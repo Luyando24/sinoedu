@@ -10,8 +10,11 @@ import { useState } from "react"
 const navigation = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
+  { name: "Why Us", href: "/why-us" },
   { name: "Services", href: "/services" },
+  { name: "Universities", href: "/universities" },
   { name: "Programs", href: "/programs" },
+  { name: "News", href: "/news" },
   { name: "Contact", href: "/contact" },
 ]
 
@@ -25,21 +28,21 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-            <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <div className="relative h-10 w-10">
-              <Image 
-                src="/logo.png" 
-                alt="CSA Logo" 
-                fill 
+              <Image
+                src="/images/logo.png"
+                alt="Sinoway Logo"
+                fill
                 className="object-contain"
               />
             </div>
             <span className="hidden font-bold sm:inline-block">
-              Chinese Scholarship Agency
+              Sinoway Education
             </span>
           </Link>
         </div>
-        
+
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6">
           {navigation.map((item) => (
@@ -97,7 +100,7 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
-             <div className="flex flex-col gap-2 pt-4">
+            <div className="flex flex-col gap-2 pt-4">
               <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start">
                   Log in

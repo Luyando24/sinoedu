@@ -1,62 +1,95 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
+import { Mail, MapPin, Phone } from "lucide-react"
 
 export default function ContactPage() {
   return (
-    <div className="container py-16 max-w-4xl">
-      <div className="text-center space-y-4 mb-12">
-        <h1 className="text-4xl font-bold tracking-tight">Contact Us</h1>
-        <p className="text-xl text-muted-foreground">
-          Have questions? We&apos;re here to help.
-        </p>
+    <div className="flex flex-col gap-12 py-16">
+      <div className="container">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+           {/* Left: Contact Info & Text */}
+           <div className="space-y-8">
+             <div className="space-y-4">
+               <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Let's Start Your Journey</h1>
+               <p className="text-xl text-muted-foreground leading-relaxed">
+                 Whether you have questions about a specific program or need guidance on the visa process, our dedicated team is here to assist you.
+               </p>
+             </div>
+
+             <div className="space-y-6">
+                {[
+                  { icon: MapPin, title: "Visit Us", details: ["Level 15, China World Tower B", "Chaoyang District, Beijing, China"] },
+                  { icon: Mail, title: "Email Us", details: ["admissions@sinoway.com", "support@sinoway.com"] },
+                  { icon: Phone, title: "Call Us", details: ["+86 10 1234 5678", "Mon-Fri, 9am - 6pm CST"] },
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4">
+                    <div className="h-12 w-12 rounded-full bg-brand-red/10 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="h-5 w-5 text-brand-red" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-1">{item.title}</h3>
+                      {item.details.map((line, j) => (
+                        <p key={j} className="text-muted-foreground">{line}</p>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+             </div>
+           </div>
+
+           {/* Right: Clean Form */}
+           <div className="bg-muted/20 p-8 md:p-10 rounded-3xl border shadow-sm">
+             <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
+             <form className="space-y-5">
+               <div className="grid sm:grid-cols-2 gap-4">
+                 <div className="space-y-2">
+                   <label className="text-sm font-medium">First Name</label>
+                   <Input placeholder="John" className="bg-background" />
+                 </div>
+                 <div className="space-y-2">
+                   <label className="text-sm font-medium">Last Name</label>
+                   <Input placeholder="Doe" className="bg-background" />
+                 </div>
+               </div>
+               
+               <div className="space-y-2">
+                 <label className="text-sm font-medium">Email Address</label>
+                 <Input type="email" placeholder="john@example.com" className="bg-background" />
+               </div>
+
+               <div className="space-y-2">
+                 <label className="text-sm font-medium">Subject</label>
+                 <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                   <option>General Inquiry</option>
+                   <option>Admissions</option>
+                   <option>Partnerships</option>
+                   <option>Support</option>
+                 </select>
+               </div>
+
+               <div className="space-y-2">
+                 <label className="text-sm font-medium">Message</label>
+                 <Textarea placeholder="How can we help you?" className="min-h-[150px] bg-background" />
+               </div>
+
+               <Button size="lg" className="w-full">Send Message</Button>
+             </form>
+           </div>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-12">
-        <Card>
-          <CardHeader>
-            <CardTitle>Send us a message</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Name</label>
-                <Input placeholder="Your name" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Email</label>
-                <Input type="email" placeholder="Your email" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Message</label>
-                <Textarea placeholder="How can we help?" />
-              </div>
-              <Button className="w-full">Send Message</Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        <div className="space-y-8">
-          <div>
-            <h3 className="text-lg font-bold mb-2">Office Location</h3>
-            <p className="text-muted-foreground">
-              Level 15, China World Tower B<br />
-              Chaoyang District, Beijing<br />
-              China
-            </p>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-2">Contact Info</h3>
-            <p className="text-muted-foreground">
-              Email: info@csa.com<br />
-              Phone: +86 10 1234 5678
-            </p>
-          </div>
-          <div className="h-48 bg-muted rounded-xl flex items-center justify-center">
-            <span className="text-muted-foreground">Map Placeholder</span>
-          </div>
-        </div>
+      {/* Full Width Map */}
+      <div className="w-full h-[500px] bg-muted relative">
+         <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3059.081829207436!2d116.4575!3d39.9042!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35f052d9a30d315f%3A0x6a0c0e5a8b7a0b0!2sChina%20World%20Trade%20Center!5e0!3m2!1sen!2scn!4v1620000000000!5m2!1sen!2scn" 
+            width="100%" 
+            height="100%" 
+            style={{ border: 0, filter: "grayscale(100%)" }} 
+            allowFullScreen 
+            loading="lazy"
+          ></iframe>
       </div>
     </div>
   )

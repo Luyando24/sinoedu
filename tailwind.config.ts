@@ -50,9 +50,10 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
         brand: {
-          red: "#a4a147", // Updated primary brand color (Olive Gold)
-          blue: "#485456", // Updated secondary brand color (Slate Gray)
-          DEFAULT: "#a4a147",
+          red: "#1A4D2E", // Darker Green (Primary)
+          blue: "#142F1E", // Darker Deep Green (Secondary)
+          hero: "#5F8546", // Original Green for Hero Section
+          DEFAULT: "#1A4D2E",
         },
       },
       borderRadius: {

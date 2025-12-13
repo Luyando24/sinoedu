@@ -24,17 +24,81 @@ create policy "Users can update their own profile" on public.users
 create policy "Admins can view all profiles" on public.users
   for select using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
 
+-- Create Universities table
+create table public.universities (
+  id uuid default uuid_generate_v4() primary key,
+  name text not null,
+  location text, -- City/Province
+  description text,
+  logo_url text,
+  image_url text, -- Campus photo
+  ranking text, -- e.g. "Top 10 in China"
+  established_year text,
+  website_url text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable RLS for universities
+alter table public.universities enable row level security;
+
+-- Policies for universities
+create policy "Universities are viewable by everyone" on public.universities
+  for select using (true);
+
+create policy "Only admins can insert universities" on public.universities
+  for insert with check (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+create policy "Only admins can update universities" on public.universities
+  for update using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+create policy "Only admins can delete universities" on public.universities
+  for delete using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+
 -- Create Programs table
 create table public.programs (
   id uuid default uuid_generate_v4() primary key,
+  program_id_code text, -- e.g. SWGZGZHSXY-2
   title text not null,
-  school_name text not null,
+  
+  -- Replaced school_name with university_id
+  university_id uuid references public.universities(id) on delete cascade,
+  
+  location text, -- City/Province (can be different from uni location)
+  
   level text check (level in ('Bachelor', 'Masters', 'PhD', 'High School', 'Language')),
   duration text,
   tuition_fee text,
   description text,
-  requirements text,
-  location text,
+  requirements text, -- General requirements description
+  
+  -- Basic Info
+  language text, -- Language of Instruction
+  intake text, -- e.g. autumn 2025
+  application_deadline text,
+  
+  -- Eligibility
+  age_requirements text,
+  nationality_restrictions text,
+  language_requirements text, -- Language Classes/Requirements
+  applicants_inside_china text, -- Not Accepted / Accepted
+  academic_requirements text[], -- List of requirements
+  
+  -- Financial
+  registration_fee text,
+  application_fee_status text, -- Refundable/etc
+  scholarship_details text,
+  
+  -- Accommodation
+  accommodation_costs jsonb, -- { single: "...", double: "..." }
+  accommodation_details text,
+  off_campus_living text, -- Allowed / Not Allowed
+  dormitory_photos text[], -- List of URLs
+  
+  -- Application Process
+  processing_speed text,
+  required_documents text[], -- List of documents
+
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -110,6 +174,39 @@ create policy "Users can view their own payments" on public.payments
 create policy "Admins can view all payments" on public.payments
   for select using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
 
+-- Create Posts table (Blog/News)
+create table public.posts (
+  id uuid default uuid_generate_v4() primary key,
+  title text not null,
+  slug text, -- unique identifier for url
+  excerpt text,
+  content text,
+  image_url text,
+  category text,
+  author_id uuid references public.users(id) on delete set null,
+  published boolean default true,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable RLS for posts
+alter table public.posts enable row level security;
+
+-- Policies for posts
+create policy "Posts are viewable by everyone" on public.posts
+  for select using (published = true);
+
+create policy "Admins can view all posts" on public.posts
+  for select using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+create policy "Only admins can insert posts" on public.posts
+  for insert with check (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+create policy "Only admins can update posts" on public.posts
+  for update using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+create policy "Only admins can delete posts" on public.posts
+  for delete using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
 -- Function to handle new user creation
 create or replace function public.handle_new_user()
 returns trigger as $$
@@ -124,6 +221,3 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
-
--- Insert seed data (Optional)
--- insert into public.programs (title, school_name, level, duration, tuition_fee, description, location) values ...

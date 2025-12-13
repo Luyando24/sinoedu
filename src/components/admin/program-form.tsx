@@ -1,0 +1,406 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { createClient } from "@/lib/supabase/client"
+import { toast } from "sonner"
+import { Loader2, Plus, X } from "lucide-react"
+
+type Program = any // using any for simplicity with the complex schema for now
+
+interface ProgramFormProps {
+  initialData?: Program
+}
+
+export function ProgramForm({ initialData }: ProgramFormProps) {
+  const router = useRouter()
+  const supabase = createClient()
+  const [loading, setLoading] = useState(false)
+  const [universities, setUniversities] = useState<any[]>([])
+
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      const { data } = await supabase.from('universities').select('id, name')
+      if (data) setUniversities(data)
+    }
+    fetchUniversities()
+  }, [])
+
+  const [formData, setFormData] = useState({
+    program_id_code: initialData?.program_id_code || "",
+    title: initialData?.title || "",
+    university_id: initialData?.university_id || "",
+    level: initialData?.level || "Bachelor",
+    duration: initialData?.duration || "",
+    tuition_fee: initialData?.tuition_fee || "",
+    description: initialData?.description || "",
+    requirements: initialData?.requirements || "",
+    location: initialData?.location || "",
+    
+    language: initialData?.language || "",
+    intake: initialData?.intake || "",
+    application_deadline: initialData?.application_deadline || "",
+    
+    age_requirements: initialData?.age_requirements || "",
+    nationality_restrictions: initialData?.nationality_restrictions || "no",
+    language_requirements: initialData?.language_requirements || "",
+    applicants_inside_china: initialData?.applicants_inside_china || "Not Accepted",
+    
+    academic_requirements: initialData?.academic_requirements || [""],
+    
+    registration_fee: initialData?.registration_fee || "",
+    application_fee_status: initialData?.application_fee_status || "",
+    scholarship_details: initialData?.scholarship_details || "",
+    
+    accommodation_single: initialData?.accommodation_costs?.single || "",
+    accommodation_double: initialData?.accommodation_costs?.double || "",
+    accommodation_details: initialData?.accommodation_details || "",
+    off_campus_living: initialData?.off_campus_living || "Not Allowed",
+    
+    dormitory_photos: initialData?.dormitory_photos || [""],
+    
+    processing_speed: initialData?.processing_speed || "",
+    required_documents: initialData?.required_documents || [""]
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  // Helper for array fields
+  const handleArrayChange = (index: number, value: string, field: "academic_requirements" | "dormitory_photos" | "required_documents") => {
+    const newArray = [...formData[field]]
+    newArray[index] = value
+    setFormData(prev => ({ ...prev, [field]: newArray }))
+  }
+
+  const addArrayItem = (field: "academic_requirements" | "dormitory_photos" | "required_documents") => {
+    setFormData(prev => ({ ...prev, [field]: [...prev[field], ""] }))
+  }
+
+  const removeArrayItem = (index: number, field: "academic_requirements" | "dormitory_photos" | "required_documents") => {
+    const newArray = [...formData[field]]
+    newArray.splice(index, 1)
+    setFormData(prev => ({ ...prev, [field]: newArray }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+
+    try {
+      const payload = {
+        ...formData,
+        academic_requirements: formData.academic_requirements.filter((i: string) => i.trim() !== ""),
+        dormitory_photos: formData.dormitory_photos.filter((i: string) => i.trim() !== ""),
+        required_documents: formData.required_documents.filter((i: string) => i.trim() !== ""),
+        accommodation_costs: {
+            single: formData.accommodation_single,
+            double: formData.accommodation_double
+        }
+      }
+      
+      // Remove flat fields that aren't in schema
+      delete (payload as any).accommodation_single
+      delete (payload as any).accommodation_double
+
+      // Look up school_name if needed for backward compatibility or display, 
+      // but we are relying on university_id now. 
+      // We will fill school_name with the university name just in case legacy code needs it
+      const selectedUni = universities.find(u => u.id === formData.university_id)
+      if (selectedUni) {
+        (payload as any).school_name = selectedUni.name
+      }
+
+      if (initialData) {
+        const { error } = await supabase
+          .from('programs')
+          .update(payload)
+          .eq('id', initialData.id)
+        if (error) throw error
+        toast.success("Program updated successfully")
+      } else {
+        const { error } = await supabase
+          .from('programs')
+          .insert([payload])
+        if (error) throw error
+        toast.success("Program created successfully")
+      }
+      
+      router.push("/admin/programs")
+      router.refresh()
+    } catch (error: any) {
+      console.error(error)
+      toast.error(error.message || "Something went wrong")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto pb-20">
+      
+      {/* Basic Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Basic Information</CardTitle>
+        </CardHeader>
+        <CardContent className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Program Title</label>
+            <Input name="title" value={formData.title} onChange={handleChange} required placeholder="e.g. Bachelor in Computer Science" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Program ID Code</label>
+            <Input name="program_id_code" value={formData.program_id_code} onChange={handleChange} placeholder="e.g. SWGZGZHSXY-2" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">University</label>
+            <select 
+              name="university_id" 
+              value={formData.university_id} 
+              onChange={handleChange}
+              required
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option value="">Select University</option>
+              {universities.map((uni) => (
+                <option key={uni.id} value={uni.id}>{uni.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Location / City</label>
+            <Input name="location" value={formData.location} onChange={handleChange} placeholder="e.g. Guangzhou" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Level</label>
+            <select 
+              name="level" 
+              value={formData.level} 
+              onChange={handleChange}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option value="Bachelor">Bachelor</option>
+              <option value="Masters">Masters</option>
+              <option value="PhD">PhD</option>
+              <option value="High School">High School</option>
+              <option value="Language">Language Program</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Duration</label>
+            <Input name="duration" value={formData.duration} onChange={handleChange} placeholder="e.g. 4 years" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Language of Instruction</label>
+            <Input name="language" value={formData.language} onChange={handleChange} placeholder="e.g. English & Chinese" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Intake</label>
+            <Input name="intake" value={formData.intake} onChange={handleChange} placeholder="e.g. Autumn 2025" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Application Deadline</label>
+            <Input name="application_deadline" value={formData.application_deadline} onChange={handleChange} placeholder="e.g. Nov 30, 2025" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Description & Requirements */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Details</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Program Description</label>
+            <Textarea name="description" value={formData.description} onChange={handleChange} className="min-h-[100px]" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">General Requirements</label>
+            <Textarea name="requirements" value={formData.requirements} onChange={handleChange} className="min-h-[100px]" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Eligibility */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Eligibility Requirements</CardTitle>
+        </CardHeader>
+        <CardContent className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Age Requirements</label>
+            <Input name="age_requirements" value={formData.age_requirements} onChange={handleChange} placeholder="e.g. 18 - 35 years" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Nationality Restrictions</label>
+            <Input name="nationality_restrictions" value={formData.nationality_restrictions} onChange={handleChange} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Language Requirements/Classes</label>
+            <Input name="language_requirements" value={formData.language_requirements} onChange={handleChange} placeholder="e.g. Not Available / HSK 4" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Applicants Inside China</label>
+            <select 
+              name="applicants_inside_china" 
+              value={formData.applicants_inside_china} 
+              onChange={handleChange}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option value="Accepted">Accepted</option>
+              <option value="Not Accepted">Not Accepted</option>
+            </select>
+          </div>
+          
+          <div className="col-span-2 space-y-2">
+            <label className="text-sm font-medium">Academic Requirements (List)</label>
+            {formData.academic_requirements.map((req, index) => (
+              <div key={index} className="flex gap-2">
+                <Input 
+                  value={req} 
+                  onChange={(e) => handleArrayChange(index, e.target.value, "academic_requirements")}
+                  placeholder="e.g. High School Diploma" 
+                />
+                <Button type="button" variant="ghost" size="icon" onClick={() => removeArrayItem(index, "academic_requirements")}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={() => addArrayItem("academic_requirements")}>
+              <Plus className="h-4 w-4 mr-2" /> Add Requirement
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Financial */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Financial Information</CardTitle>
+        </CardHeader>
+        <CardContent className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Tuition Fee</label>
+            <Input name="tuition_fee" value={formData.tuition_fee} onChange={handleChange} placeholder="e.g. ¥20,000/year or N/A" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Registration Fee</label>
+            <Input name="registration_fee" value={formData.registration_fee} onChange={handleChange} placeholder="e.g. ¥600" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Application Fee Status</label>
+            <Input name="application_fee_status" value={formData.application_fee_status} onChange={handleChange} placeholder="e.g. Refundable" />
+          </div>
+          <div className="space-y-2 col-span-2">
+            <label className="text-sm font-medium">Scholarship Information</label>
+            <Textarea name="scholarship_details" value={formData.scholarship_details} onChange={handleChange} placeholder="Details about available scholarships..." />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Accommodation */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Accommodation</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+                <label className="text-sm font-medium">Single Room Cost</label>
+                <Input name="accommodation_single" value={formData.accommodation_single} onChange={handleChange} placeholder="e.g. ¥N/A" />
+            </div>
+            <div className="space-y-2">
+                <label className="text-sm font-medium">Double Room Cost</label>
+                <Input name="accommodation_double" value={formData.accommodation_double} onChange={handleChange} placeholder="e.g. ¥N/A" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Accommodation Details</label>
+            <Input name="accommodation_details" value={formData.accommodation_details} onChange={handleChange} placeholder="e.g. HAS KITCHEN AND BATHROOM" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Off-Campus Living</label>
+            <select 
+              name="off_campus_living" 
+              value={formData.off_campus_living} 
+              onChange={handleChange}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option value="Allowed">Allowed</option>
+              <option value="Not Allowed">Not Allowed</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Dormitory Photos (URLs)</label>
+            {formData.dormitory_photos.map((photo, index) => (
+              <div key={index} className="flex gap-2">
+                <Input 
+                  value={photo} 
+                  onChange={(e) => handleArrayChange(index, e.target.value, "dormitory_photos")}
+                  placeholder="https://example.com/photo.jpg" 
+                />
+                <Button type="button" variant="ghost" size="icon" onClick={() => removeArrayItem(index, "dormitory_photos")}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={() => addArrayItem("dormitory_photos")}>
+              <Plus className="h-4 w-4 mr-2" /> Add Photo URL
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Application Process */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Application Process</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Processing Speed</label>
+            <Input name="processing_speed" value={formData.processing_speed} onChange={handleChange} placeholder="e.g. usually 2-4 weeks" />
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Required Documents</label>
+            {formData.required_documents.map((doc, index) => (
+              <div key={index} className="flex gap-2">
+                <Input 
+                  value={doc} 
+                  onChange={(e) => handleArrayChange(index, e.target.value, "required_documents")}
+                  placeholder="e.g. Passport" 
+                />
+                <Button type="button" variant="ghost" size="icon" onClick={() => removeArrayItem(index, "required_documents")}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button type="button" variant="outline" size="sm" onClick={() => addArrayItem("required_documents")}>
+              <Plus className="h-4 w-4 mr-2" /> Add Document
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex gap-4">
+        <Button type="submit" size="lg" disabled={loading}>
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {initialData ? "Update Program" : "Create Program"}
+        </Button>
+        <Button type="button" variant="outline" size="lg" onClick={() => router.back()}>
+          Cancel
+        </Button>
+      </div>
+    </form>
+  )
+}
