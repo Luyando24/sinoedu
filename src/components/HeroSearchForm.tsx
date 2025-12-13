@@ -29,6 +29,7 @@ export function HeroSearchForm() {
     if (formData.degree) params.append("level", formData.degree) // mapping degree to level
     if (formData.language) params.append("language", formData.language)
     if (formData.duration) params.append("duration", formData.duration)
+    if (formData.scholarship) params.append("scholarship", formData.scholarship)
     if (formData.query) params.append("query", formData.query)
     if (formData.intake) params.append("intake", formData.intake)
     

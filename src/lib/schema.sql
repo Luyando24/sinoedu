@@ -124,6 +124,14 @@ create table public.applications (
   user_id uuid references public.users(id) on delete cascade not null,
   program_id uuid references public.programs(id) on delete set null,
   status text default 'Pending' check (status in ('Pending', 'Processing', 'Accepted', 'More Documents Needed', 'Rejected')),
+  
+  -- Applicant Details (Snapshot)
+  full_name text,
+  nationality text,
+  passport_number text,
+  date_of_birth date,
+  highest_qualification text,
+  
   passport_file text,
   transcript_file text,
   passport_photo text,
@@ -221,3 +229,21 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- Create Storage Bucket for Documents
+insert into storage.buckets (id, name, public)
+values ('documents', 'documents', true)
+on conflict (id) do nothing;
+
+-- Set up storage policies for documents
+create policy "Authenticated users can upload documents"
+  on storage.objects for insert
+  with check (bucket_id = 'documents' and auth.role() = 'authenticated');
+
+create policy "Users can view their own documents"
+  on storage.objects for select
+  using (bucket_id = 'documents'); 
+
+create policy "Admins can view all documents"
+  on storage.objects for select
+  using (bucket_id = 'documents' and exists (select 1 from public.users where id = auth.uid() and role = 'admin'));

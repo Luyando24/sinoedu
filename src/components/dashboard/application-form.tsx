@@ -74,6 +74,13 @@ export function ApplicationForm({ programs, userId }: { programs: any[], userId:
         .insert({
           user_id: userId,
           program_id: data.programId,
+          
+          full_name: data.fullName,
+          nationality: data.nationality,
+          passport_number: data.passportNumber,
+          date_of_birth: data.dateOfBirth,
+          highest_qualification: data.highestQualification,
+          
           personal_statement: data.personalStatement,
           status: 'Pending',
           // Mock file paths for now as we can't ensure storage bucket exists without manual setup
@@ -132,7 +139,7 @@ export function ApplicationForm({ programs, userId }: { programs: any[], userId:
             >
               <option value="">Select a program...</option>
               {programs.map(p => (
-                <option key={p.id} value={p.id}>{p.title} - {p.school_name}</option>
+                <option key={p.id} value={p.id}>{p.title} - {p.universities?.name}</option>
               ))}
             </select>
             {errors.programId && <p className="text-red-500 text-xs">{errors.programId.message}</p>}

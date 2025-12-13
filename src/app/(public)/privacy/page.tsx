@@ -15,7 +15,7 @@ export default function PrivacyPage() {
         <section className="space-y-4">
           <h2 className="text-2xl font-bold text-foreground">1. Introduction</h2>
           <p className="text-muted-foreground leading-relaxed text-lg">
-            Sinoway Education ("we", "our", or "us") provides educational consultancy services. By using our website and services, you consent to the data practices described in this statement. We are committed to protecting your personal data and ensuring transparency in how we handle it.
+            Sinoway Education (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) provides educational consultancy services. By using our website and services, you consent to the data practices described in this statement. We are committed to protecting your personal data and ensuring transparency in how we handle it.
           </p>
         </section>
 

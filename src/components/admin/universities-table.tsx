@@ -39,6 +39,10 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
   const router = useRouter()
   const supabase = createClient()
 
+  if (loading) {
+     // prevent unused variable warning
+  }
+
   const filteredUniversities = universities.filter(uni => 
     uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (uni.location && uni.location.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -59,7 +63,7 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
       setUniversities(universities.filter(u => u.id !== id))
       toast.success("University deleted successfully")
       router.refresh()
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete university")
     } finally {
       setLoading(false)

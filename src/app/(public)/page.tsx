@@ -1,11 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, GraduationCap, Users, Clock, Award, ArrowRight, Globe, BookOpen } from "lucide-react"
-import { FadeIn, HoverCard, StaggerContainer } from "@/components/ui/motion"
+import { Users, Clock, Award, Globe, BookOpen } from "lucide-react"
+import { FadeIn } from "@/components/ui/motion"
 import { motion } from "framer-motion"
 import { HeroSearchForm } from "@/components/HeroSearchForm"
 
@@ -78,7 +76,7 @@ export default function Home() {
                 Unlocking Global <span className="text-brand-red">Opportunities</span>
               </h2>
               <p className="text-lg text-muted-foreground leading-loose">
-                At Sinoway Education, we don't just process applications; we architect futures. As a premier consultancy, we specialize in navigating the complex landscape of Chinese higher education for ambitious international students.
+                At Sinoway Education, we don&apos;t just process applications; we architect futures. As a premier consultancy, we specialize in navigating the complex landscape of Chinese higher education for ambitious international students.
               </p>
             </div>
             

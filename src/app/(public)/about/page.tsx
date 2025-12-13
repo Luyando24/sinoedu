@@ -78,7 +78,7 @@ export default function AboutPage() {
              <div className="text-center text-white space-y-4 max-w-2xl px-4">
                <h2 className="text-3xl md:text-4xl font-bold">Meet Our Experts</h2>
                <p className="text-lg text-white/90">
-                 Our team consists of former admission officers and alumni from China's top universities.
+                 Our team consists of former admission officers and alumni from China&apos;s top universities.
                </p>
              </div>
           </div>

@@ -24,7 +24,7 @@ export default async function ApplicationPage() {
   // Fetch programs
   const { data: programs } = await supabase
     .from('programs')
-    .select('id, title, school_name')
+    .select('id, title, universities(name)')
   
   return (
     <div className="max-w-4xl mx-auto">

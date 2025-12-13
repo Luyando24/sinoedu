@@ -1,4 +1,3 @@
-import { LayoutDashboard, FileText, User, CreditCard, Shield } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { Sidebar } from "@/components/dashboard/sidebar"
 
@@ -11,10 +10,10 @@ export default async function DashboardLayout({
   const { data: { user } } = await supabase.auth.getUser()
 
   let sidebarItems = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "My Application", href: "/dashboard/application", icon: FileText },
-    { name: "Profile", href: "/dashboard/profile", icon: User },
-    { name: "Payments", href: "/dashboard/payments", icon: CreditCard },
+    { name: "Dashboard", href: "/dashboard", icon: "LayoutDashboard" },
+    { name: "My Application", href: "/dashboard/application", icon: "FileText" },
+    { name: "Profile", href: "/dashboard/profile", icon: "User" },
+    { name: "Payments", href: "/dashboard/payments", icon: "CreditCard" },
   ]
 
   if (user) {
@@ -26,7 +25,7 @@ export default async function DashboardLayout({
     
     if (profile?.role === 'admin') {
       sidebarItems = [
-        { name: "Overview", href: "/admin", icon: Shield },
+        { name: "Overview", href: "/admin", icon: "Shield" },
       ]
     }
   }

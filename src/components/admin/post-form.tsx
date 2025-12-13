@@ -10,7 +10,15 @@ import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
-type Post = any
+type Post = {
+  id: string
+  title: string
+  excerpt: string | null
+  content: string | null
+  image_url: string | null
+  category: string | null
+  published: boolean
+}
 
 interface PostFormProps {
   initialData?: Post
@@ -57,9 +65,9 @@ export function PostForm({ initialData }: PostFormProps) {
       
       router.push("/admin/posts")
       router.refresh()
-    } catch (error: any) {
+    } catch (error) {
       console.error(error)
-      toast.error(error.message || "Something went wrong")
+      toast.error("Something went wrong")
     } finally {
       setLoading(false)
     }

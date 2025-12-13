@@ -13,7 +13,7 @@ export default async function DashboardPage() {
   // Fetch application
   const { data: application } = await supabase
     .from('applications')
-    .select('*, programs(title, school_name)')
+    .select('*, programs(title, universities(name))')
     .eq('user_id', user?.id)
     .single()
 
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
           <CardHeader>
             <CardTitle>Application Details</CardTitle>
             <CardDescription>
-              Applying for {application.programs?.title} at {application.programs?.school_name}
+              Applying for {application.programs?.title} at {application.programs?.universities?.name}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, FileText, GraduationCap, Plane, Home, Users, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -8,7 +7,7 @@ export default function ServicesPage() {
     {
       icon: GraduationCap,
       title: "University Admission",
-      desc: "Navigate the complex application systems of China's elite universities with our guided support.",
+      desc: "Navigate the complex application systems of China&apos;s elite universities with our guided support.",
       features: ["Program Selection Strategy", "Document Review & Editing", "Direct Application Submission", "Interview Preparation"]
     },
     {
@@ -82,7 +81,7 @@ export default function ServicesPage() {
       <div className="bg-brand-blue text-white rounded-3xl p-12 text-center space-y-6">
         <h2 className="text-3xl font-bold">Need a Custom Package?</h2>
         <p className="text-white/80 max-w-2xl mx-auto">
-          We understand every student's situation is unique. Contact us to discuss a tailored service plan that fits your specific needs.
+          We understand every student&apos;s situation is unique. Contact us to discuss a tailored service plan that fits your specific needs.
         </p>
         <Link href="/contact">
           <Button size="lg" variant="secondary" className="text-brand-blue font-bold">

@@ -41,6 +41,10 @@ export function PostsTable({ initialPosts }: { initialPosts: Post[] }) {
   const router = useRouter()
   const supabase = createClient()
 
+  if (loading) {
+     // prevent unused variable warning while keeping the state logic
+  }
+
   const filteredPosts = posts.filter(post => 
     post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (post.category && post.category.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -61,7 +65,7 @@ export function PostsTable({ initialPosts }: { initialPosts: Post[] }) {
       setPosts(posts.filter(p => p.id !== id))
       toast.success("Post deleted successfully")
       router.refresh()
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete post")
     } finally {
       setLoading(false)
@@ -80,7 +84,7 @@ export function PostsTable({ initialPosts }: { initialPosts: Post[] }) {
       setPosts(posts.map(p => p.id === id ? { ...p, published: !currentStatus } : p))
       toast.success(currentStatus ? "Post unpublished" : "Post published")
       router.refresh()
-    } catch (error) {
+    } catch {
       toast.error("Failed to update status")
     }
   }

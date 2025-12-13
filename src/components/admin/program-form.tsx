@@ -10,7 +10,35 @@ import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { Loader2, Plus, X } from "lucide-react"
 
-type Program = any // using any for simplicity with the complex schema for now
+type Program = {
+  id: string
+  program_id_code: string | null
+  title: string
+  university_id: string | null
+  level: string | null
+  duration: string | null
+  tuition_fee: string | null
+  description: string | null
+  requirements: string | null
+  location: string | null
+  language: string | null
+  intake: string | null
+  application_deadline: string | null
+  age_requirements: string | null
+  nationality_restrictions: string | null
+  language_requirements: string | null
+  applicants_inside_china: string | null
+  academic_requirements: string[] | null
+  registration_fee: string | null
+  application_fee_status: string | null
+  scholarship_details: string | null
+  accommodation_costs: { single: string; double: string } | null
+  accommodation_details: string | null
+  off_campus_living: string | null
+  dormitory_photos: string[] | null
+  processing_speed: string | null
+  required_documents: string[] | null
+}
 
 interface ProgramFormProps {
   initialData?: Program
@@ -20,7 +48,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
   const router = useRouter()
   const supabase = createClient()
   const [loading, setLoading] = useState(false)
-  const [universities, setUniversities] = useState<any[]>([])
+  const [universities, setUniversities] = useState<{ id: string, name: string }[]>([])
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -28,7 +56,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
       if (data) setUniversities(data)
     }
     fetchUniversities()
-  }, [])
+  }, [supabase])
 
   const [formData, setFormData] = useState({
     program_id_code: initialData?.program_id_code || "",
@@ -94,28 +122,27 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     setLoading(true)
 
     try {
+      // Destructure to remove flat fields that aren't in schema
+      const { accommodation_single, accommodation_double, ...rest } = formData
+
       const payload = {
-        ...formData,
+        ...rest,
         academic_requirements: formData.academic_requirements.filter((i: string) => i.trim() !== ""),
         dormitory_photos: formData.dormitory_photos.filter((i: string) => i.trim() !== ""),
         required_documents: formData.required_documents.filter((i: string) => i.trim() !== ""),
         accommodation_costs: {
-            single: formData.accommodation_single,
-            double: formData.accommodation_double
+            single: accommodation_single,
+            double: accommodation_double
         }
       }
       
-      // Remove flat fields that aren't in schema
-      delete (payload as any).accommodation_single
-      delete (payload as any).accommodation_double
-
       // Look up school_name if needed for backward compatibility or display, 
       // but we are relying on university_id now. 
       // We will fill school_name with the university name just in case legacy code needs it
-      const selectedUni = universities.find(u => u.id === formData.university_id)
-      if (selectedUni) {
-        (payload as any).school_name = selectedUni.name
-      }
+      // const selectedUni = universities.find(u => u.id === formData.university_id)
+      // if (selectedUni) {
+      //   (payload as any).school_name = selectedUni.name
+      // }
 
       if (initialData) {
         const { error } = await supabase
@@ -134,9 +161,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
       
       router.push("/admin/programs")
       router.refresh()
-    } catch (error: any) {
+    } catch (error) {
       console.error(error)
-      toast.error(error.message || "Something went wrong")
+      toast.error("Something went wrong")
     } finally {
       setLoading(false)
     }

@@ -10,7 +10,17 @@ import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
-type University = any
+type University = {
+  id: string
+  name: string
+  location: string | null
+  description: string | null
+  logo_url: string | null
+  image_url: string | null
+  ranking: string | null
+  established_year: string | null
+  website_url: string | null
+}
 
 interface UniversityFormProps {
   initialData?: University
@@ -59,9 +69,9 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
       
       router.push("/admin/universities")
       router.refresh()
-    } catch (error: any) {
+    } catch (error) {
       console.error(error)
-      toast.error(error.message || "Something went wrong")
+      toast.error("Something went wrong")
     } finally {
       setLoading(false)
     }

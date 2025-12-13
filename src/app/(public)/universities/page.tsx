@@ -21,7 +21,7 @@ export default async function UniversitiesPage() {
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <h1 className="text-4xl font-bold tracking-tight">Partner Universities</h1>
         <p className="text-xl text-muted-foreground">
-          Explore China's top institutions. We are official representatives for these prestigious universities.
+          Explore China&apos;s top institutions. We are official representatives for these prestigious universities.
         </p>
       </div>
 

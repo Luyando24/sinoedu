@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent } from "@/components/ui/card"
 import { Mail, MapPin, Phone } from "lucide-react"
 
 export default function ContactPage() {
@@ -12,7 +11,7 @@ export default function ContactPage() {
            {/* Left: Contact Info & Text */}
            <div className="space-y-8">
              <div className="space-y-4">
-               <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Let's Start Your Journey</h1>
+               <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Let&apos;s Start Your Journey</h1>
                <p className="text-xl text-muted-foreground leading-relaxed">
                  Whether you have questions about a specific program or need guidance on the visa process, our dedicated team is here to assist you.
                </p>

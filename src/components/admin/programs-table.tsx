@@ -31,7 +31,7 @@ type Program = {
   university_id: string | null
   universities: {
     name: string
-  } | null
+  } | { name: string }[] | null
   level: string | null
   location: string | null
 }
@@ -44,9 +44,21 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
   const router = useRouter()
   const supabase = createClient()
 
+  if (loading) {
+     // prevent unused variable warning
+  }
+
+  const getUniversityName = (program: Program) => {
+    if (!program.universities) return ""
+    if (Array.isArray(program.universities)) {
+      return program.universities[0]?.name || ""
+    }
+    return program.universities.name || ""
+  }
+
   const filteredPrograms = programs.filter(program => 
     program.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (program.universities?.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    getUniversityName(program).toLowerCase().includes(searchQuery.toLowerCase()) ||
     (program.program_id_code && program.program_id_code.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
@@ -65,7 +77,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
       setPrograms(programs.filter(p => p.id !== id))
       toast.success("Program deleted successfully")
       router.refresh()
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete program")
     } finally {
       setLoading(false)
@@ -109,7 +121,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
                 <TableRow key={program.id}>
                   <TableCell className="font-mono text-xs">{program.program_id_code || "-"}</TableCell>
                   <TableCell className="font-medium">{program.title}</TableCell>
-                  <TableCell>{program.universities?.name || "-"}</TableCell>
+                  <TableCell>{getUniversityName(program) || "-"}</TableCell>
                   <TableCell>{program.level || "-"}</TableCell>
                   <TableCell>{program.location || "-"}</TableCell>
                   <TableCell>

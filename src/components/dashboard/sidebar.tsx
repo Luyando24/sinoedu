@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { LogOut, LucideIcon } from "lucide-react"
+import { LogOut, LayoutDashboard, FileText, User, CreditCard, Shield, LucideIcon } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import Image from "next/image"
@@ -12,7 +12,15 @@ import Image from "next/image"
 interface SidebarItem {
   name: string
   href: string
-  icon: LucideIcon
+  icon: string
+}
+
+const iconMap: Record<string, LucideIcon> = {
+  LayoutDashboard,
+  FileText,
+  User,
+  CreditCard,
+  Shield
 }
 
 interface SidebarProps {
@@ -47,21 +55,24 @@ export function Sidebar({ items }: SidebarProps) {
         </Link>
       </div>
       <div className="flex flex-col gap-2 p-4">
-        {items.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
-              pathname === item.href
-                ? "bg-muted text-foreground"
-                : "text-muted-foreground"
-            )}
-          >
-            <item.icon className="h-4 w-4" />
-            {item.name}
-          </Link>
-        ))}
+        {items.map((item) => {
+          const Icon = iconMap[item.icon] || LayoutDashboard
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
+                pathname === item.href
+                  ? "bg-muted text-foreground"
+                  : "text-muted-foreground"
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {item.name}
+            </Link>
+          )
+        })}
       </div>
       <div className="absolute bottom-4 left-4 right-4">
         <Button variant="outline" className="w-full justify-start gap-3" onClick={handleSignOut}>
