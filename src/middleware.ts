@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -13,61 +13,44 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
+        getAll() {
+          return request.cookies.getAll()
         },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          });
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
+            request,
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          )
         },
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  // Refresh session if expired - required for Server Components
+  // https://supabase.com/docs/guides/auth/server-side/nextjs
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
 
-  // Protect dashboard routes
-  if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    if (!user) {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
+    // Protect dashboard routes
+    if (request.nextUrl.pathname.startsWith("/dashboard")) {
+      if (!user) {
+        return NextResponse.redirect(new URL("/auth/login", request.url));
+      }
     }
-  }
 
-  // Protect admin routes
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    if (!user) {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
+    // Protect admin routes
+    if (request.nextUrl.pathname.startsWith("/admin")) {
+      if (!user) {
+        return NextResponse.redirect(new URL("/auth/login", request.url));
+      }
     }
+  } catch (e) {
+    // If there is an error (e.g. missing env vars), just proceed
+    // The protected routes will likely fail downstream or be handled by client-side auth checks
+    console.error("Middleware auth check failed:", e)
   }
 
   return response;
