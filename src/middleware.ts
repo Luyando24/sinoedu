@@ -65,8 +65,13 @@ export async function middleware(request: NextRequest) {
 
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
+    // Allow access to admin login page
+    if (request.nextUrl.pathname === "/admin/login") {
+      return response;
+    }
+
     if (!user) {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
+      return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }
 

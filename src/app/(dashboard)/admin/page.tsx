@@ -8,7 +8,7 @@ export default async function AdminDashboard() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) redirect("/auth/login")
+  if (!user) redirect("/admin/login")
 
   // Verify admin role (mocked for now as per instructions, but in production use RLS/claims)
   
