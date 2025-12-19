@@ -3,6 +3,7 @@ import Image from "next/image"
 import { CheckCircle, Trophy, Users, Globe, ShieldCheck, HeartHandshake } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { GalleryGrid } from "@/components/about/gallery-grid"
 
 export const dynamic = 'force-dynamic'
 
