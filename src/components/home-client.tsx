@@ -69,10 +69,10 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
           <div className="w-full max-w-4xl mx-auto px-4">
             <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 text-center space-y-4">
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide text-white drop-shadow-lg">
-                {getContent(content, 'home.hero.title_new', 'Study in China')}
+                {getContent(content, 'home.hero.title_expert', 'Your Go-to Study-in-China Expert')}
               </h1>
               <p className="text-base md:text-xl text-white/90 font-light max-w-2xl mx-auto drop-shadow-md">
-                {getContent(content, 'home.hero.subtitle_expert', 'Your Go-to Study-in-China Expert')}
+                {getContent(content, 'home.hero.subtitle_long', 'Professional team, professional service, making study in China simpler.')}
               </p>
             </div>
           </div>
