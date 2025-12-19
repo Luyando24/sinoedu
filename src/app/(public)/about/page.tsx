@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import Image from "next/image"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, Trophy, Users, Globe, ShieldCheck, HeartHandshake } from "lucide-react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export const dynamic = 'force-dynamic'
 
@@ -13,6 +15,39 @@ const getContent = (blocks: { key: string; content: string }[] | null, key: stri
 export default async function AboutPage() {
   const supabase = createClient()
   const { data: blocks } = await supabase.from('content_blocks').select('*')
+
+  const reasons = [
+    {
+      icon: Trophy,
+      title: getContent(blocks, 'whyus.1.title', "Proven Track Record"),
+      desc: getContent(blocks, 'whyus.1.desc', "With a 98% admission success rate and over $5M in scholarships secured, our results speak for themselves.")
+    },
+    {
+      icon: Users,
+      title: getContent(blocks, 'whyus.2.title', "Personalized Mentorship"),
+      desc: getContent(blocks, 'whyus.2.desc', "We don't just process papers. We provide 1-on-1 career counseling and academic roadmap planning.")
+    },
+    {
+      icon: Globe,
+      title: getContent(blocks, 'whyus.3.title', "Exclusive Partnerships"),
+      desc: getContent(blocks, 'whyus.3.desc', "Direct agreements with 50+ top Chinese universities give our students priority consideration.")
+    },
+    {
+      icon: ShieldCheck,
+      title: getContent(blocks, 'whyus.4.title', "End-to-End Support"),
+      desc: getContent(blocks, 'whyus.4.desc', "From the first consultation to airport pickup and dormitory settlement, we are with you every step.")
+    },
+    {
+      icon: HeartHandshake,
+      title: getContent(blocks, 'whyus.5.title', "Transparent Process"),
+      desc: getContent(blocks, 'whyus.5.desc', "No hidden fees, no false promises. We believe in complete honesty and ethical counseling.")
+    },
+    {
+      icon: CheckCircle,
+      title: getContent(blocks, 'whyus.6.title', "Local Presence"),
+      desc: getContent(blocks, 'whyus.6.desc', "Our team in China ensures you have on-ground support whenever you face any challenges.")
+    }
+  ]
 
   return (
     <div className="flex flex-col gap-24 py-16 bg-slate-50">
@@ -77,6 +112,31 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* Why Us Section */}
+      <section className="container">
+        <div className="text-center max-w-4xl mx-auto space-y-6 mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[#0056b3]">
+            {getContent(blocks, 'whyus.hero.title_prefix', "Why Choose")} <span className="text-[#0056b3]">{getContent(blocks, 'whyus.hero.highlight', "Sinoway?")}</span>
+          </h2>
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            {getContent(blocks, 'whyus.hero.desc', "Choosing an education consultant is as important as choosing a university. Here is what sets us apart in the crowded landscape of study abroad agencies.")}
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {reasons.map((reason, i) => (
+            <div key={i} className="bg-white p-8 rounded-3xl border hover:border-[#0056b3] hover:shadow-lg transition-all group">
+              <div className="h-14 w-14 rounded-2xl bg-[#0056b3]/10 shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <reason.icon className="h-7 w-7 text-[#0056b3]" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-[#0056b3]">{reason.title}</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {reason.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Team/Office - Large Image */}
       <section className="container">
         <div className="relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden shadow-xl">
@@ -93,6 +153,23 @@ export default async function AboutPage() {
                  {getContent(blocks, 'about.team.desc', 'Our team consists of former admission officers and alumni from China\'s top universities.')}
                </p>
              </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-[#0056b3] text-white py-20 rounded-3xl mx-4 lg:mx-20">
+        <div className="container text-center space-y-8">
+          <h2 className="text-3xl md:text-4xl font-bold">{getContent(blocks, 'whyus.cta.title', "Ready to experience the difference?")}</h2>
+          <p className="text-white/80 max-w-2xl mx-auto text-lg">
+            {getContent(blocks, 'whyus.cta.desc', "Let us handle the complexities of your application while you focus on your future.")}
+          </p>
+          <div className="flex justify-center gap-4">
+            <Link href="/contact">
+               <Button size="lg" variant="secondary" className="font-bold text-[#0056b3]">
+                 {getContent(blocks, 'whyus.cta.button', "Get Free Consultation")}
+               </Button>
+            </Link>
           </div>
         </div>
       </section>
