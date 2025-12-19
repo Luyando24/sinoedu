@@ -65,6 +65,8 @@ export async function Footer() {
              </div>
           </div>
 
+          <div className="hidden md:block w-[1px] bg-[#0056b3] opacity-30 self-stretch"></div>
+
           {/* Social Icons */}
           <div className="md:w-1/4 flex flex-col items-start md:items-end gap-4">
              <div className="grid grid-cols-2 gap-4">
