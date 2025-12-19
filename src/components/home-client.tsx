@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Users, Clock, Award, Globe, BookOpen, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, Twitter, MessageCircle } from "lucide-react"
+import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play } from "lucide-react"
 import { FadeIn } from "@/components/ui/motion"
 import { motion } from "framer-motion"
 import Link from "next/link"

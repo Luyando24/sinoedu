@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
-import { Facebook, Instagram, Twitter, MessageCircle } from "lucide-react"
+import { Facebook, Instagram, MessageCircle } from "lucide-react"
 
 const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
   if (!blocks) return fallback
