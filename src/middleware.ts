@@ -8,9 +8,22 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const envKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  let supabaseUrl = envUrl ? envUrl.trim() : 'https://example.supabase.co'
+  let supabaseKey = envKey ? envKey.trim() : 'example-key'
+
+  try {
+    new URL(supabaseUrl)
+  } catch {
+    supabaseUrl = 'https://example.supabase.co'
+    supabaseKey = 'example-key'
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         get(name: string) {
