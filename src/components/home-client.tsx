@@ -137,6 +137,9 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
                   </svg>
                 </Link>
+                <Link href="https://www.xiaohongshu.com/user/profile/612b3765000000000101fdd4?xhsshare=userQrCode" target="_blank" rel="noopener noreferrer">
+                  <BookOpen className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                </Link>
               </div>
             </div>
           </div>
