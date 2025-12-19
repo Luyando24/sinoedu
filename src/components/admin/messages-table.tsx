@@ -10,10 +10,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Mail } from "lucide-react"
+import { Search, Mail, Eye } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
 
@@ -32,6 +40,7 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null)
   const supabase = createClient()
 
   const handleStatusChange = async (id: string, newStatus: string) => {
@@ -166,16 +175,26 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <select
-                      className="flex h-8 w-[110px] items-center justify-between rounded-md border border-input bg-background px-2 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      value={msg.status}
-                      onChange={(e) => handleStatusChange(msg.id, e.target.value)}
-                    >
-                      <option value="new">New</option>
-                      <option value="read">Read</option>
-                      <option value="replied">Replied</option>
-                      <option value="archived">Archived</option>
-                    </select>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="View Message"
+                        onClick={() => setSelectedMessage(msg)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <select
+                        className="flex h-8 w-[110px] items-center justify-between rounded-md border border-input bg-background px-2 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={msg.status}
+                        onChange={(e) => handleStatusChange(msg.id, e.target.value)}
+                      >
+                        <option value="new">New</option>
+                        <option value="read">Read</option>
+                        <option value="replied">Replied</option>
+                        <option value="archived">Archived</option>
+                      </select>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -183,6 +202,49 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
           </TableBody>
         </Table>
       </CardContent>
+
+      <Dialog open={!!selectedMessage} onOpenChange={(open) => !open && setSelectedMessage(null)}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Message Details</DialogTitle>
+            <DialogDescription>
+              From {selectedMessage?.first_name} {selectedMessage?.last_name}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedMessage && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="font-bold text-right">Date:</span>
+                <span className="col-span-3">
+                  {format(new Date(selectedMessage.created_at), "PPP p")}
+                </span>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="font-bold text-right">Email:</span>
+                <span className="col-span-3">{selectedMessage.email}</span>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="font-bold text-right">Subject:</span>
+                <span className="col-span-3">{selectedMessage.subject}</span>
+              </div>
+              <div className="grid grid-cols-4 items-start gap-4">
+                <span className="font-bold text-right mt-1">Message:</span>
+                <div className="col-span-3 p-3 bg-muted rounded-md text-sm whitespace-pre-wrap max-h-[300px] overflow-y-auto">
+                  {selectedMessage.message}
+                </div>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="font-bold text-right">Status:</span>
+                <div className="col-span-3">
+                  <Badge variant={getStatusBadgeVariant(selectedMessage.status)}>
+                    {selectedMessage.status}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }
