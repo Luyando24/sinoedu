@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
              
              if (profileError) {
                 console.error("Error fetching profile:", profileError)
-                toast.error("System Error: Could not verify permissions.")
+                toast.error(`System Error: ${profileError.message} (Hint: Run the SQL setup script)`)
                 await supabase.auth.signOut()
                 return
              }
