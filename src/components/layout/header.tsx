@@ -55,8 +55,8 @@ export function Header({ content = [], user }: { content?: ContentBlock[], user?
               />
             </div>
             <div className="hidden flex-col sm:flex">
-              <span className="font-bold text-2xl leading-none text-sky-300 tracking-wide">SINOWAY</span>
-              <div className="text-xs font-medium leading-none text-amber-400 mt-1 flex justify-between w-full">
+              <span className="font-bold text-3xl leading-none text-sky-300 tracking-wide">SINOWAY</span>
+              <div className="text-sm font-medium leading-none text-amber-400 mt-1 flex justify-between w-full">
                 <span>华</span><span>途</span><span>国</span><span>际</span><span>教</span><span>育</span>
               </div>
             </div>
