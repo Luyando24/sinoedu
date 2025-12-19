@@ -115,7 +115,9 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
               <div className="flex gap-4 mt-6">
                 <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
                 <div className="h-6 w-6 border rounded flex items-center justify-center cursor-pointer hover:bg-white/10">VK</div>
-                <Instagram className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                <Link href="https://www.instagram.com/sinowayedu/?utm_source=qr&igsh=MXR4cGs5emdxNGxweg%3D%3D" target="_blank" rel="noopener noreferrer">
+                  <Instagram className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                </Link>
                 <MessageCircle className="h-6 w-6 cursor-pointer hover:text-white/80" />
               </div>
             </div>
@@ -181,32 +183,36 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
           <h2 className="text-white text-3xl font-bold mb-8">Scholarship Program</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Chinese Government Scholarship */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex flex-col">
-              <div className="h-2/3 relative">
-                 <Image src="/images/gallery-6.jpg" alt="Chinese Government Scholarship" fill className="object-cover" />
-              </div>
-              <div className="h-1/3 bg-[#1e5aa0] flex items-center justify-center gap-4 text-white p-4">
-                <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
-                  <span className="text-xl font-bold">¥</span>
+            <Link href="/scholarships#csc" className="block transition-transform hover:scale-105 duration-300">
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex flex-col">
+                <div className="h-2/3 relative">
+                   <Image src="/images/gallery-6.jpg" alt="Chinese Government Scholarship" fill className="object-cover" />
                 </div>
-                <span className="text-xl font-semibold">Chinese Government<br/>Scholarship</span>
+                <div className="h-1/3 bg-[#1e5aa0] flex items-center justify-center gap-4 text-white p-4">
+                  <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
+                    <span className="text-xl font-bold">¥</span>
+                  </div>
+                  <span className="text-xl font-semibold">Chinese Government<br/>Scholarship</span>
+                </div>
               </div>
-            </div>
+            </Link>
 
              {/* Local Government Scholarship */}
-             <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex items-center justify-center relative">
-               <div className="absolute inset-0 opacity-10 flex items-center justify-center">
-                 <div className="w-64 h-64 border-[20px] border-blue-200 rotate-45 rounded-3xl"></div>
-               </div>
-               <div className="flex items-center gap-6 z-10">
-                 <div className="h-20 w-20 bg-[#1e5aa0] rounded-xl flex items-center justify-center shadow-lg text-white">
-                    <span className="text-4xl font-bold">¥</span>
+             <Link href="/scholarships#local" className="block transition-transform hover:scale-105 duration-300">
+               <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex items-center justify-center relative">
+                 <div className="absolute inset-0 opacity-10 flex items-center justify-center">
+                   <div className="w-64 h-64 border-[20px] border-blue-200 rotate-45 rounded-3xl"></div>
                  </div>
-                 <div className="text-[#1e5aa0] text-2xl font-bold">
-                   Local Government<br/>Scholarship
+                 <div className="flex items-center gap-6 z-10">
+                   <div className="h-20 w-20 bg-[#1e5aa0] rounded-xl flex items-center justify-center shadow-lg text-white">
+                      <span className="text-4xl font-bold">¥</span>
+                   </div>
+                   <div className="text-[#1e5aa0] text-2xl font-bold">
+                     Local Government<br/>Scholarship
+                   </div>
                  </div>
-               </div>
-            </div>
+              </div>
+            </Link>
           </div>
         </div>
       </section>
