@@ -35,8 +35,8 @@ export default async function ContactPage() {
                     icon: MapPin, 
                     title: getContent(blocks, 'contact.info.visit.title', "Visit Us"), 
                     details: [
-                      getContent(blocks, 'contact.info.visit.line1', "Level 15, China World Tower B"), 
-                      getContent(blocks, 'contact.info.visit.line2', "Chaoyang District, Beijing, China")
+                      getContent(blocks, 'contact.info.visit.line1', "Room 1201, Building D, Guicheng Garden, Beijing Road"), 
+                      getContent(blocks, 'contact.info.visit.line2', "Haicheng District, Beihai City, Guangxi Province, China")
                     ] 
                   },
                   { 

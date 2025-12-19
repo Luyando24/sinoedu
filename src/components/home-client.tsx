@@ -102,7 +102,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
               <h3 className="text-2xl font-semibold mb-4">Headquarters</h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>Level 15, China World Tower B, Chaoyang District, Beijing, China</p>
+                <p>Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />

@@ -90,8 +90,8 @@ insert into public.content_blocks (key, content, description) values
 ('contact.hero.title', 'Let''s Start Your Journey', 'Contact page title'),
 ('contact.hero.desc', 'Whether you have questions about a specific program or need guidance on the visa process, our dedicated team is here to assist you.', 'Contact page description'),
 ('contact.info.visit.title', 'Visit Us', 'Contact info 1 title'),
-('contact.info.visit.line1', 'Level 15, China World Tower B', 'Contact info 1 line 1'),
-('contact.info.visit.line2', 'Chaoyang District, Beijing, China', 'Contact info 1 line 2'),
+('contact.info.visit.line1', 'Room 1201, Building D, Guicheng Garden, Beijing Road', 'Contact info 1 line 1'),
+('contact.info.visit.line2', 'Haicheng District, Beihai City, Guangxi Province, China', 'Contact info 1 line 2'),
 ('contact.info.email.title', 'Email Us', 'Contact info 2 title'),
 ('contact.info.email.line1', 'admissions@sinoway.com', 'Contact info 2 line 1'),
 ('contact.info.email.line2', 'support@sinoway.com', 'Contact info 2 line 2'),
@@ -165,7 +165,7 @@ insert into public.content_blocks (key, content, description) values
 ('footer.connect.title', 'Connect', 'Footer connect column title'),
 ('footer.connect.email', 'admission@sinoway.com', 'Footer email address'),
 ('footer.connect.phone', '+86 123 456 7890', 'Footer phone number'),
-('footer.connect.address', 'Beijing, China', 'Footer address'),
+('footer.connect.address', 'Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China', 'Footer address'),
 ('footer.copyright', 'Sinoway Education. All rights reserved.', 'Footer copyright text'),
 
 -- HOME PAGE (Remaining)
