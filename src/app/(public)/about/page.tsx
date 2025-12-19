@@ -178,6 +178,26 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* Gallery Section */}
+      <section className="container space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-4">
+          <h2 className="text-3xl font-bold text-[#0056b3]">Our Moments</h2>
+          <p className="text-muted-foreground">Capturing the memories and success stories of our students.</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="relative h-48 md:h-64 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group">
+              <Image
+                src={`/images/about/gallery-${i + 1}.jpg`}
+                alt={`Gallery Image ${i + 1}`}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="bg-[#0056b3] text-white py-20 rounded-3xl mx-4 lg:mx-20">
         <div className="container text-center space-y-8">
