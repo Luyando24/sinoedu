@@ -7,6 +7,12 @@ import { createClient } from "@/lib/supabase/server"
 
 export const dynamic = 'force-dynamic'
 
+const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
+  if (!blocks) return fallback
+  const block = blocks.find(b => b.key === key)
+  return block ? block.content : fallback
+}
+
 export default async function NewsPage() {
   const supabase = createClient()
   
@@ -16,12 +22,14 @@ export default async function NewsPage() {
     .eq('published', true)
     .order('created_at', { ascending: false })
 
+  const { data: blocks } = await supabase.from('content_blocks').select('*')
+
   return (
     <div className="container py-16 space-y-12">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight">Latest News & Updates</h1>
+        <h1 className="text-4xl font-bold tracking-tight">{getContent(blocks, 'news.hero.title', 'Latest News & Updates')}</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Stay informed about scholarships, university updates, and student life in China.
+          {getContent(blocks, 'news.hero.desc', 'Stay informed about scholarships, university updates, and student life in China.')}
         </p>
       </div>
 
@@ -73,8 +81,8 @@ export default async function NewsPage() {
           ))
         ) : (
           <div className="col-span-full text-center py-20 bg-muted/20 rounded-3xl">
-            <h3 className="text-xl font-semibold">No news yet</h3>
-            <p className="text-muted-foreground mt-2">Check back later for the latest updates.</p>
+            <h3 className="text-xl font-semibold">{getContent(blocks, 'news.no_news.title', 'No news yet')}</h3>
+            <p className="text-muted-foreground mt-2">{getContent(blocks, 'news.no_news.desc', 'Check back later for the latest updates.')}</p>
           </div>
         )}
       </div>

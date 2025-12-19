@@ -145,6 +145,37 @@ insert into public.content_blocks (key, content, description) values
 ('universities.header.title', 'Partner Universities', 'Universities page header title'),
 ('universities.header.desc', 'Explore China''s top institutions. We are official representatives for these prestigious universities.', 'Universities page header description'),
 
+-- NEWS PAGE
+('news.hero.title', 'Latest News & Updates', 'News page hero title'),
+('news.hero.desc', 'Stay informed about scholarships, university updates, and student life in China.', 'News page hero description'),
+('news.no_news.title', 'No news yet', 'Title shown when there are no news posts'),
+('news.no_news.desc', 'Check back later for the latest updates.', 'Description shown when there are no news posts'),
+('news.post.back_button', 'Back to News', 'Back button text on single post page'),
+
+-- HEADER
+('header.brand', 'Sinoway Education', 'Brand name in header'),
+('header.nav.login', 'Log in', 'Login button text'),
+('header.nav.apply', 'Apply Now', 'Apply button text'),
+
+-- FOOTER
+('footer.about.title', 'Sinoway Education', 'Footer about section title'),
+('footer.about.desc', 'Empowering global students to achieve academic excellence in China through trusted guidance and expert support.', 'Footer about section description'),
+('footer.services.title', 'Services', 'Footer services column title'),
+('footer.company.title', 'Company', 'Footer company column title'),
+('footer.connect.title', 'Connect', 'Footer connect column title'),
+('footer.connect.email', 'admission@sinoway.com', 'Footer email address'),
+('footer.connect.phone', '+86 10 1234 5678', 'Footer phone number'),
+('footer.connect.address', 'Beijing, China', 'Footer address'),
+('footer.copyright', 'Sinoway Education. All rights reserved.', 'Footer copyright text'),
+
+-- HOME PAGE (Remaining)
+('home.gallery.campus.title', 'Campus Life', 'Home gallery campus title'),
+('home.gallery.education.title', 'Immersive Education', 'Home gallery education title'),
+('home.gallery.education.desc', 'Experience world-class learning facilities.', 'Home gallery education description'),
+('home.gallery.community.title', 'Community', 'Home gallery community title'),
+('home.cta.button.apply', 'Begin Application', 'Home bottom CTA apply button'),
+('home.cta.button.advisor', 'Speak to an Advisor', 'Home bottom CTA advisor button'),
+
 -- PRIVACY PAGE
 ('privacy.title', 'Privacy Policy', 'Privacy page title'),
 ('privacy.subtitle', 'Your privacy is important to us. This document outlines how we handle your personal information.', 'Privacy page subtitle'),

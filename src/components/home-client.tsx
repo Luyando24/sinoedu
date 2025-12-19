@@ -163,7 +163,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
              <div className="flex-1 bg-muted rounded-3xl relative overflow-hidden group">
                 <Image src="/images/gallery-3.jpg" alt="Campus" fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute bottom-0 left-0 p-6 bg-gradient-to-t from-black/80 to-transparent w-full">
-                  <span className="text-white font-bold">Campus Life</span>
+                  <span className="text-white font-bold">{getContent(content, 'home.gallery.campus.title', 'Campus Life')}</span>
                 </div>
              </div>
              <div className="h-1/3 bg-muted rounded-3xl relative overflow-hidden group">
@@ -173,8 +173,8 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
            <div className="w-full md:w-1/3 bg-muted rounded-3xl relative overflow-hidden group">
               <Image src="/images/gallery-1.jpg" alt="Education" fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
               <div className="absolute bottom-0 left-0 p-8 bg-gradient-to-t from-black/80 to-transparent w-full text-white">
-                  <h3 className="text-2xl font-bold mb-2">Immersive Education</h3>
-                  <p className="text-white/80 text-sm">Experience world-class learning facilities.</p>
+                  <h3 className="text-2xl font-bold mb-2">{getContent(content, 'home.gallery.education.title', 'Immersive Education')}</h3>
+                  <p className="text-white/80 text-sm">{getContent(content, 'home.gallery.education.desc', 'Experience world-class learning facilities.')}</p>
               </div>
            </div>
            <div className="w-full md:w-1/3 flex flex-col gap-8">
@@ -184,7 +184,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
              <div className="flex-1 bg-muted rounded-3xl relative overflow-hidden group">
                 <Image src="/images/gallery-5.jpg" alt="Students" fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
                  <div className="absolute bottom-0 left-0 p-6 bg-gradient-to-t from-black/80 to-transparent w-full">
-                  <span className="text-white font-bold">Community</span>
+                  <span className="text-white font-bold">{getContent(content, 'home.gallery.community.title', 'Community')}</span>
                 </div>
              </div>
            </div>
@@ -200,10 +200,10 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button size="lg" variant="secondary" className="h-14 px-8 text-lg rounded-full">
-              Begin Application
+              {getContent(content, 'home.cta.button.apply', 'Begin Application')}
             </Button>
             <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full bg-transparent border-white text-white hover:bg-white hover:text-brand-red">
-              Speak to an Advisor
+              {getContent(content, 'home.cta.button.advisor', 'Speak to an Advisor')}
             </Button>
           </div>
         </div>

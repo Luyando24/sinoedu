@@ -20,7 +20,16 @@ const navigation = [
 
 import Image from "next/image"
 
-export function Header() {
+type ContentBlock = {
+  key: string
+  content: string
+}
+
+const getContent = (blocks: ContentBlock[], key: string, fallback: string) => {
+  return blocks?.find(b => b.key === key)?.content || fallback
+}
+
+export function Header({ content = [] }: { content?: ContentBlock[] }) {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -38,7 +47,7 @@ export function Header() {
               />
             </div>
             <span className="hidden font-bold sm:inline-block">
-              Sinoway Education
+              {getContent(content, 'header.brand', 'Sinoway Education')}
             </span>
           </Link>
         </div>
@@ -64,11 +73,11 @@ export function Header() {
         <div className="hidden md:flex items-center gap-4">
           <Link href="/auth/login">
             <Button variant="ghost" size="sm">
-              Log in
+              {getContent(content, 'header.nav.login', 'Log in')}
             </Button>
           </Link>
           <Link href="/auth/register">
-            <Button size="sm">Apply Now</Button>
+            <Button size="sm">{getContent(content, 'header.nav.apply', 'Apply Now')}</Button>
           </Link>
         </div>
 
@@ -103,11 +112,11 @@ export function Header() {
             <div className="flex flex-col gap-2 pt-4">
               <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start">
-                  Log in
+                  {getContent(content, 'header.nav.login', 'Log in')}
                 </Button>
               </Link>
               <Link href="/auth/register" onClick={() => setMobileMenuOpen(false)}>
-                <Button className="w-full justify-start">Apply Now</Button>
+                <Button className="w-full justify-start">{getContent(content, 'header.nav.apply', 'Apply Now')}</Button>
               </Link>
             </div>
           </nav>
