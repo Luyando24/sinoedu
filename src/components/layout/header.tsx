@@ -43,11 +43,11 @@ export function Header({ content = [] }: { content?: ContentBlock[] }) {
                 src="/images/logo.png"
                 alt="Sinoway Logo"
                 fill
-                className="object-contain brightness-0 invert"
+                className="object-contain"
               />
             </div>
             <span className="hidden font-bold sm:inline-block">
-              {getContent(content, 'header.brand', 'Sinoway Education')}
+              SinowayEdu 华途国际教育
             </span>
           </Link>
         </div>

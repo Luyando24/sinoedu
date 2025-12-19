@@ -30,8 +30,8 @@ export async function Footer() {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-bold text-[#0056b3] text-xl leading-none">SINOWAY</span>
-                  <span className="text-[#0056b3] text-sm tracking-widest">EDUCATION</span>
+                  <span className="font-bold text-[#0056b3] text-xl leading-none">SinowayEdu</span>
+                  <span className="text-[#0056b3] text-sm tracking-widest">华途国际教育</span>
                 </div>
             </Link>
             

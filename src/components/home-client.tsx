@@ -65,8 +65,8 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
         </div>
 
         {/* Text Overlay - Bottom Bar */}
-        <div className="absolute bottom-0 w-full bg-black/70 py-8 z-10">
-          <div className="container flex flex-col items-center text-center text-white space-y-2">
+        <div className="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-4xl bg-black/70 py-8 z-10 md:rounded-t-xl">
+          <div className="flex flex-col items-center text-center text-white space-y-2 px-4">
             <h1 className="text-2xl md:text-4xl font-bold tracking-wide">
               {getContent(content, 'home.hero.title', 'Renowned International Education: Your Study Abroad Expert')}
             </h1>
