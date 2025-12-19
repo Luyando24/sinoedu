@@ -1,5 +1,7 @@
 import Link from "next/link"
+import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
+import { Facebook, Instagram, Twitter, MessageCircle } from "lucide-react"
 
 const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
   if (!blocks) return fallback
@@ -12,42 +14,75 @@ export async function Footer() {
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
   return (
-    <footer className="border-t bg-muted/40">
-      <div className="container py-10 md:py-16">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          <div className="space-y-4">
-            <h4 className="text-lg font-bold">{getContent(blocks, 'footer.about.title', 'Sinoway Education')}</h4>
-            <p className="text-sm text-muted-foreground">
-              {getContent(blocks, 'footer.about.desc', 'Empowering global students to achieve academic excellence in China through trusted guidance and expert support.')}
-            </p>
+    <footer className="bg-white pt-16 pb-8 border-t">
+      <div className="container">
+        <div className="flex flex-col md:flex-row justify-between gap-12">
+          
+          {/* Logo & About Column */}
+          <div className="space-y-6 md:w-1/4">
+            <Link href="/" className="flex items-center space-x-2">
+                <div className="relative h-12 w-12">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Sinoway Logo"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-bold text-[#0056b3] text-xl leading-none">SINOWAY</span>
+                  <span className="text-[#0056b3] text-sm tracking-widest">EDUCATION</span>
+                </div>
+            </Link>
+            
+            <div className="space-y-4">
+              <h4 className="text-[#0056b3] font-bold text-lg">About Sinoway</h4>
+              <ul className="space-y-2 text-sm text-[#0056b3]">
+                <li><Link href="/why-us" className="hover:text-[#0056b3]/80">Why us &rarr;</Link></li>
+                <li><Link href="/partners" className="hover:text-[#0056b3]/80">Our partner &rarr;</Link></li>
+                <li><Link href="/universities" className="hover:text-[#0056b3]/80">Domestic cooperative universities &rarr;</Link></li>
+              </ul>
+            </div>
           </div>
-          <div>
-            <h4 className="mb-4 text-sm font-semibold">{getContent(blocks, 'footer.services.title', 'Services')}</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/services" className="hover:text-primary">University Admissions</Link></li>
-              <li><Link href="/services" className="hover:text-primary">Scholarship Strategy</Link></li>
-              <li><Link href="/services" className="hover:text-primary">Visa & Immigration</Link></li>
+
+          {/* Our Service */}
+          <div className="md:w-1/4">
+            <h4 className="text-[#0056b3] font-bold text-lg mb-6">Our service</h4>
+            <ul className="space-y-2 text-sm text-[#0056b3]">
+              <li><Link href="/services" className="hover:text-[#0056b3]/80">University application</Link></li>
+              <li><Link href="/services" className="hover:text-[#0056b3]/80">Airport pick up</Link></li>
+              <li><Link href="/programs" className="hover:text-[#0056b3]/80">Short-term study abroad</Link></li>
             </ul>
           </div>
-          <div>
-            <h4 className="mb-4 text-sm font-semibold">{getContent(blocks, 'footer.company.title', 'Company')}</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/about" className="hover:text-primary">Our Story</Link></li>
-              <li><Link href="/contact" className="hover:text-primary">Get in Touch</Link></li>
-              <li><Link href="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
-            </ul>
+
+          {/* Contact US */}
+          <div className="md:w-1/4">
+             <h4 className="text-[#0056b3] font-bold text-lg mb-6">Contact US</h4>
+             <div className="space-y-2 text-sm text-[#0056b3]">
+               <p><span className="font-semibold">Address:</span> {getContent(blocks, 'footer.connect.address', 'Room 705 Energy+Center, No. 103 Chaoyang North Road, Chaoyang District, Beijing')}</p>
+               <p><span className="font-semibold">Phone:</span> {getContent(blocks, 'footer.connect.phone', '(86)18511316867')}</p>
+               <p><span className="font-semibold">E-mail:</span> {getContent(blocks, 'footer.connect.email', 'bjmygj@126.com')}</p>
+             </div>
           </div>
-          <div>
-            <h4 className="mb-4 text-sm font-semibold">{getContent(blocks, 'footer.connect.title', 'Connect')}</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>{getContent(blocks, 'footer.connect.email', 'admission@sinoway.com')}</li>
-              <li>{getContent(blocks, 'footer.connect.phone', '+86 123 456 7890')}</li>
-              <li>{getContent(blocks, 'footer.connect.address', 'Beijing, China')}</li>
-            </ul>
+
+          {/* Social Icons */}
+          <div className="md:w-1/4 flex flex-col items-start md:items-end gap-4">
+             <div className="grid grid-cols-2 gap-4">
+                <Link href="#" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
+                  <Facebook className="h-8 w-8" />
+                </Link>
+                <Link href="#" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
+                  <div className="font-bold text-xl">VK</div>
+                </Link>
+                <Link href="#" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
+                  <Instagram className="h-8 w-8" />
+                </Link>
+                <Link href="#" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
+                  <MessageCircle className="h-8 w-8" />
+                </Link>
+             </div>
           </div>
-        </div>
-        <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} {getContent(blocks, 'footer.copyright', 'Sinoway Education. All rights reserved.')}
+
         </div>
       </div>
     </footer>

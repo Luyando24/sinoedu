@@ -2,10 +2,10 @@
 
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Users, Clock, Award, Globe, BookOpen } from "lucide-react"
+import { Users, Clock, Award, Globe, BookOpen, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, Twitter, MessageCircle } from "lucide-react"
 import { FadeIn } from "@/components/ui/motion"
 import { motion } from "framer-motion"
-import { HeroSearchForm } from "@/components/HeroSearchForm"
+import Link from "next/link"
 
 type ContentBlock = {
   key: string
@@ -17,197 +17,317 @@ const getContent = (blocks: ContentBlock[], key: string, fallback: string) => {
 }
 
 export function HomeClient({ content }: { content: ContentBlock[] }) {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
-    <div className="flex flex-col gap-20 pb-20">
+    <div className="flex flex-col gap-12 md:gap-20 pb-20 bg-slate-50">
       {/* Hero Section */}
-      <section className="relative min-h-[600px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <motion.div
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="relative w-full h-full"
-          >
-            <Image
-              src="/images/gallery-5.jpg"
-              alt="Students in China"
-              fill
-              className="object-cover"
-              priority
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-red via-brand-red/70 to-transparent" />
-          <div className="absolute inset-0 bg-black/10" />
+          <Image
+            src="/images/gallery-5.jpg"
+            alt="MIE Group Team"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
 
-        <div className="container relative z-10 flex flex-col items-center text-center space-y-8 pt-20 pb-32">
-
-          <FadeIn delay={0.4}>
-            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl max-w-4xl drop-shadow-sm">
-              {getContent(content, 'home.hero.title', 'Your Trusted Partner for')} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300">
-                {getContent(content, 'home.hero.subtitle', 'Studying in China')}
-              </span>
+        {/* Text Overlay - Bottom Bar */}
+        <div className="absolute bottom-0 w-full bg-black/70 py-8 z-10">
+          <div className="container flex flex-col items-center text-center text-white space-y-2">
+            <h1 className="text-2xl md:text-4xl font-bold tracking-wide">
+              {getContent(content, 'home.hero.title', 'Renowned International Education: Your Study Abroad Expert')}
             </h1>
-          </FadeIn>
-
-          <FadeIn delay={0.6}>
-            <p className="text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed drop-shadow-sm">
-              {getContent(content, 'home.hero.description', 'From application to arrival, your gateway to top universities.')}
+            <p className="text-sm md:text-base text-white/90 font-light">
+              {getContent(content, 'home.hero.subtitle', 'Professional team, professional service, making study in China simpler.')}
             </p>
-          </FadeIn>
-
-          <FadeIn delay={0.9} fullWidth>
-            <HeroSearchForm />
-          </FadeIn>
-
+          </div>
         </div>
+
+        {/* TOP Button */}
+        <button 
+          onClick={scrollToTop}
+          className="absolute bottom-20 right-4 md:bottom-24 md:right-12 z-20 bg-[#2d74c4] hover:bg-[#2d74c4]/90 text-white w-12 h-14 md:w-14 md:h-16 flex flex-col items-center justify-center rounded shadow-lg transition-colors"
+        >
+          <ArrowUp className="h-5 w-5 md:h-6 md:w-6 mb-1" />
+          <span className="text-[10px] md:text-xs font-bold">TOP</span>
+        </button>
       </section>
 
-      {/* About Section - New Layout (Image Left, Text Right) & Copy */}
+      {/* MIE Group Section */}
       <section className="container">
-        <div className="flex flex-col md:flex-row gap-16 items-center">
-          <FadeIn direction="right" className="w-full md:w-1/2">
-             <div className="relative h-[600px] w-full rounded-tr-[100px] rounded-bl-[100px] overflow-hidden shadow-2xl">
-              <Image
-                src="/images/gallery-2.jpg"
-                alt="Sinoway Team"
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
-              />
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">MIE Group</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Beijing Company */}
+          <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
+            {/* Background Image Overlay */}
+             <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
+               <Image src="/images/gallery-1.jpg" alt="Beijing" fill className="object-cover object-bottom" />
+             </div>
+            <div className="relative z-10 space-y-4">
+              <h3 className="text-2xl font-semibold mb-4">Beijing Company</h3>
+              <div className="flex gap-3 items-start text-sm">
+                <MapPin className="h-5 w-5 shrink-0 mt-1" />
+                <p>Room 705 Energy+Center, No. 103 Chaoyang North Road, Chaoyang District, Beijing</p>
+              </div>
+              <div className="flex gap-3 items-center text-sm">
+                <Phone className="h-5 w-5 shrink-0" />
+                <p>+86 18511316867</p>
+              </div>
+              <div className="flex gap-3 items-center text-sm">
+                <Mail className="h-5 w-5 shrink-0" />
+                <p>bjmygj@126.com</p>
+              </div>
+              <div className="flex gap-4 mt-6">
+                <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                <div className="h-6 w-6 border rounded flex items-center justify-center cursor-pointer hover:bg-white/10">VK</div>
+                <Instagram className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                <MessageCircle className="h-6 w-6 cursor-pointer hover:text-white/80" />
+              </div>
             </div>
-          </FadeIn>
+          </div>
 
-          <FadeIn direction="left" className="w-full md:w-1/2 space-y-8">
-            <div className="space-y-4">
-              <h2 className="text-4xl font-bold tracking-tight text-foreground">
-                {getContent(content, 'home.about.title', 'Unlocking Global')} <span className="text-brand-red">{getContent(content, 'home.about.highlight', 'Opportunities')}</span>
-              </h2>
-              <p className="text-lg text-muted-foreground leading-loose">
-                {getContent(content, 'home.about.description', 'At Sinoway Education, we don\'t just process applications; we architect futures. As a premier consultancy, we specialize in navigating the complex landscape of Chinese higher education for ambitious international students.')}
-              </p>
+          {/* Moscow Company */}
+          <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
+             <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
+               <Image src="/images/gallery-2.jpg" alt="Moscow" fill className="object-cover object-bottom" />
+             </div>
+            <div className="relative z-10 space-y-4">
+              <h3 className="text-2xl font-semibold mb-4">Moscow Company</h3>
+              <div className="flex gap-3 items-start text-sm">
+                <MapPin className="h-5 w-5 shrink-0 mt-1" />
+                <p>Kurskaya Metro Station, Office 421, 4th floor, Zemlyanoi Val 8, Moscow, Russia</p>
+              </div>
+              <div className="flex gap-3 items-center text-sm">
+                <Phone className="h-5 w-5 shrink-0" />
+                <p>+78005059816; +79231440095</p>
+              </div>
+              <div className="flex gap-3 items-center text-sm">
+                <Mail className="h-5 w-5 shrink-0" />
+                <p>Mingyang.moscow@gmail.com</p>
+              </div>
+              <div className="flex gap-3 items-center text-sm mt-4">
+                <Globe className="h-5 w-5 shrink-0" />
+                <p>www.mingyang.ru</p>
+              </div>
             </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-               <div className="flex flex-col gap-2">
-                 <div className="h-10 w-10 rounded-full bg-brand-red/10 flex items-center justify-center">
-                   <Globe className="h-5 w-5 text-brand-red" />
-                 </div>
-                 <h4 className="font-bold text-lg">{getContent(content, 'home.about.feature1.title', 'Global Network')}</h4>
-                 <p className="text-sm text-muted-foreground">{getContent(content, 'home.about.feature1.desc', 'Connecting you with 100+ top-tier universities across China.')}</p>
-               </div>
-               <div className="flex flex-col gap-2">
-                 <div className="h-10 w-10 rounded-full bg-brand-red/10 flex items-center justify-center">
-                   <BookOpen className="h-5 w-5 text-brand-red" />
-                 </div>
-                 <h4 className="font-bold text-lg">{getContent(content, 'home.about.feature2.title', 'Scholarship Focus')}</h4>
-                 <p className="text-sm text-muted-foreground">{getContent(content, 'home.about.feature2.desc', 'Dedicated team securing full and partial funding for 95% of students.')}</p>
-               </div>
-            </div>
+          </div>
 
-            <Button size="lg" className="rounded-full px-8">
-              {getContent(content, 'home.about.cta', 'Discover Our Story')}
-            </Button>
-          </FadeIn>
+          {/* Bucheon, Korea */}
+          <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
+             <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
+               <Image src="/images/gallery-3.jpg" alt="Korea" fill className="object-cover object-bottom" />
+             </div>
+            <div className="relative z-10 space-y-4">
+              <h3 className="text-2xl font-semibold mb-4">Bucheon, Korea</h3>
+              <div className="flex gap-3 items-start text-sm">
+                <MapPin className="h-5 w-5 shrink-0 mt-1" />
+                <p>90, Jungdong-ro 254beon-gil, Wonmi-gu, Bucheon-si, Gyeonggi-do, Korea</p>
+              </div>
+              <div className="flex gap-3 items-center text-sm">
+                <Phone className="h-5 w-5 shrink-0" />
+                <p>+82 10 4397 9330</p>
+              </div>
+              <div className="flex gap-3 items-center text-sm">
+                <Mail className="h-5 w-5 shrink-0" />
+                <p>th0610@naver.com</p>
+              </div>
+              <div className="flex gap-3 items-start text-sm mt-4">
+                <Globe className="h-5 w-5 shrink-0 mt-1" />
+                <p className="break-all">https://m.blog.naver.com/miestudyinchina/223654638181</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Stats Section - New */}
-      <section className="bg-brand-blue py-16 text-white">
-        <div className="container grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { label: getContent(content, 'home.stats.1.label', "Partner Universities"), value: getContent(content, 'home.stats.1.value', "50+") },
-            { label: getContent(content, 'home.stats.2.label', "Students Placed"), value: getContent(content, 'home.stats.2.value', "2,000+") },
-            { label: getContent(content, 'home.stats.3.label', "Scholarships Awarded"), value: getContent(content, 'home.stats.3.value', "$5M+") },
-            { label: getContent(content, 'home.stats.4.label', "Success Rate"), value: getContent(content, 'home.stats.4.value', "98%") },
-          ].map((stat, i) => (
-            <div key={i} className="space-y-2">
-              <h3 className="text-4xl md:text-5xl font-bold text-brand-hero">{stat.value}</h3>
-              <p className="text-white/80 font-medium">{stat.label}</p>
+      {/* Scholarship Program */}
+      <section className="bg-[#2d74c4] py-16">
+        <div className="container">
+          <h2 className="text-white text-3xl font-bold mb-8">Scholarship Program</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Chinese Government Scholarship */}
+            <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex flex-col">
+              <div className="h-2/3 relative">
+                 <Image src="/images/gallery-6.jpg" alt="Chinese Government Scholarship" fill className="object-cover" />
+              </div>
+              <div className="h-1/3 bg-[#1e5aa0] flex items-center justify-center gap-4 text-white p-4">
+                <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
+                  <span className="text-xl font-bold">¥</span>
+                </div>
+                <span className="text-xl font-semibold">Chinese Government<br/>Scholarship</span>
+              </div>
             </div>
-          ))}
+
+             {/* Local Government Scholarship */}
+             <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex items-center justify-center relative">
+               <div className="absolute inset-0 opacity-10 flex items-center justify-center">
+                 <div className="w-64 h-64 border-[20px] border-blue-200 rotate-45 rounded-3xl"></div>
+               </div>
+               <div className="flex items-center gap-6 z-10">
+                 <div className="h-20 w-20 bg-[#1e5aa0] rounded-xl flex items-center justify-center shadow-lg text-white">
+                    <span className="text-4xl font-bold">¥</span>
+                 </div>
+                 <div className="text-[#1e5aa0] text-2xl font-bold">
+                   Local Government<br/>Scholarship
+                 </div>
+               </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Services/Features - New Layout (Horizontal Cards) */}
-      <section className="container py-8">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="text-3xl font-bold">{getContent(content, 'home.services.title', 'The Sinoway Advantage')}</h2>
-          <p className="text-muted-foreground">{getContent(content, 'home.services.subtitle', 'Comprehensive support designed for your success.')}</p>
+      {/* University Application */}
+      <section className="container">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-[#0056b3] text-3xl font-bold">University application</h2>
+          <Link href="/universities" className="text-[#0056b3] font-bold text-lg hover:underline">MORE+</Link>
         </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {[
-             { icon: Users, title: getContent(content, 'home.services.1.title', "Expert Guidance"), desc: getContent(content, 'home.services.1.desc', "Our counselors are alumni of Chinese universities, offering firsthand insights.") },
-             { icon: Clock, title: getContent(content, 'home.services.2.title', "Rapid Processing"), desc: getContent(content, 'home.services.2.desc', "Optimized workflows ensure your application moves faster than standard channels.") },
-             { icon: Award, title: getContent(content, 'home.services.3.title', "Elite Partnerships"), desc: getContent(content, 'home.services.3.desc', "Direct lines of communication with admissions offices at prestige institutions.") },
-           ].map((feature, i) => (
-             <div key={i} className="group relative bg-muted/20 p-8 rounded-3xl hover:bg-brand-red hover:text-white transition-all duration-300">
-               <div className="mb-6 inline-block p-4 rounded-2xl bg-white text-brand-red shadow-sm group-hover:bg-white/10 group-hover:text-white">
-                 <feature.icon className="h-8 w-8" />
+             { name: "Tsinghua University", img: "/images/gallery-10.jpg", desc: "Renowned for its outstanding engineering programs and rich historical and cultural heritage, offers a wealth of academic resources." },
+             { name: "Shanghai University", img: "/images/gallery-11.jpg", desc: "Recognized for its comprehensive academic disciplines and vibrant international community, is known for its strong emphasis on global perspectives." },
+             { name: "Peking University", img: "/images/gallery-9.jpg", desc: "A major Chinese research university in Beijing and a member of the C9 League. It is colloquially known as Beida." },
+           ].map((uni, i) => (
+             <div key={i} className="bg-white shadow-lg rounded-none overflow-hidden group hover:shadow-xl transition-shadow">
+               <div className="h-64 relative overflow-hidden">
+                 <Image src={uni.img} alt={uni.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                </div>
-               <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-               <p className="text-muted-foreground group-hover:text-white/90 leading-relaxed">
-                 {feature.desc}
-               </p>
+               <div className="p-6 bg-slate-100 min-h-[200px]">
+                 <h3 className="text-xl font-bold mb-4 text-black">{uni.name}</h3>
+                 <p className="text-sm text-gray-600 leading-relaxed">{uni.desc}</p>
+               </div>
              </div>
            ))}
         </div>
       </section>
 
-      {/* Gallery - New Layout (Masonry-ish) */}
+      {/* Short-term Study Tour */}
       <section className="container">
-         <div className="flex flex-col md:flex-row gap-8 h-[600px]">
-           <div className="w-full md:w-1/3 flex flex-col gap-8">
-             <div className="flex-1 bg-muted rounded-3xl relative overflow-hidden group">
-                <Image src="/images/gallery-3.jpg" alt="Campus" fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute bottom-0 left-0 p-6 bg-gradient-to-t from-black/80 to-transparent w-full">
-                  <span className="text-white font-bold">{getContent(content, 'home.gallery.campus.title', 'Campus Life')}</span>
-                </div>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">Short-term Study Tour</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column */}
+          <div className="flex flex-col gap-6">
+             {/* Academic Experience */}
+             <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col sm:flex-row gap-6 items-center">
+               <div className="w-full sm:w-1/2 h-48 relative rounded-lg overflow-hidden shrink-0">
+                 <Image src="/images/gallery-4.jpg" alt="Academic Experience" fill className="object-cover" />
+               </div>
+               <div className="space-y-2">
+                 <h3 className="text-[#0056b3] font-bold text-lg">Academic Experience:</h3>
+                 <p className="text-sm text-gray-600">Visiting prestigious universities, broaden international perspectives, enhance intercultural communication skills.</p>
+               </div>
              </div>
-             <div className="h-1/3 bg-muted rounded-3xl relative overflow-hidden group">
-                <Image src="/images/gallery-6.jpg" alt="Culture" fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-             </div>
-           </div>
-           <div className="w-full md:w-1/3 bg-muted rounded-3xl relative overflow-hidden group">
-              <Image src="/images/gallery-1.jpg" alt="Education" fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-              <div className="absolute bottom-0 left-0 p-8 bg-gradient-to-t from-black/80 to-transparent w-full text-white">
-                  <h3 className="text-2xl font-bold mb-2">{getContent(content, 'home.gallery.education.title', 'Immersive Education')}</h3>
-                  <p className="text-white/80 text-sm">{getContent(content, 'home.gallery.education.desc', 'Experience world-class learning facilities.')}</p>
-              </div>
-           </div>
-           <div className="w-full md:w-1/3 flex flex-col gap-8">
-             <div className="h-1/3 bg-muted rounded-3xl relative overflow-hidden group">
-                <Image src="/images/gallery-4.jpg" alt="Graduation" fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-             </div>
-             <div className="flex-1 bg-muted rounded-3xl relative overflow-hidden group">
-                <Image src="/images/gallery-5.jpg" alt="Students" fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
-                 <div className="absolute bottom-0 left-0 p-6 bg-gradient-to-t from-black/80 to-transparent w-full">
-                  <span className="text-white font-bold">{getContent(content, 'home.gallery.community.title', 'Community')}</span>
-                </div>
-             </div>
-           </div>
-         </div>
-      </section>
 
-      {/* CTA - New Layout (Full Width) */}
-      <section className="bg-brand-red text-white py-24 mt-12">
-        <div className="container text-center space-y-8">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">{getContent(content, 'home.cta.title', 'Your Future Starts Here')}</h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
-            {getContent(content, 'home.cta.subtitle', 'Join the ranks of successful graduates who transformed their lives through education in China.')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button size="lg" variant="secondary" className="h-14 px-8 text-lg rounded-full">
-              {getContent(content, 'home.cta.button.apply', 'Begin Application')}
-            </Button>
-            <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full bg-transparent border-white text-white hover:bg-white hover:text-brand-red">
-              {getContent(content, 'home.cta.button.advisor', 'Speak to an Advisor')}
-            </Button>
+             {/* Cultural Perception */}
+             <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col sm:flex-row gap-6 items-center">
+               <div className="w-full sm:w-1/2 h-48 relative rounded-lg overflow-hidden shrink-0">
+                 <Image src="/images/gallery-7.jpg" alt="Cultural Perception" fill className="object-cover" />
+               </div>
+               <div className="space-y-2">
+                 <h3 className="text-[#0056b3] font-bold text-lg">Cultural Perception:</h3>
+                 <p className="text-sm text-gray-600">Immersive experience in traditional Chinese culture and arts, visiting historical sites and monuments, understand Chinese history.</p>
+               </div>
+             </div>
+          </div>
+
+          {/* Right Column - Language Study */}
+          <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col gap-4">
+             <div className="w-full h-[300px] lg:h-[400px] relative rounded-lg overflow-hidden">
+               <Image src="/images/gallery-8.jpg" alt="Language study" fill className="object-cover" />
+             </div>
+             <div className="p-2 space-y-2">
+               <h3 className="text-[#0056b3] font-bold text-lg">Language study:</h3>
+               <p className="text-sm text-gray-600">Incorporating Chinese language learning with practical activities, familiarize students with HSK examination, explore the charm of language</p>
+             </div>
           </div>
         </div>
       </section>
+
+      {/* Cityscape */}
+      <section className="container">
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">Cityscape</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+           {[
+             { city: "Beijing", img: "/images/gallery-1.jpg" },
+             { city: "Shanghai", img: "/images/gallery-2.jpg" },
+             { city: "Guangzhou", img: "/images/gallery-3.jpg" },
+           ].map((item, i) => (
+             <div key={i} className="bg-white shadow-md rounded-lg overflow-hidden">
+               <div className="h-64 relative">
+                 <Image src={item.img} alt={item.city} fill className="object-cover" />
+               </div>
+               <div className="p-4 bg-gray-100 flex justify-between items-center">
+                 <span className="text-lg font-medium">{item.city}</span>
+                 <Button size="sm" className="bg-[#1e5aa0] hover:bg-[#1e5aa0]/90 text-white font-bold px-6 rounded">CHINA</Button>
+               </div>
+             </div>
+           ))}
+        </div>
+      </section>
+
+      {/* Application Process */}
+      <section className="container py-8">
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-12">Application Process</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+          {[
+            { 
+              icon: HelpCircle, 
+              title: "Assessment", 
+              desc: "Identify the student's needs, initially grasp the student's academic situation and application information" 
+            },
+            { 
+              icon: Target, 
+              title: "Counseling", 
+              desc: "Develop a strategy, guide the student in preparing application materials" 
+            },
+            { 
+              icon: Clock, 
+              title: "Submission", 
+              desc: "Submit applications, track application status, and promptly supplement materials" 
+            },
+            { 
+              icon: CheckCircle, 
+              title: "Enrollment", 
+              desc: "Obtain admission results, Interpret the admission notification and pay the required fees" 
+            }
+          ].map((step, i, arr) => (
+            <div key={i} className="flex flex-col items-center text-center relative group">
+              <div className="w-24 h-24 rounded-full border-[3px] border-[#0056b3] flex items-center justify-center mb-6 bg-white z-10">
+                <step.icon className="h-12 w-12 text-[#0056b3]" strokeWidth={1.5} />
+              </div>
+              {i < arr.length - 1 && (
+                <div className="hidden md:block absolute top-12 left-1/2 w-full z-0">
+                  <div className="flex items-center justify-center w-full pl-12">
+                     <Play className="h-6 w-6 text-[#0056b3] fill-[#0056b3]" />
+                  </div>
+                </div>
+              )}
+              <h3 className="text-[#0056b3] text-xl font-bold mb-4">{step.title}</h3>
+              <p className="text-sm text-[#0056b3]/80 leading-relaxed max-w-[200px]">
+                {step.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Journey Banner */}
+      <section className="relative h-[250px] w-full overflow-hidden bg-[#0056b3] flex items-center justify-center">
+        <div className="absolute inset-0 opacity-20">
+          <Image src="/images/gallery-5.jpg" alt="Background" fill className="object-cover" />
+        </div>
+        <div className="relative z-10 flex items-center gap-8 w-full container justify-center">
+           <div className="h-px bg-white/50 w-24 md:w-64"></div>
+           <h2 className="text-2xl md:text-4xl font-bold text-white tracking-wide text-center">Journey to China starts here</h2>
+           <div className="h-px bg-white/50 w-24 md:w-64"></div>
+        </div>
+      </section>
+
     </div>
   )
 }

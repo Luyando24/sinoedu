@@ -34,7 +34,7 @@ export function Header({ content = [] }: { content?: ContentBlock[] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-[#0056b3] text-white">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
@@ -43,7 +43,7 @@ export function Header({ content = [] }: { content?: ContentBlock[] }) {
                 src="/images/logo.png"
                 alt="Sinoway Logo"
                 fill
-                className="object-contain"
+                className="object-contain brightness-0 invert"
               />
             </div>
             <span className="hidden font-bold sm:inline-block">
@@ -59,10 +59,10 @@ export function Header({ content = [] }: { content?: ContentBlock[] }) {
               key={item.href}
               href={item.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
+                "text-sm font-medium transition-colors hover:text-white/80",
                 pathname === item.href
-                  ? "text-foreground"
-                  : "text-muted-foreground"
+                  ? "text-white font-bold border-b-2 border-white pb-1"
+                  : "text-white/90"
               )}
             >
               {item.name}
@@ -72,18 +72,20 @@ export function Header({ content = [] }: { content?: ContentBlock[] }) {
 
         <div className="hidden md:flex items-center gap-4">
           <Link href="/auth/login">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 hover:text-white">
               {getContent(content, 'header.nav.login', 'Log in')}
             </Button>
           </Link>
           <Link href="/auth/register">
-            <Button size="sm">{getContent(content, 'header.nav.apply', 'Apply Now')}</Button>
+            <Button size="sm" className="bg-white text-[#0056b3] hover:bg-white/90">
+              {getContent(content, 'header.nav.apply', 'Apply Now')}
+            </Button>
           </Link>
         </div>
 
         {/* Mobile Menu Toggle */}
         <button
-          className="flex items-center space-x-2 md:hidden"
+          className="flex items-center space-x-2 md:hidden text-white"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X /> : <Menu />}
