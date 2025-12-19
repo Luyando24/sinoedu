@@ -6,7 +6,6 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play } from "lucide-react"
 import Link from "next/link"
-import { HeroSearchForm } from "./HeroSearchForm"
 
 const SLIDER_IMAGES = [
   "/images/sliders/slider-1.jpg",
@@ -66,18 +65,16 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
         </div>
 
         {/* Text Overlay & Search */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center pb-4">
-          <div className="flex-1 flex flex-col justify-center items-center container px-4 text-center space-y-6">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide text-white drop-shadow-lg">
-              {getContent(content, 'home.hero.title_new', 'Study in China')}
-            </h1>
-            <p className="text-base md:text-xl text-white/90 font-light max-w-2xl mx-auto drop-shadow-md">
-              {getContent(content, 'home.hero.subtitle_long', 'Professional team, professional service, making study in China simpler.')}
-            </p>
-          </div>
-            
-          <div className="w-full max-w-5xl mx-auto px-4">
-            <HeroSearchForm />
+        <div className="absolute inset-0 z-10 flex flex-col justify-end items-center pb-2 md:pb-4">
+          <div className="w-full max-w-4xl mx-auto px-4">
+            <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 text-center space-y-4">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide text-white drop-shadow-lg">
+                {getContent(content, 'home.hero.title_new', 'Study in China')}
+              </h1>
+              <p className="text-base md:text-xl text-white/90 font-light max-w-2xl mx-auto drop-shadow-md">
+                {getContent(content, 'home.hero.subtitle_long', 'Professional team, professional service, making study in China simpler.')}
+              </p>
+            </div>
           </div>
         </div>
 
