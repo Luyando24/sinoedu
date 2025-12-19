@@ -11,6 +11,7 @@ const getContent = (blocks: { key: string; content: string }[] | null, key: stri
   const block = blocks.find(b => b.key === key)
   return block ? block.content : fallback
 }
+import { ContactForm } from "@/components/contact/contact-form"
 
 export default async function ContactPage() {
   const supabase = createClient()
@@ -35,24 +36,22 @@ export default async function ContactPage() {
                     icon: MapPin, 
                     title: getContent(blocks, 'contact.info.visit.title', "Visit Us"), 
                     details: [
-                      getContent(blocks, 'contact.info.visit.line1', "Room 1201, Building D, Guicheng Garden, Beijing Road"), 
-                      getContent(blocks, 'contact.info.visit.line2', "Haicheng District, Beihai City, Guangxi Province, China")
+                      getContent(blocks, 'contact.info.visit.line1.v2', "Room 1201, Building D, Guicheng Garden, Beijing Road"), 
+                      getContent(blocks, 'contact.info.visit.line2.v2', "Haicheng District, Beihai City, Guangxi Province, China")
                     ] 
                   },
                   { 
                     icon: Mail, 
                     title: getContent(blocks, 'contact.info.email.title', "Email Us"), 
                     details: [
-                      getContent(blocks, 'contact.info.email.line1', "info@sinowayedu.com"), 
-                      getContent(blocks, 'contact.info.email.line2', "info@sinowayedu.com")
+                      getContent(blocks, 'contact.info.email.line1.v2', "info@sinowayedu.com")
                     ] 
                   },
                   { 
                     icon: Phone, 
                     title: getContent(blocks, 'contact.info.phone.title', "Call Us"), 
                     details: [
-                      getContent(blocks, 'contact.info.phone.line1', "+8613601965441"), 
-                      getContent(blocks, 'contact.info.phone.line2', "Mon-Fri, 9am - 6pm CST")
+                      getContent(blocks, 'contact.info.phone.line1.v2', "+8613601965441")
                     ] 
                   },
                 ].map((item, i) => (
@@ -74,40 +73,7 @@ export default async function ContactPage() {
            {/* Right: Clean Form */}
            <div className="bg-white p-8 md:p-10 rounded-3xl border shadow-lg">
              <h3 className="text-2xl font-bold mb-6 text-[#0056b3]">{getContent(blocks, 'contact.form.title', "Send a Message")}</h3>
-             <form className="space-y-5">
-               <div className="grid sm:grid-cols-2 gap-4">
-                 <div className="space-y-2">
-                   <label className="text-sm font-medium">First Name</label>
-                   <Input placeholder="John" className="bg-slate-50" />
-                 </div>
-                 <div className="space-y-2">
-                   <label className="text-sm font-medium">Last Name</label>
-                   <Input placeholder="Doe" className="bg-slate-50" />
-                 </div>
-               </div>
-               
-               <div className="space-y-2">
-                 <label className="text-sm font-medium">Email Address</label>
-                 <Input type="email" placeholder="john@example.com" className="bg-slate-50" />
-               </div>
-
-               <div className="space-y-2">
-                 <label className="text-sm font-medium">Subject</label>
-                 <select className="flex h-10 w-full rounded-md border border-input bg-slate-50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                   <option>General Inquiry</option>
-                   <option>Admissions</option>
-                   <option>Partnerships</option>
-                   <option>Support</option>
-                 </select>
-               </div>
-
-               <div className="space-y-2">
-                 <label className="text-sm font-medium">Message</label>
-                 <Textarea placeholder="How can we help you?" className="min-h-[150px] bg-slate-50" />
-               </div>
-
-               <Button size="lg" className="w-full bg-[#0056b3] hover:bg-[#0056b3]/90">Send Message</Button>
-             </form>
+             <ContactForm />
            </div>
         </div>
       </div>
