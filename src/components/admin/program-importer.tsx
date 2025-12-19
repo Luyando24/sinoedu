@@ -60,7 +60,7 @@ export function ProgramImporter() {
       {
         title: "MBA",
         university: "Beijing Language and Culture University",
-        level: "Masters",
+        level: "Master",
         location: "Beijing",
         duration: "2 Years",
         tuition_fee: "30,000 RMB/Year",

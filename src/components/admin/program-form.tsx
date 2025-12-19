@@ -214,10 +214,17 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <option value="Bachelor">Bachelor</option>
-              <option value="Masters">Masters</option>
-              <option value="PhD">PhD</option>
+              <option value="Master">Master</option>
+              <option value="Doctor">Doctor</option>
+              <option value="Short-term Language">Short-term Language</option>
+              <option value="Long-term Language">Long-term Language</option>
+              <option value="College">College</option>
               <option value="High School">High School</option>
-              <option value="Language">Language Program</option>
+              <option value="Senior high school">Senior high school</option>
+              <option value="Secondary Vocational Education">Secondary Vocational Education</option>
+              <option value="Masters">Masters (Legacy)</option>
+              <option value="PhD">PhD (Legacy)</option>
+              <option value="Language">Language Program (Legacy)</option>
             </select>
           </div>
           <div className="space-y-2">

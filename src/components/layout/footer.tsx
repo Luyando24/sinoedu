@@ -66,7 +66,7 @@ export async function Footer() {
           </div>
 
           {/* Social Icons */}
-          <div className="md:w-1/4 flex flex-col items-start md:items-end gap-4">
+          <div className="md:w-1/4 flex flex-col items-start md:items-end gap-4 md:pl-8">
              <div className="grid grid-cols-2 gap-4">
                 <Link href="https://www.facebook.com/share/1DPPMYfmyZ/" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
                   <Facebook className="h-8 w-8" />
