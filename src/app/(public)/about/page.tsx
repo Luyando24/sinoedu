@@ -53,7 +53,7 @@ export default async function AboutPage() {
   const galleryImages = [
     ...Array.from({ length: 5 }, (_, i) => `/images/about/about-${i + 1}.jpg`),
     ...Array.from({ length: 10 }, (_, i) => `/images/about/gallery-${i + 1}.jpg`),
-    ...Array.from({ length: 7 }, (_, i) => `/images/about/gallery-${i + 11}.png`),
+    ...Array.from({ length: 5 }, (_, i) => `/images/about/gallery-${i + 11}.png`),
   ]
 
   return (
