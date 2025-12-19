@@ -79,7 +79,7 @@ export default async function AboutPage() {
                 Steven Yang
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                {getContent(blocks, 'about.hero.description', 'Founded on the belief that education knows no borders, Sinoway Education has evolved from a small consultancy to a leading authority in Sino-international student exchange. We are more than agents; we are mentors, strategists, and your first family in a new land.')}
+                {getContent(blocks, 'about.hero.description', "As the founder of Sinoway Edu, I’ve steered our team in empowering international students to pursue studies in China since 2018. With nearly 8 years of dedicated experience in cross-border education consulting, we’ve forged partnerships with over 600 prestigious Chinese universities and supported more than 15,000 students in their study-in-China journey.")}
               </p>
             </div>
             <div className="grid grid-cols-2 gap-6">
