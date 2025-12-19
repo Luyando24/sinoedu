@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { CheckCircle, Award, GraduationCap, MapPin } from "lucide-react"
+import { CheckCircle, Award, MapPin } from "lucide-react"
 
 export const dynamic = 'force-dynamic'
 
