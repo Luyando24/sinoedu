@@ -60,7 +60,7 @@ export async function Footer() {
              <h4 className="text-[#0056b3] font-bold text-lg mb-6">Contact US</h4>
              <div className="space-y-2 text-sm text-[#0056b3]">
                <p><span className="font-semibold">Address:</span> {getContent(blocks, 'footer.connect.address', 'Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China')}</p>
-               <p><span className="font-semibold">Phone:</span> {getContent(blocks, 'footer.connect.phone', '+86 123 456 7890')}</p>
+               <p><span className="font-semibold">Phone:</span> {getContent(blocks, 'footer.connect.phone', '+8613601965441')}</p>
                <p><span className="font-semibold">E-mail:</span> {getContent(blocks, 'footer.connect.email', 'admissions@sinoway.com')}</p>
              </div>
           </div>

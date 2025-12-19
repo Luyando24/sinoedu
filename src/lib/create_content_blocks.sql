@@ -96,7 +96,7 @@ insert into public.content_blocks (key, content, description) values
 ('contact.info.email.line1', 'admissions@sinoway.com', 'Contact info 2 line 1'),
 ('contact.info.email.line2', 'support@sinoway.com', 'Contact info 2 line 2'),
 ('contact.info.phone.title', 'Call Us', 'Contact info 3 title'),
-('contact.info.phone.line1', '+86 123 456 7890', 'Contact info 3 line 1'),
+('contact.info.phone.line1', '+8613601965441', 'Contact info 3 line 1'),
 ('contact.info.phone.line2', 'Mon-Fri, 9am - 6pm CST', 'Contact info 3 line 2'),
 ('contact.form.title', 'Send a Message', 'Contact form title'),
 
@@ -164,7 +164,7 @@ insert into public.content_blocks (key, content, description) values
 ('footer.company.title', 'Company', 'Footer company column title'),
 ('footer.connect.title', 'Connect', 'Footer connect column title'),
 ('footer.connect.email', 'admission@sinoway.com', 'Footer email address'),
-('footer.connect.phone', '+86 123 456 7890', 'Footer phone number'),
+('footer.connect.phone', '+8613601965441', 'Footer phone number'),
 ('footer.connect.address', 'Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China', 'Footer address'),
 ('footer.copyright', 'Sinoway Education. All rights reserved.', 'Footer copyright text'),
 
@@ -190,4 +190,4 @@ insert into public.content_blocks (key, content, description) values
 ('privacy.contact.title', 'Contact Our Privacy Officer', 'Privacy contact title'),
 ('privacy.contact.text', 'If you have any questions about this Privacy Policy, please contact us:', 'Privacy contact text'),
 ('privacy.contact.email', 'privacy@sinoway.com', 'Privacy contact email'),
-('privacy.contact.phone', '+86 123 456 7890', 'Privacy contact phone');
+('privacy.contact.phone', '+8613601965441', 'Privacy contact phone');

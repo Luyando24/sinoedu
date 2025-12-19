@@ -106,7 +106,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+86 123 456 7890</p>
+                <p>+8613601965441</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
@@ -134,7 +134,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+86 123 456 7890</p>
+                <p>+8613601965441</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
@@ -160,7 +160,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+86 123 456 7890</p>
+                <p>+8613601965441</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
