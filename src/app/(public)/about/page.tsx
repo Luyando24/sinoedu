@@ -72,7 +72,7 @@ export default async function AboutPage() {
         <div className="flex flex-col lg:flex-row gap-16 items-center">
           <div className="lg:w-1/2 space-y-8">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0056b3]">
-              {getContent(blocks, 'about.hero.title_prefix', 'Meet Our')} <span className="text-[#0056b3]">{getContent(blocks, 'about.hero.title_highlight', 'Founder')}</span>
+              Meet Our <span className="text-[#0056b3]">Founder</span>
             </h1>
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold text-[#0056b3]">
@@ -98,7 +98,7 @@ export default async function AboutPage() {
           </div>
           <div className="lg:w-1/2 relative h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl">
             <Image 
-              src={getContent(blocks, 'about.hero.image', "/images/about/founder.jpg")}
+              src="/images/about/founder.jpg"
               alt="Steven - Founder of Sinoway Education" 
               fill 
               className="object-cover"
