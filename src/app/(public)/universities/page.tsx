@@ -7,9 +7,18 @@ import Image from "next/image"
 
 export const dynamic = 'force-dynamic'
 
+const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
+  if (!blocks) return fallback
+  const block = blocks.find(b => b.key === key)
+  return block ? block.content : fallback
+}
+
 export default async function UniversitiesPage() {
   const supabase = createClient()
   
+  // Fetch content blocks
+  const { data: blocks } = await supabase.from('content_blocks').select('*')
+
   // Fetch universities directly
   const { data: universities } = await supabase
     .from('universities')
@@ -19,9 +28,9 @@ export default async function UniversitiesPage() {
   return (
     <div className="container py-16 space-y-12">
       <div className="text-center space-y-4 max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold tracking-tight">Partner Universities</h1>
+        <h1 className="text-4xl font-bold tracking-tight">{getContent(blocks, 'universities.header.title', "Partner Universities")}</h1>
         <p className="text-xl text-muted-foreground">
-          Explore China&apos;s top institutions. We are official representatives for these prestigious universities.
+          {getContent(blocks, 'universities.header.desc', "Explore China's top institutions. We are official representatives for these prestigious universities.")}
         </p>
       </div>
 

@@ -1,9 +1,21 @@
+import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, MapPin, Phone } from "lucide-react"
 
-export default function ContactPage() {
+export const dynamic = 'force-dynamic'
+
+const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
+  if (!blocks) return fallback
+  const block = blocks.find(b => b.key === key)
+  return block ? block.content : fallback
+}
+
+export default async function ContactPage() {
+  const supabase = createClient()
+  const { data: blocks } = await supabase.from('content_blocks').select('*')
+
   return (
     <div className="flex flex-col gap-12 py-16">
       <div className="container">
@@ -11,17 +23,38 @@ export default function ContactPage() {
            {/* Left: Contact Info & Text */}
            <div className="space-y-8">
              <div className="space-y-4">
-               <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Let&apos;s Start Your Journey</h1>
+               <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{getContent(blocks, 'contact.hero.title', "Let's Start Your Journey")}</h1>
                <p className="text-xl text-muted-foreground leading-relaxed">
-                 Whether you have questions about a specific program or need guidance on the visa process, our dedicated team is here to assist you.
+                 {getContent(blocks, 'contact.hero.desc', "Whether you have questions about a specific program or need guidance on the visa process, our dedicated team is here to assist you.")}
                </p>
              </div>
 
              <div className="space-y-6">
                 {[
-                  { icon: MapPin, title: "Visit Us", details: ["Level 15, China World Tower B", "Chaoyang District, Beijing, China"] },
-                  { icon: Mail, title: "Email Us", details: ["admissions@sinoway.com", "support@sinoway.com"] },
-                  { icon: Phone, title: "Call Us", details: ["+86 10 1234 5678", "Mon-Fri, 9am - 6pm CST"] },
+                  { 
+                    icon: MapPin, 
+                    title: getContent(blocks, 'contact.info.visit.title', "Visit Us"), 
+                    details: [
+                      getContent(blocks, 'contact.info.visit.line1', "Level 15, China World Tower B"), 
+                      getContent(blocks, 'contact.info.visit.line2', "Chaoyang District, Beijing, China")
+                    ] 
+                  },
+                  { 
+                    icon: Mail, 
+                    title: getContent(blocks, 'contact.info.email.title', "Email Us"), 
+                    details: [
+                      getContent(blocks, 'contact.info.email.line1', "admissions@sinoway.com"), 
+                      getContent(blocks, 'contact.info.email.line2', "support@sinoway.com")
+                    ] 
+                  },
+                  { 
+                    icon: Phone, 
+                    title: getContent(blocks, 'contact.info.phone.title', "Call Us"), 
+                    details: [
+                      getContent(blocks, 'contact.info.phone.line1', "+86 10 1234 5678"), 
+                      getContent(blocks, 'contact.info.phone.line2', "Mon-Fri, 9am - 6pm CST")
+                    ] 
+                  },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="h-12 w-12 rounded-full bg-brand-red/10 flex items-center justify-center flex-shrink-0">
@@ -40,7 +73,7 @@ export default function ContactPage() {
 
            {/* Right: Clean Form */}
            <div className="bg-muted/20 p-8 md:p-10 rounded-3xl border shadow-sm">
-             <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
+             <h3 className="text-2xl font-bold mb-6">{getContent(blocks, 'contact.form.title', "Send a Message")}</h3>
              <form className="space-y-5">
                <div className="grid sm:grid-cols-2 gap-4">
                  <div className="space-y-2">

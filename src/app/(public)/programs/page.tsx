@@ -4,6 +4,12 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, DollarSign, MapPin, GraduationCap } from "lucide-react"
 
+const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
+  if (!blocks) return fallback
+  const block = blocks.find(b => b.key === key)
+  return block ? block.content : fallback
+}
+
 export default async function ProgramsPage({
   searchParams,
 }: {
@@ -27,6 +33,9 @@ export default async function ProgramsPage({
 
   const supabase = createClient()
   
+  // Fetch content blocks
+  const { data: blocks } = await supabase.from('content_blocks').select('*')
+
   let queryBuilder = supabase.from('programs').select('*, universities(name)')
   
   if (query) {
@@ -58,9 +67,9 @@ export default async function ProgramsPage({
     <div className="container py-16 space-y-12">
       <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b pb-8">
         <div className="space-y-4 max-w-2xl">
-          <h1 className="text-4xl font-bold tracking-tight">Academic Programs</h1>
+          <h1 className="text-4xl font-bold tracking-tight">{getContent(blocks, 'programs.header.title', "Academic Programs")}</h1>
           <p className="text-xl text-muted-foreground">
-            Curated opportunities for international students. Find your perfect match.
+            {getContent(blocks, 'programs.header.desc', "Curated opportunities for international students. Find your perfect match.")}
           </p>
         </div>
         <div className="w-full md:w-auto">
@@ -101,33 +110,26 @@ export default async function ProgramsPage({
                    </div>
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
                      <Calendar className="h-4 w-4" />
-                     {program.intake || "Spring/Fall"}
+                     {program.intake || "N/A"}
                    </div>
-                   {program.application_deadline && (
-                      <div className="flex items-center gap-2 text-sm text-red-600 font-medium">
-                        <GraduationCap className="h-4 w-4" />
-                        Deadline: {program.application_deadline}
-                      </div>
-                   )}
+                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                     <GraduationCap className="h-4 w-4" />
+                     {program.scholarship_details ? "Scholarship" : "Self-funded"}
+                   </div>
                  </div>
                </div>
-
-               <div className="flex flex-col justify-center gap-3 min-w-[200px] border-t md:border-t-0 md:border-l pt-4 md:pt-0 md:pl-6">
-                 <Link href={`/auth/register?program=${program.id}`} className="w-full">
-                   <Button size="lg" className="w-full font-bold">Apply Now</Button>
+               
+               <div className="flex flex-col justify-center min-w-[150px]">
+                 <Link href={`/programs/${program.id}`}>
+                   <Button className="w-full">View Details</Button>
                  </Link>
-                 {/* Ideally this would link to a details page, e.g. /programs/[id] */}
-                 <Button variant="outline" className="w-full">View Details</Button>
                </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-20 bg-muted/20 rounded-3xl space-y-4">
+          <div className="col-span-full text-center py-20 bg-muted/20 rounded-3xl">
             <h3 className="text-xl font-semibold">No programs found</h3>
-            <p className="text-muted-foreground">Try adjusting your search terms or browse all programs.</p>
-            <Link href="/programs">
-                <Button variant="link">Clear Filters</Button>
-            </Link>
+            <p className="text-muted-foreground mt-2">Try adjusting your filters.</p>
           </div>
         )}
       </div>

@@ -26,6 +26,10 @@ export default async function DashboardLayout({
     if (profile?.role === 'admin') {
       sidebarItems = [
         { name: "Overview", href: "/admin", icon: "Shield" },
+        { name: "Programs", href: "/admin/programs", icon: "FileText" },
+        { name: "Universities", href: "/admin/universities", icon: "LayoutDashboard" },
+        { name: "Posts", href: "/admin/posts", icon: "FileText" },
+        { name: "Content", href: "/admin/content", icon: "FileEdit" },
       ]
     }
   }
