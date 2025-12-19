@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { 
@@ -30,6 +30,8 @@ type University = {
   location: string | null
   ranking: string | null
 }
+
+import { UniversityImporter } from "./university-importer"
 
 export function UniversitiesTable({ initialUniversities }: { initialUniversities: University[] }) {
   const [universities, setUniversities] = useState(initialUniversities)
@@ -82,11 +84,14 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Link href="/admin/universities/new">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Add University
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+            <UniversityImporter />
+            <Link href="/admin/universities/new">
+            <Button>
+                <Plus className="mr-2 h-4 w-4" /> Add University
+            </Button>
+            </Link>
+        </div>
       </div>
 
       <div className="rounded-md border">

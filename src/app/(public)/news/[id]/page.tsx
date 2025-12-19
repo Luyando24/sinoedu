@@ -60,11 +60,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       )}
 
       <div className="prose prose-lg dark:prose-invert max-w-none">
-        {post.content.split('\n').map((paragraph: string, i: number) => (
-            <p key={i} className="mb-4 leading-relaxed text-muted-foreground">
-              {paragraph}
-            </p>
-        ))}
+        <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </div>
     </article>
   )

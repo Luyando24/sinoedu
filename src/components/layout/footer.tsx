@@ -41,7 +41,7 @@ export async function Footer() {
             <h4 className="mb-4 text-sm font-semibold">{getContent(blocks, 'footer.connect.title', 'Connect')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>{getContent(blocks, 'footer.connect.email', 'admission@sinoway.com')}</li>
-              <li>{getContent(blocks, 'footer.connect.phone', '+86 10 1234 5678')}</li>
+              <li>{getContent(blocks, 'footer.connect.phone', '+86 123 456 7890')}</li>
               <li>{getContent(blocks, 'footer.connect.address', 'Beijing, China')}</li>
             </ul>
           </div>

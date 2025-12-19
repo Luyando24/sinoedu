@@ -16,6 +16,15 @@ const getContent = (blocks: { key: string; content: string }[] | null, key: stri
 export default async function UniversitiesPage() {
   const supabase = createClient()
   
+  // Check if user is admin
+  const { data: { user } } = await supabase.auth.getUser()
+  let isAdmin = false
+  if (user) {
+    // Secure RPC check
+    const { data: role } = await supabase.rpc('get_my_role')
+    isAdmin = role === 'admin'
+  }
+
   // Fetch content blocks
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
@@ -42,7 +51,7 @@ export default async function UniversitiesPage() {
                 <div className="relative h-48 w-full">
                   <Image 
                     src={uni.image_url} 
-                    alt={uni.name}
+                    alt={isAdmin ? uni.name : "Partner University"}
                     fill
                     className="object-cover"
                   />
@@ -55,7 +64,7 @@ export default async function UniversitiesPage() {
                        <GraduationCap className="h-6 w-6 text-brand-red" />
                     </div>
                   )}
-                  {uni.logo_url && (
+                  {uni.logo_url && isAdmin && (
                     <div className="relative h-12 w-12">
                       <Image 
                         src={uni.logo_url} 
@@ -66,7 +75,9 @@ export default async function UniversitiesPage() {
                     </div>
                   )}
                 </div>
-                <CardTitle className="line-clamp-2">{uni.name}</CardTitle>
+                <CardTitle className="line-clamp-2">
+                    {isAdmin ? uni.name : "University in " + (uni.location || "China")}
+                </CardTitle>
               </CardHeader>
               <CardContent className="flex-1">
                 <div className="flex items-center gap-2 text-muted-foreground mb-4">
@@ -87,9 +98,9 @@ export default async function UniversitiesPage() {
                    <span className="text-sm text-muted-foreground font-medium">
                      {uni.programs?.[0]?.count || 0} Programs
                    </span>
-                   <Link href={`/programs?query=${encodeURIComponent(uni.name)}`}>
+                   <Link href={`/universities/${uni.id}`}>
                     <Button variant="ghost" size="sm" className="group">
-                      View Programs <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      View Details <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
                 </div>

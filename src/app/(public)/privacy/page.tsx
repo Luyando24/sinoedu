@@ -77,7 +77,7 @@ export default async function PrivacyPage() {
           <div className="mt-4 p-6 border rounded-xl inline-block pr-12">
              <p className="font-bold">Sinoway Education Legal Team</p>
              <p className="text-muted-foreground">{getContent(blocks, 'privacy.contact.email', "privacy@sinoway.com")}</p>
-             <p className="text-muted-foreground">{getContent(blocks, 'privacy.contact.phone', "+86 10 1234 5678")}</p>
+             <p className="text-muted-foreground">{getContent(blocks, 'privacy.contact.phone', "+86 123 456 7890")}</p>
           </div>
         </section>
       </div>

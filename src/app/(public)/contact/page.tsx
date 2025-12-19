@@ -51,7 +51,7 @@ export default async function ContactPage() {
                     icon: Phone, 
                     title: getContent(blocks, 'contact.info.phone.title', "Call Us"), 
                     details: [
-                      getContent(blocks, 'contact.info.phone.line1', "+86 10 1234 5678"), 
+                      getContent(blocks, 'contact.info.phone.line1', "+86 123 456 7890"), 
                       getContent(blocks, 'contact.info.phone.line2', "Mon-Fri, 9am - 6pm CST")
                     ] 
                   },

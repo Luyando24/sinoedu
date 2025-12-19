@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { 
@@ -35,6 +35,8 @@ type Program = {
   level: string | null
   location: string | null
 }
+
+import { ProgramImporter } from "./program-importer"
 
 export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] }) {
   const [programs, setPrograms] = useState(initialPrograms)
@@ -96,11 +98,14 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Link href="/admin/programs/new">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Add Program
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+            <ProgramImporter />
+            <Link href="/admin/programs/new">
+            <Button>
+                <Plus className="mr-2 h-4 w-4" /> Add Program
+            </Button>
+            </Link>
+        </div>
       </div>
 
       <div className="rounded-md border">

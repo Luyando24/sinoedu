@@ -52,7 +52,7 @@ export function Sidebar({ items }: SidebarProps) {
               className="object-contain"
             />
           </div>
-          <span className="font-bold text-lg">CSA Portal</span>
+          <span className="font-bold text-lg">DASHBOARD</span>
         </Link>
       </div>
       <div className="flex flex-col gap-2 p-4">
