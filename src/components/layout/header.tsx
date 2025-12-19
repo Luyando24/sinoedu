@@ -11,7 +11,7 @@ import { createClient } from "@/lib/supabase/client"
 
 const navigation = [
   { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
+  { name: "About Us", href: "/about" },
   { name: "Services", href: "/services" },
   { name: "Universities", href: "/universities" },
   { name: "Programs", href: "/programs" },
