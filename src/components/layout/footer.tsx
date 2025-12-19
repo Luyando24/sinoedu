@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
-import { Facebook, Instagram, MessageCircle, Youtube } from "lucide-react"
+import { Facebook, Instagram, MessageCircle, Youtube, BookOpen } from "lucide-react"
 
 const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
   if (!blocks) return fallback
@@ -82,6 +82,22 @@ export async function Footer() {
                 </Link>
                 <Link href="https://youtube.com/@sinowayedu?si=HB8B_8LLfJs1OO26" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
                   <Youtube className="h-8 w-8" />
+                </Link>
+                <Link href="https://www.tiktok.com/@sinowayedu?is_from_webapp=1&sender_device=pc" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className="h-8 w-8"
+                  >
+                    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                  </svg>
+                </Link>
+                <Link href="https://www.xiaohongshu.com/user/profile/612b3765000000000101fdd4?xhsshare=userQrCode" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
+                  <BookOpen className="h-8 w-8" />
                 </Link>
              </div>
           </div>

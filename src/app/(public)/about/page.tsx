@@ -51,6 +51,22 @@ export default async function AboutPage() {
 
   return (
     <div className="flex flex-col gap-24 py-16 bg-slate-50">
+      {/* Team Gallery Section */}
+      <section className="container">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {[1, 2, 3, 4, 5].map((num) => (
+            <div key={num} className="relative h-48 md:h-64 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+              <Image
+                src={`/images/about/about-${num}.jpg`}
+                alt={`Sinoway Team Member ${num}`}
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Intro Section - Split View */}
       <section className="container">
         <div className="flex flex-col lg:flex-row gap-16 items-center">

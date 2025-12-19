@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Youtube } from "lucide-react"
+import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Youtube, BookOpen } from "lucide-react"
 import Link from "next/link"
 
 const SLIDER_IMAGES = [
@@ -123,6 +123,19 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                 <MessageCircle className="h-6 w-6 cursor-pointer hover:text-white/80" />
                 <Link href="https://youtube.com/@sinowayedu?si=HB8B_8LLfJs1OO26" target="_blank" rel="noopener noreferrer">
                   <Youtube className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                </Link>
+                <Link href="https://www.tiktok.com/@sinowayedu?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className="h-6 w-6 cursor-pointer hover:text-white/80"
+                  >
+                    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                  </svg>
                 </Link>
               </div>
             </div>
