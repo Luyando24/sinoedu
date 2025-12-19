@@ -1,9 +1,18 @@
 "use client"
 
+import { useState, useEffect } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play } from "lucide-react"
 import Link from "next/link"
+
+const SLIDER_IMAGES = [
+  "/images/sliders/slider-1.jpg",
+  "/images/sliders/slider-2.jpg",
+  "/images/sliders/slider-3.jpg",
+  "/images/sliders/slider-4.jpg",
+]
 
 type ContentBlock = {
   key: string
@@ -15,6 +24,15 @@ const getContent = (blocks: ContentBlock[], key: string, fallback: string) => {
 }
 
 export function HomeClient({ content }: { content: ContentBlock[] }) {
+  const [currentSlide, setCurrentSlide] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % SLIDER_IMAGES.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [])
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -23,15 +41,27 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
     <div className="flex flex-col gap-12 md:gap-20 pb-20 bg-slate-50">
       {/* Hero Section */}
       <section className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
-        {/* Background Image */}
+        {/* Background Image Carousel */}
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/gallery-5.jpg"
-            alt="MIE Group Team"
-            fill
-            className="object-cover"
-            priority
-          />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSlide}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={SLIDER_IMAGES[currentSlide]}
+                alt="Hero Background"
+                fill
+                className="object-cover"
+                priority
+              />
+            </motion.div>
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-black/20" />
         </div>
 
         {/* Text Overlay - Bottom Bar */}
