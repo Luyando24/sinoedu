@@ -86,29 +86,29 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
         </button>
       </section>
 
-      {/* MIE Group Section */}
+      {/* Sinoway Education Section */}
       <section className="container">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">MIE Group</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">Sinoway Education</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Beijing Company */}
+          {/* Headquarters */}
           <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
             {/* Background Image Overlay */}
              <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
                <Image src="/images/gallery-1.jpg" alt="Beijing" fill className="object-cover object-bottom" />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">Beijing Company</h3>
+              <h3 className="text-2xl font-semibold mb-4">Headquarters</h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>Room 705 Energy+Center, No. 103 Chaoyang North Road, Chaoyang District, Beijing</p>
+                <p>Level 15, China World Tower B, Chaoyang District, Beijing, China</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+86 18511316867</p>
+                <p>+86 123 456 7890</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>bjmygj@126.com</p>
+                <p>admissions@sinoway.com</p>
               </div>
               <div className="flex gap-4 mt-6">
                 <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
@@ -119,54 +119,54 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
             </div>
           </div>
 
-          {/* Moscow Company */}
+          {/* International Support */}
           <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
              <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
-               <Image src="/images/gallery-2.jpg" alt="Moscow" fill className="object-cover object-bottom" />
+               <Image src="/images/gallery-2.jpg" alt="Support" fill className="object-cover object-bottom" />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">Moscow Company</h3>
+              <h3 className="text-2xl font-semibold mb-4">International Support</h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>Kurskaya Metro Station, Office 421, 4th floor, Zemlyanoi Val 8, Moscow, Russia</p>
+                <p>Online Support Center, Available Globally</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+78005059816; +79231440095</p>
+                <p>+86 123 456 7890</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>Mingyang.moscow@gmail.com</p>
+                <p>support@sinoway.com</p>
               </div>
               <div className="flex gap-3 items-center text-sm mt-4">
                 <Globe className="h-5 w-5 shrink-0" />
-                <p>www.mingyang.ru</p>
+                <p>www.sinoway.com</p>
               </div>
             </div>
           </div>
 
-          {/* Bucheon, Korea */}
+          {/* Student Services */}
           <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
              <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
-               <Image src="/images/gallery-3.jpg" alt="Korea" fill className="object-cover object-bottom" />
+               <Image src="/images/gallery-3.jpg" alt="Student Services" fill className="object-cover object-bottom" />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">Bucheon, Korea</h3>
+              <h3 className="text-2xl font-semibold mb-4">Student Services</h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>90, Jungdong-ro 254beon-gil, Wonmi-gu, Bucheon-si, Gyeonggi-do, Korea</p>
+                <p>Global Student Center</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+82 10 4397 9330</p>
+                <p>+86 123 456 7890</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>th0610@naver.com</p>
+                <p>students@sinoway.com</p>
               </div>
               <div className="flex gap-3 items-start text-sm mt-4">
                 <Globe className="h-5 w-5 shrink-0 mt-1" />
-                <p className="break-all">https://m.blog.naver.com/miestudyinchina/223654638181</p>
+                <p className="break-all">www.sinoway.com/services</p>
               </div>
             </div>
           </div>
