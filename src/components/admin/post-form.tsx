@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
-import { Loader2, Upload, X, Image as ImageIcon } from "lucide-react"
+import { Loader2, X, Image as ImageIcon } from "lucide-react"
 import Image from "next/image"
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
@@ -93,9 +93,9 @@ export function PostForm({ initialData }: PostFormProps) {
 
       setFormData(prev => ({ ...prev, image_url: data.publicUrl }))
       toast.success("Image uploaded successfully")
-    } catch (error: any) {
+    } catch (error) {
       console.error(error)
-      toast.error("Failed to upload image: " + error.message)
+      toast.error("Failed to upload image: " + (error as Error).message)
     } finally {
       setUploading(false)
       // Reset input so same file can be selected again if needed

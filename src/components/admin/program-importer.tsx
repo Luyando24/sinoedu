@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Upload, FileSpreadsheet, AlertCircle, CheckCircle, Download } from "lucide-react"
+import { FileSpreadsheet, AlertCircle, CheckCircle, Download } from "lucide-react"
 import * as XLSX from "xlsx"
 import { saveAs } from "file-saver"
 import { createClient } from "@/lib/supabase/client"
@@ -24,7 +24,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 export function ProgramImporter() {
   const [open, setOpen] = useState(false)
   const [file, setFile] = useState<File | null>(null)
-  const [previewData, setPreviewData] = useState<any[]>([])
+  const [previewData, setPreviewData] = useState<Record<string, unknown>[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [universities, setUniversities] = useState<{id: string, name: string}[]>([])
@@ -132,7 +132,7 @@ export function ProgramImporter() {
             return
         }
 
-        setPreviewData(jsonData)
+        setPreviewData(jsonData as Record<string, unknown>[])
       } catch (err) {
         console.error(err)
         setError("Failed to parse the file. Please ensure it is a valid Excel file.")
@@ -154,27 +154,28 @@ export function ProgramImporter() {
     setError(null)
 
     try {
-      const formattedData = previewData.map((row: any) => {
-          const uniName = row.university || row.University || row.school || row.School
+      const formattedData = previewData.map((row) => {
+          const r = row as Record<string, unknown>
+          const uniName = (r.university || r.University || r.school || r.School) as string
           const uniId = findUniversityId(uniName)
 
           return {
-            title: row.title || row.Title || row.Program,
-            program_id_code: row.program_id_code || row.Code || null,
+            title: (r.title || r.Title || r.Program) as string,
+            program_id_code: (r.program_id_code || r.Code || null) as string | null,
             university_id: uniId,
-            level: row.level || row.Level || 'Bachelor',
-            location: row.location || row.Location || null,
-            duration: row.duration || row.Duration || null,
-            tuition_fee: row.tuition_fee || row.Tuition || null,
-            description: row.description || row.Description || null,
-            requirements: row.requirements || row.Requirements || null,
-            language: row.language || row.Language || 'English',
-            intake: row.intake || row.Intake || null,
-            application_deadline: row.application_deadline || row.Deadline || null,
+            level: (r.level || r.Level || 'Bachelor') as string,
+            location: (r.location || r.Location || null) as string | null,
+            duration: (r.duration || r.Duration || null) as string | null,
+            tuition_fee: (r.tuition_fee || r.Tuition || null) as string | null,
+            description: (r.description || r.Description || null) as string | null,
+            requirements: (r.requirements || r.Requirements || null) as string | null,
+            language: (r.language || r.Language || 'English') as string,
+            intake: (r.intake || r.Intake || null) as string | null,
+            application_deadline: (r.application_deadline || r.Deadline || null) as string | null,
             
             // Default arrays/json for complex fields if missing
-            academic_requirements: row.academic_requirements ? [row.academic_requirements] : [],
-            required_documents: row.required_documents ? [row.required_documents] : [],
+            academic_requirements: r.academic_requirements ? [r.academic_requirements] : [],
+            required_documents: r.required_documents ? [r.required_documents] : [],
           }
       }).filter(item => item.title) // Ensure title exists
 
@@ -204,9 +205,9 @@ export function ProgramImporter() {
       
       // Force refresh the page data
       router.refresh()
-    } catch (err: any) {
+    } catch (err) {
       console.error(err)
-      setError(err.message || "Failed to upload data to the database.")
+      setError((err as Error).message || "Failed to upload data to the database.")
       toast.error("Import failed")
     } finally {
       setIsUploading(false)
@@ -276,12 +277,13 @@ export function ProgramImporter() {
                             </tr>
                         </thead>
                         <tbody>
-                            {previewData.slice(0, 5).map((row: any, i) => {
-                                const uniName = row.university || row.University || row.school || row.School
+                            {previewData.slice(0, 5).map((row, i) => {
+                                const r = row as Record<string, unknown>
+                                const uniName = (r.university || r.University || r.school || r.School) as string
                                 const isMatched = !!findUniversityId(uniName)
                                 return (
                                 <tr key={i} className="border-b">
-                                    <td className="p-2">{row.title || row.Title}</td>
+                                    <td className="p-2">{(r.title || r.Title) as string}</td>
                                     <td className="p-2">{uniName || '-'}</td>
                                     <td className="p-2">
                                         {isMatched ? (

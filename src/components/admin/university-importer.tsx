@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Upload, FileSpreadsheet, AlertCircle, CheckCircle, Download } from "lucide-react"
+import { FileSpreadsheet, AlertCircle, CheckCircle, Download } from "lucide-react"
 import * as XLSX from "xlsx"
 import { saveAs } from "file-saver"
 import { createClient } from "@/lib/supabase/client"
@@ -24,7 +24,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 export function UniversityImporter() {
   const [open, setOpen] = useState(false)
   const [file, setFile] = useState<File | null>(null)
-  const [previewData, setPreviewData] = useState<any[]>([])
+  const [previewData, setPreviewData] = useState<Record<string, unknown>[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
@@ -110,7 +110,7 @@ export function UniversityImporter() {
             return
         }
 
-        setPreviewData(jsonData)
+        setPreviewData(jsonData as Record<string, unknown>[])
       } catch (err) {
         console.error(err)
         setError("Failed to parse the file. Please ensure it is a valid Excel file.")
@@ -127,17 +127,20 @@ export function UniversityImporter() {
 
     try {
       // Map data to database schema
-      const formattedData = previewData.map((row: any) => ({
-        name: row.name || row.Name,
-        location: row.location || row.Location || null,
-        description: row.description || row.Description || null,
-        ranking: row.ranking ? String(row.ranking) : (row.Ranking ? String(row.Ranking) : null),
-        website_url: row.website_url || row.Website || null,
-        established_year: row.established_year ? String(row.established_year) : (row.Established ? String(row.Established) : null),
-        // logo_url and image_url are harder to bulk import from excel unless they are URLs
-        logo_url: row.logo_url || row.Logo || null,
-        image_url: row.image_url || row.Image || null,
-      })).filter(item => item.name) // Ensure name exists
+      const formattedData = previewData.map((row) => {
+        const r = row as Record<string, unknown>
+        return {
+          name: (r.name || r.Name) as string,
+          location: (r.location || r.Location || null) as string | null,
+          description: (r.description || r.Description || null) as string | null,
+          ranking: r.ranking ? String(r.ranking) : (r.Ranking ? String(r.Ranking) : null),
+          website_url: (r.website_url || r.Website || null) as string | null,
+          established_year: r.established_year ? String(r.established_year) : (r.Established ? String(r.Established) : null),
+          // logo_url and image_url are harder to bulk import from excel unless they are URLs
+          logo_url: (r.logo_url || r.Logo || null) as string | null,
+          image_url: (r.image_url || r.Image || null) as string | null,
+        }
+      }).filter(item => item.name) // Ensure name exists
 
       if (formattedData.length === 0) {
         throw new Error("No valid data found to import.")
@@ -159,9 +162,9 @@ export function UniversityImporter() {
       
       // Optional: Add a small delay before refresh to ensure DB is consistent if needed, 
       // but router.refresh() is usually enough for server components.
-    } catch (err: any) {
+    } catch (err) {
       console.error(err)
-      setError(err.message || "Failed to upload data to the database.")
+      setError((err as Error).message || "Failed to upload data to the database.")
       toast.error("Import failed")
     } finally {
       setIsUploading(false)
@@ -231,13 +234,15 @@ export function UniversityImporter() {
                             </tr>
                         </thead>
                         <tbody>
-                            {previewData.slice(0, 5).map((row: any, i) => (
+                            {previewData.slice(0, 5).map((row, i) => {
+                                const r = row as Record<string, unknown>
+                                return (
                                 <tr key={i} className="border-b">
-                                    <td className="p-2">{row.name || row.Name}</td>
-                                    <td className="p-2">{row.location || row.Location}</td>
-                                    <td className="p-2">{row.ranking || row.Ranking}</td>
+                                    <td className="p-2">{(r.name || r.Name) as string}</td>
+                                    <td className="p-2">{(r.location || r.Location) as string}</td>
+                                    <td className="p-2">{(r.ranking || r.Ranking) as string}</td>
                                 </tr>
-                            ))}
+                            )})}
                             {previewData.length > 5 && (
                                 <tr>
                                     <td colSpan={3} className="p-2 text-center text-muted-foreground">

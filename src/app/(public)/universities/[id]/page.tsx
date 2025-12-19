@@ -130,7 +130,16 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
                 <h2 className="text-2xl font-bold tracking-tight">Available Programs</h2>
                 {university.programs && university.programs.length > 0 ? (
                     <div className="grid gap-4">
-                        {university.programs.map((program: any) => (
+                        {university.programs.map((program: {
+                            id: string;
+                            title: string;
+                            level: string;
+                            duration?: string;
+                            language?: string;
+                            tuition_fee?: string;
+                            description?: string;
+                            application_deadline?: string;
+                        }) => (
                             <Card key={program.id} className="hover:border-primary transition-colors">
                                 <CardHeader>
                                     <div className="flex justify-between items-start">
