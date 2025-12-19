@@ -49,18 +49,28 @@ export default async function AboutPage() {
     }
   ]
 
+  const galleryImages = [
+    ...Array.from({ length: 5 }, (_, i) => `/images/about/about-${i + 1}.jpg`),
+    ...Array.from({ length: 10 }, (_, i) => `/images/about/gallery-${i + 1}.jpg`),
+    ...Array.from({ length: 7 }, (_, i) => `/images/about/gallery-${i + 11}.png`),
+  ]
+
   return (
     <div className="flex flex-col gap-24 py-16 bg-slate-50">
-      {/* Team Gallery Section */}
-      <section className="container">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {[1, 2, 3, 4, 5].map((num) => (
-            <div key={num} className="relative h-48 md:h-64 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+      {/* Unified Gallery Section */}
+      <section className="container space-y-8">
+        <div className="text-center max-w-2xl mx-auto space-y-4">
+          <h2 className="text-3xl font-bold text-[#0056b3]">Our Moments</h2>
+          <p className="text-muted-foreground">Capturing the memories and success stories of our students.</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {galleryImages.map((src, i) => (
+            <div key={i} className="relative h-48 md:h-64 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group">
               <Image
-                src={`/images/about/about-${num}.jpg`}
-                alt={`Sinoway Team Member ${num}`}
+                src={src}
+                alt={`Gallery Image ${i + 1}`}
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-500"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
           ))}
@@ -175,26 +185,6 @@ export default async function AboutPage() {
                </p>
              </div>
           </div>
-        </div>
-      </section>
-
-      {/* Gallery Section */}
-      <section className="container space-y-8">
-        <div className="text-center max-w-2xl mx-auto space-y-4">
-          <h2 className="text-3xl font-bold text-[#0056b3]">Our Moments</h2>
-          <p className="text-muted-foreground">Capturing the memories and success stories of our students.</p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 17 }).map((_, i) => (
-            <div key={i} className="relative h-48 md:h-64 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 group">
-              <Image
-                src={`/images/about/gallery-${i + 1}.${i < 10 ? 'jpg' : 'png'}`}
-                alt={`Gallery Image ${i + 1}`}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-          ))}
         </div>
       </section>
 
