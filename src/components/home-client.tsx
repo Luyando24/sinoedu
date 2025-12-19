@@ -72,7 +72,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                 {getContent(content, 'home.hero.title_new', 'Study in China')}
               </h1>
               <p className="text-base md:text-xl text-white/90 font-light max-w-2xl mx-auto drop-shadow-md">
-                {getContent(content, 'home.hero.subtitle_long', 'Professional team, professional service, making study in China simpler.')}
+                {getContent(content, 'home.hero.subtitle_expert', 'Your Go-to Study-in-China Expert')}
               </p>
             </div>
           </div>
