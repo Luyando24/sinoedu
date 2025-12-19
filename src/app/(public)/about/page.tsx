@@ -76,7 +76,7 @@ export default async function AboutPage() {
             </h1>
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold text-[#0056b3]">
-                Steven
+                Steven Yang
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 {getContent(blocks, 'about.hero.description', 'Founded on the belief that education knows no borders, Sinoway Education has evolved from a small consultancy to a leading authority in Sino-international student exchange. We are more than agents; we are mentors, strategists, and your first family in a new land.')}
