@@ -37,13 +37,23 @@ export default function LoginPage() {
       
       let redirectUrl = "/dashboard"
       if (user) {
-        const { data: profile } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single()
+        // Try RPC first (bypasses RLS)
+        const { data: roleData, error: rpcError } = await supabase.rpc('get_my_role')
+        let userRole = roleData
+
+        if (rpcError) {
+             console.warn("RPC failed in login, falling back to direct select")
+             const { data: profile } = await supabase
+              .from('users')
+              .select('role')
+              .eq('id', user.id)
+              .single()
+             userRole = profile?.role
+        }
         
-        if (profile?.role === 'admin') {
+        console.log("Login Role Check:", userRole)
+
+        if (userRole === 'admin') {
           redirectUrl = "/admin"
         }
       }
