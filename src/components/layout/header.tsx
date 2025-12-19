@@ -35,10 +35,10 @@ export function Header({ content = [] }: { content?: ContentBlock[] }) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-[#0056b3] text-white">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-20 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="relative h-10 w-10">
+            <div className="relative h-14 w-14">
               <Image
                 src="/images/logo.png"
                 alt="Sinoway Logo"
@@ -47,8 +47,10 @@ export function Header({ content = [] }: { content?: ContentBlock[] }) {
               />
             </div>
             <div className="hidden flex-col sm:flex">
-              <span className="font-bold text-lg leading-none">SinowayEdu</span>
-              <span className="text-sm font-medium leading-none">华途国际教育</span>
+              <span className="font-bold text-2xl leading-none text-sky-300 tracking-wide">SINOWAY</span>
+              <div className="text-xs font-medium leading-none text-amber-400 mt-1 flex justify-between w-full">
+                <span>华</span><span>途</span><span>国</span><span>际</span><span>教</span><span>育</span>
+              </div>
             </div>
           </Link>
         </div>

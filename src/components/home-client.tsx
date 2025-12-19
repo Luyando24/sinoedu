@@ -4,8 +4,9 @@ import { useState, useEffect } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play } from "lucide-react"
+import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Search } from "lucide-react"
 import Link from "next/link"
+import { User } from "@supabase/supabase-js"
 
 const SLIDER_IMAGES = [
   "/images/sliders/slider-1.jpg",
@@ -23,7 +24,7 @@ const getContent = (blocks: ContentBlock[], key: string, fallback: string) => {
   return blocks?.find(b => b.key === key)?.content || fallback
 }
 
-export function HomeClient({ content }: { content: ContentBlock[] }) {
+export function HomeClient({ content, user }: { content: ContentBlock[], user: User | null }) {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   useEffect(() => {
@@ -65,15 +66,51 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
         </div>
 
         {/* Text Overlay - Bottom Bar */}
-        <div className="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-4xl bg-black/70 py-8 z-10 md:rounded-t-xl">
-          <div className="flex flex-col items-center text-center text-white space-y-2 px-4">
-            <h1 className="text-2xl md:text-4xl font-bold tracking-wide">
-              {getContent(content, 'home.hero.title', 'Renowned International Education: Your Study Abroad Expert')}
-            </h1>
-            <p className="text-sm md:text-base text-white/90 font-light">
-              {getContent(content, 'home.hero.subtitle', 'Professional team, professional service, making study in China simpler.')}
-            </p>
-          </div>
+        <div className={`absolute bottom-0 left-0 right-0 mx-auto w-full ${user ? 'max-w-6xl' : 'max-w-4xl'} bg-black/70 py-8 z-10 md:rounded-t-xl transition-all duration-300`}>
+          {user ? (
+            <div className="px-4 md:px-8">
+              <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                 <select className="h-10 w-full rounded-md border-none bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0056b3]">
+                   <option>Select City</option>
+                 </select>
+                 <select className="h-10 w-full rounded-md border-none bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0056b3]">
+                   <option>Select Degree</option>
+                 </select>
+                 <select className="h-10 w-full rounded-md border-none bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0056b3]">
+                   <option>Teaching Language</option>
+                 </select>
+                 <select className="h-10 w-full rounded-md border-none bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0056b3]">
+                   <option>Select Duration</option>
+                 </select>
+                 <select className="h-10 w-full rounded-md border-none bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0056b3]">
+                   <option>Select Scholarship</option>
+                 </select>
+                 
+                 <input 
+                    type="text" 
+                    placeholder="Search Programs" 
+                    className="h-10 w-full rounded-md border-none bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0056b3]"
+                 />
+
+                 <select className="h-10 w-full rounded-md border-none bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0056b3]">
+                   <option>Select Intake</option>
+                 </select>
+
+                 <Button className="h-10 w-full bg-[#1a3a3a] hover:bg-[#1a3a3a]/90 text-white font-bold">
+                    <Search className="mr-2 h-4 w-4" /> Search
+                 </Button>
+              </form>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center text-center text-white space-y-2 px-4">
+              <h1 className="text-2xl md:text-4xl font-bold tracking-wide">
+                {getContent(content, 'home.hero.title_new', 'Study in China')}
+              </h1>
+              <p className="text-sm md:text-base text-white/90 font-light">
+                {getContent(content, 'home.hero.subtitle_long', 'Professional team, professional service, making study in China simpler.')}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* TOP Button */}
