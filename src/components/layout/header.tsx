@@ -46,9 +46,10 @@ export function Header({ content = [] }: { content?: ContentBlock[] }) {
                 className="object-contain"
               />
             </div>
-            <span className="hidden font-bold sm:inline-block">
-              SinowayEdu 华途国际教育
-            </span>
+            <div className="hidden flex-col sm:flex">
+              <span className="font-bold text-lg leading-none">SinowayEdu</span>
+              <span className="text-sm font-medium leading-none">华途国际教育</span>
+            </div>
           </Link>
         </div>
 
