@@ -37,18 +37,40 @@ export default function AdminLoginPage() {
       const { data: { user } } = await supabase.auth.getUser()
       
       if (user) {
-        const { data: profile } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single()
+        console.log("Auth user found:", user.id)
         
-        if (profile?.role === 'admin') {
+        // Try RPC first (bypasses RLS)
+        const { data: roleData, error: rpcError } = await supabase.rpc('get_my_role')
+        
+        console.log("RPC Role check:", { roleData, rpcError })
+
+        let userRole = roleData
+
+        // Fallback to direct select if RPC fails (e.g., function not created yet)
+        if (rpcError) {
+             console.warn("RPC failed, falling back to direct select")
+             const { data: profile, error: profileError } = await supabase
+              .from('users')
+              .select('role')
+              .eq('id', user.id)
+              .single()
+             
+             if (profileError) {
+                console.error("Error fetching profile:", profileError)
+                toast.error("System Error: Could not verify permissions.")
+                await supabase.auth.signOut()
+                return
+             }
+             userRole = profile?.role
+        }
+        
+        if (userRole === 'admin') {
           toast.success("Admin access granted")
           router.push("/admin")
           router.refresh()
         } else {
-          toast.error("Unauthorized: Admin access required")
+          console.warn("User role is not admin:", userRole)
+          toast.error("Unauthorized: Admin access required. (Role: " + (userRole || 'none') + ")")
           await supabase.auth.signOut()
         }
       }

@@ -25,7 +25,8 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.auth.signUp({
+      console.log("Attempting registration for:", email)
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -37,15 +38,24 @@ export default function RegisterPage() {
         },
       })
 
+      console.log("Registration response:", { data, error })
+
       if (error) {
+        console.error("Supabase Auth Error:", error)
         toast.error(error.message)
         return
+      }
+
+      if (data?.user && data?.user?.identities?.length === 0) {
+         console.warn("User already registered or email confirmation required (identities empty)")
+         toast.error("This email is already registered.")
+         return
       }
 
       toast.success("Account created successfully! You can now log in.")
       router.push("/auth/login")
     } catch (error) {
-      console.error("Registration Error:", error)
+      console.error("Unexpected Registration Error:", error)
       toast.error("An unexpected error occurred. Please try again.")
     } finally {
       setLoading(false)
