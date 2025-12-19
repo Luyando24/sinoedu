@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Mail, Calendar, User } from "lucide-react"
+import { Search, Mail } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
 
