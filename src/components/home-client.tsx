@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Youtube, BookOpen, Trophy, GraduationCap } from "lucide-react"
+import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Youtube, BookOpen, Trophy, GraduationCap, Briefcase } from "lucide-react"
 import Link from "next/link"
 
 const SLIDER_IMAGES = [
