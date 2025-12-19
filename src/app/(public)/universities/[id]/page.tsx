@@ -248,5 +248,6 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
         </div>
       </div>
     </div>
+    </div>
   )
 }
