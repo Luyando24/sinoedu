@@ -5,8 +5,15 @@ import { Search } from "lucide-react"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { cn } from "@/lib/utils"
 
-export function HeroSearchForm() {
+interface HeroSearchFormProps {
+  className?: string
+  enableAnimation?: boolean
+  variant?: "hero" | "plain"
+}
+
+export function HeroSearchForm({ className, enableAnimation = true, variant = "hero" }: HeroSearchFormProps) {
   const router = useRouter()
   const [formData, setFormData] = useState({
     city: "",
@@ -36,19 +43,23 @@ export function HeroSearchForm() {
     router.push(`/programs?${params.toString()}`)
   }
 
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.8, duration: 0.5 }}
-      className="w-full max-w-5xl mx-auto mt-12 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl"
-    >
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  const containerClasses = cn(
+    "w-full max-w-5xl mx-auto p-4 rounded-2xl shadow-xl",
+    variant === "hero" 
+      ? "mt-12 bg-white/10 backdrop-blur-md border border-white/20" 
+      : "bg-white border border-gray-200 shadow-sm",
+    className
+  )
+
+  const inputClasses = "w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-[#0056b3] text-gray-700 font-medium appearance-none cursor-pointer placeholder:text-gray-500 focus:outline-none"
+
+  const FormContent = () => (
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* City Select */}
         <div className="relative">
           <select 
             name="city"
-            className="w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-brand-red text-gray-700 font-medium appearance-none cursor-pointer"
+            className={inputClasses}
             value={formData.city}
             onChange={handleChange}
           >
@@ -71,7 +82,7 @@ export function HeroSearchForm() {
         <div className="relative">
           <select 
             name="degree"
-            className="w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-brand-red text-gray-700 font-medium appearance-none cursor-pointer"
+            className={inputClasses}
             value={formData.degree}
             onChange={handleChange}
           >
@@ -93,7 +104,7 @@ export function HeroSearchForm() {
         <div className="relative">
           <select 
             name="language"
-            className="w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-brand-red text-gray-700 font-medium appearance-none cursor-pointer"
+            className={inputClasses}
             value={formData.language}
             onChange={handleChange}
           >
@@ -113,7 +124,7 @@ export function HeroSearchForm() {
         <div className="relative">
           <select 
             name="duration"
-            className="w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-brand-red text-gray-700 font-medium appearance-none cursor-pointer"
+            className={inputClasses}
             value={formData.duration}
             onChange={handleChange}
           >
@@ -135,7 +146,7 @@ export function HeroSearchForm() {
         <div className="relative">
           <select 
             name="scholarship"
-            className="w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-brand-red text-gray-700 font-medium appearance-none cursor-pointer"
+            className={inputClasses}
             value={formData.scholarship}
             onChange={handleChange}
           >
@@ -150,24 +161,24 @@ export function HeroSearchForm() {
             </svg>
           </div>
         </div>
-
-         {/* Programs Input */}
-         <div className="relative">
+        
+        {/* Search Input */}
+        <div className="relative">
            <input 
-            type="text" 
-            name="query"
-            placeholder="Search Programs" 
-            className="w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-brand-red text-gray-700 placeholder:text-gray-500 font-medium"
-            value={formData.query}
-            onChange={handleChange}
-          />
+              type="text" 
+              name="query"
+              placeholder="Search Programs" 
+              className={inputClasses}
+              value={formData.query}
+              onChange={handleChange}
+           />
         </div>
 
         {/* Intake Select */}
         <div className="relative">
           <select 
             name="intake"
-            className="w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-brand-red text-gray-700 font-medium appearance-none cursor-pointer"
+            className={inputClasses}
             value={formData.intake}
             onChange={handleChange}
           >
@@ -182,15 +193,28 @@ export function HeroSearchForm() {
           </div>
         </div>
 
-        {/* Search Button */}
-        <Button 
-          type="submit"
-          className="w-full h-12 bg-brand-blue hover:bg-brand-blue/90 text-white font-bold text-lg rounded-lg shadow-lg flex items-center justify-center gap-2"
-        >
-          <Search className="w-5 h-5" />
-          Search
+        <Button className="h-12 w-full bg-[#1a3a3a] hover:bg-[#1a3a3a]/90 text-white font-bold rounded-lg transition-all shadow-md hover:shadow-lg">
+           <Search className="mr-2 h-4 w-4" /> Search
         </Button>
       </form>
-    </motion.div>
+  )
+
+  if (enableAnimation) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
+        className={containerClasses}
+      >
+        <FormContent />
+      </motion.div>
+    )
+  }
+
+  return (
+    <div className={containerClasses}>
+      <FormContent />
+    </div>
   )
 }

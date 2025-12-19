@@ -35,7 +35,7 @@ export default function LoginPage() {
 
       const { data: { user } } = await supabase.auth.getUser()
       
-      let redirectUrl = "/dashboard"
+      let redirectUrl = "/"
       if (user) {
         // Try RPC first (bypasses RLS)
         const { data: roleData, error: rpcError } = await supabase.rpc('get_my_role')

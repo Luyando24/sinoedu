@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, DollarSign, MapPin, GraduationCap } from "lucide-react"
+import { HeroSearchForm } from "@/components/HeroSearchForm"
 
 const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
   if (!blocks) return fallback
@@ -73,11 +74,10 @@ export default async function ProgramsPage({
           </p>
         </div>
         <div className="w-full md:w-auto">
-          {/* We might want to replace this with the HeroSearchForm or keep a smaller local one */}
-          {/* For now, keeping the smaller one but it might not have all fields. */}
-          {/* <SearchForm /> */}
         </div>
       </div>
+
+      <HeroSearchForm variant="plain" enableAnimation={false} />
 
       <div className="space-y-6">
         {programs && programs.length > 0 ? (
