@@ -46,8 +46,8 @@ export function Sidebar({ items }: SidebarProps) {
         <Link href="/" className="flex items-center gap-2">
           <div className="relative h-8 w-8">
             <Image 
-              src="/logo.png" 
-              alt="CSA Logo" 
+              src="/images/logo-new.jpg" 
+              alt="Sinoway Logo" 
               fill 
               className="object-contain"
             />

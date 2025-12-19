@@ -48,7 +48,7 @@ export function Header({ content = [], user }: { content?: ContentBlock[], user?
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative h-14 w-14">
               <Image
-                src="/images/logo.png"
+                src="/images/logo-new.jpg"
                 alt="Sinoway Logo"
                 fill
                 className="object-contain"

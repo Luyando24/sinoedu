@@ -23,7 +23,7 @@ export async function Footer() {
             <Link href="/" className="flex items-center space-x-2">
                 <div className="relative h-12 w-12">
                   <Image
-                    src="/images/logo.png"
+                    src="/images/logo-new.jpg"
                     alt="Sinoway Logo"
                     fill
                     className="object-contain"
