@@ -4,9 +4,8 @@ import { useState, useEffect } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Search } from "lucide-react"
+import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play } from "lucide-react"
 import Link from "next/link"
-import { User } from "@supabase/supabase-js"
 import { HeroSearchForm } from "./HeroSearchForm"
 
 const SLIDER_IMAGES = [
@@ -25,7 +24,7 @@ const getContent = (blocks: ContentBlock[], key: string, fallback: string) => {
   return blocks?.find(b => b.key === key)?.content || fallback
 }
 
-export function HomeClient({ content, user }: { content: ContentBlock[], user: User | null }) {
+export function HomeClient({ content }: { content: ContentBlock[] }) {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   useEffect(() => {
