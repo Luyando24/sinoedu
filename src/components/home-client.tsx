@@ -113,12 +113,17 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                 <p>info@sinowayedu.com</p>
               </div>
               <div className="flex gap-4 mt-6">
-                <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                <Link href="https://www.facebook.com/share/1DPPMYfmyZ/" target="_blank" rel="noopener noreferrer">
+                  <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                </Link>
                 <div className="h-6 w-6 border rounded flex items-center justify-center cursor-pointer hover:bg-white/10">VK</div>
                 <Link href="https://www.instagram.com/sinowayedu/?utm_source=qr&igsh=MXR4cGs5emdxNGxweg%3D%3D" target="_blank" rel="noopener noreferrer">
                   <Instagram className="h-6 w-6 cursor-pointer hover:text-white/80" />
                 </Link>
                 <MessageCircle className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                <Link href="https://youtube.com/@sinowayedu?si=HB8B_8LLfJs1OO26" target="_blank" rel="noopener noreferrer">
+                  <Youtube className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                </Link>
               </div>
             </div>
           </div>
