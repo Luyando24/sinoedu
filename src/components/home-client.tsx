@@ -293,6 +293,36 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                 </div>
               </div>
             </Link>
+
+            {/* Silk Road Scholarship */}
+            <Link href="/scholarships#silk" className="block transition-transform hover:scale-105 duration-300">
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex flex-col">
+                <div className="h-2/3 relative">
+                   <Image src="/images/gallery-5.jpg" alt="Silk Road Scholarship" fill className="object-cover" />
+                </div>
+                <div className="h-1/3 bg-[#1e5aa0] flex items-center justify-center gap-4 text-white p-4">
+                  <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
+                    <Globe className="h-6 w-6" />
+                  </div>
+                  <span className="text-xl font-semibold">Silk Road<br/>Scholarship</span>
+                </div>
+              </div>
+            </Link>
+
+            {/* Enterprise Scholarship */}
+            <Link href="/scholarships#enterprise" className="block transition-transform hover:scale-105 duration-300">
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex flex-col">
+                <div className="h-2/3 relative">
+                   <Image src="/images/gallery-7.jpg" alt="Enterprise Scholarship" fill className="object-cover" />
+                </div>
+                <div className="h-1/3 bg-[#1e5aa0] flex items-center justify-center gap-4 text-white p-4">
+                  <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
+                    <Briefcase className="h-6 w-6" />
+                  </div>
+                  <span className="text-xl font-semibold">Enterprise<br/>Scholarship</span>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </section>
