@@ -240,7 +240,7 @@ export default async function ScholarshipsPage() {
                  </div>
                  <h2 className="text-3xl font-bold mb-4">Silk Road Scholarship</h2>
                  <p className="text-blue-100 text-lg mb-8 leading-relaxed">
-                   Designed for students from "Belt and Road" initiative countries to foster talent and cultural exchange.
+                   Designed for students from &quot;Belt and Road&quot; initiative countries to foster talent and cultural exchange.
                  </p>
                  <Link href="/contact">
                    <Button className="bg-white text-[#1e5aa0] hover:bg-blue-50 w-fit">
