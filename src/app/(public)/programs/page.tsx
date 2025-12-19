@@ -64,10 +64,10 @@ export default async function ProgramsPage({
   const { data: programs } = await queryBuilder
 
   return (
-    <div className="container py-16 space-y-12">
+    <div className="container py-16 space-y-12 bg-slate-50 min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b pb-8">
         <div className="space-y-4 max-w-2xl">
-          <h1 className="text-4xl font-bold tracking-tight">{getContent(blocks, 'programs.header.title', "Academic Programs")}</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-[#0056b3]">{getContent(blocks, 'programs.header.title', "Academic Programs")}</h1>
           <p className="text-xl text-muted-foreground">
             {getContent(blocks, 'programs.header.desc', "Curated opportunities for international students. Find your perfect match.")}
           </p>
@@ -82,15 +82,15 @@ export default async function ProgramsPage({
       <div className="space-y-6">
         {programs && programs.length > 0 ? (
           programs.map((program) => (
-            <div key={program.id} className="group bg-card hover:bg-muted/30 border rounded-2xl p-6 transition-all hover:shadow-md flex flex-col md:flex-row gap-6">
+            <div key={program.id} className="group bg-white hover:bg-white border border-gray-200 rounded-2xl p-6 transition-all hover:shadow-lg flex flex-col md:flex-row gap-6">
                <div className="flex-1 space-y-4">
                  <div className="flex items-start justify-between">
                    <div>
                      <div className="flex gap-2 mb-2">
-                        <Badge variant="secondary">{program.level}</Badge>
-                        {program.language && <Badge variant="outline">{program.language}</Badge>}
+                        <Badge variant="secondary" className="bg-slate-100 text-[#0056b3] hover:bg-slate-200">{program.level}</Badge>
+                        {program.language && <Badge variant="outline" className="border-[#0056b3]/20 text-[#0056b3]">{program.language}</Badge>}
                      </div>
-                     <h3 className="text-2xl font-bold group-hover:text-brand-red transition-colors">{program.title}</h3>
+                     <h3 className="text-2xl font-bold group-hover:text-[#0056b3] transition-colors">{program.title}</h3>
                      <div className="flex items-center gap-2 text-muted-foreground mt-1">
                        <MapPin className="h-4 w-4" />
                        <span className="font-medium">{program.universities?.name || "University"}</span>
@@ -101,19 +101,19 @@ export default async function ProgramsPage({
                  
                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                     <Clock className="h-4 w-4" />
+                     <Clock className="h-4 w-4 text-[#0056b3]" />
                      {program.duration || "N/A"}
                    </div>
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                     <DollarSign className="h-4 w-4" />
+                     <DollarSign className="h-4 w-4 text-[#0056b3]" />
                      {program.tuition_fee || "N/A"}
                    </div>
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                     <Calendar className="h-4 w-4" />
+                     <Calendar className="h-4 w-4 text-[#0056b3]" />
                      {program.intake || "N/A"}
                    </div>
                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                     <GraduationCap className="h-4 w-4" />
+                     <GraduationCap className="h-4 w-4 text-[#0056b3]" />
                      {program.scholarship_details ? "Scholarship" : "Self-funded"}
                    </div>
                  </div>
@@ -121,14 +121,14 @@ export default async function ProgramsPage({
                
                <div className="flex flex-col justify-center min-w-[150px]">
                  <Link href={`/programs/${program.id}`}>
-                   <Button className="w-full">View Details</Button>
+                   <Button className="w-full bg-[#0056b3] hover:bg-[#0056b3]/90">View Details</Button>
                  </Link>
                </div>
             </div>
           ))
         ) : (
-          <div className="col-span-full text-center py-20 bg-muted/20 rounded-3xl">
-            <h3 className="text-xl font-semibold">No programs found</h3>
+          <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
+            <h3 className="text-xl font-semibold text-[#0056b3]">No programs found</h3>
             <p className="text-muted-foreground mt-2">Try adjusting your filters.</p>
           </div>
         )}

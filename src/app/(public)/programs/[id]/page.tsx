@@ -57,47 +57,48 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
   const accommodationCosts = program.accommodation_costs as unknown as AccommodationCosts;
 
   return (
-    <div className="container py-10 space-y-8">
-      {/* Navigation & Admin Controls */}
-      <div className="flex items-center justify-between">
-        <Link href={`/universities/${program.university_id}`}>
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to University
-          </Button>
-        </Link>
-        
-        {isAdmin && (
-          <Link href={`/admin/programs/${program.id}`}>
-            <Button variant="outline" size="sm">
-              <Pencil className="mr-2 h-4 w-4" /> Edit Program
+    <div className="bg-slate-50 min-h-screen py-10">
+      <div className="container space-y-8">
+        {/* Navigation & Admin Controls */}
+        <div className="flex items-center justify-between">
+          <Link href={`/universities/${program.university_id}`}>
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to University
             </Button>
           </Link>
-        )}
-      </div>
+          
+          {isAdmin && (
+            <Link href={`/admin/programs/${program.id}`}>
+              <Button variant="outline" size="sm">
+                <Pencil className="mr-2 h-4 w-4" /> Edit Program
+              </Button>
+            </Link>
+          )}
+        </div>
 
-      {/* Hero Section */}
-      <div className="bg-muted/30 rounded-2xl p-8 border">
-        <div className="flex flex-col md:flex-row gap-8 justify-between">
-          <div className="space-y-4 max-w-3xl">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="default" className="bg-brand-blue hover:bg-brand-blue/90">
-                {program.level}
-              </Badge>
-              {program.language && (
-                <Badge variant="secondary">
-                  <Languages className="mr-1 h-3 w-3" /> {program.language} Taught
+        {/* Hero Section */}
+        <div className="bg-white rounded-2xl p-8 border shadow-sm">
+          <div className="flex flex-col md:flex-row gap-8 justify-between">
+            <div className="space-y-4 max-w-3xl">
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="default" className="bg-[#0056b3] hover:bg-[#0056b3]/90">
+                  {program.level}
                 </Badge>
-              )}
-            </div>
-            
-            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-brand-dark-blue">
-              {program.title}
-            </h1>
-            
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground text-lg">
-              <div className="flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
-                <span className="font-medium text-foreground">{universityName}</span>
+                {program.language && (
+                  <Badge variant="secondary">
+                    <Languages className="mr-1 h-3 w-3" /> {program.language} Taught
+                  </Badge>
+                )}
+              </div>
+              
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[#0056b3]">
+                {program.title}
+              </h1>
+              
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground text-lg">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5" />
+                  <span className="font-medium text-foreground">{universityName}</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-5 w-5" />

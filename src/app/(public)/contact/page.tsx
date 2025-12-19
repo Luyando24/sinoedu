@@ -17,13 +17,13 @@ export default async function ContactPage() {
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
   return (
-    <div className="flex flex-col gap-12 py-16">
+    <div className="flex flex-col gap-12 py-16 bg-slate-50 min-h-screen">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
            {/* Left: Contact Info & Text */}
            <div className="space-y-8">
              <div className="space-y-4">
-               <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{getContent(blocks, 'contact.hero.title', "Let's Start Your Journey")}</h1>
+               <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0056b3]">{getContent(blocks, 'contact.hero.title', "Let's Start Your Journey")}</h1>
                <p className="text-xl text-muted-foreground leading-relaxed">
                  {getContent(blocks, 'contact.hero.desc', "Whether you have questions about a specific program or need guidance on the visa process, our dedicated team is here to assist you.")}
                </p>
@@ -57,11 +57,11 @@ export default async function ContactPage() {
                   },
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4">
-                    <div className="h-12 w-12 rounded-full bg-brand-red/10 flex items-center justify-center flex-shrink-0">
-                      <item.icon className="h-5 w-5 text-brand-red" />
+                    <div className="h-12 w-12 rounded-full bg-[#0056b3]/10 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="h-5 w-5 text-[#0056b3]" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-1">{item.title}</h3>
+                      <h3 className="font-bold text-lg mb-1 text-[#0056b3]">{item.title}</h3>
                       {item.details.map((line, j) => (
                         <p key={j} className="text-muted-foreground">{line}</p>
                       ))}
@@ -72,28 +72,28 @@ export default async function ContactPage() {
            </div>
 
            {/* Right: Clean Form */}
-           <div className="bg-muted/20 p-8 md:p-10 rounded-3xl border shadow-sm">
-             <h3 className="text-2xl font-bold mb-6">{getContent(blocks, 'contact.form.title', "Send a Message")}</h3>
+           <div className="bg-white p-8 md:p-10 rounded-3xl border shadow-lg">
+             <h3 className="text-2xl font-bold mb-6 text-[#0056b3]">{getContent(blocks, 'contact.form.title', "Send a Message")}</h3>
              <form className="space-y-5">
                <div className="grid sm:grid-cols-2 gap-4">
                  <div className="space-y-2">
                    <label className="text-sm font-medium">First Name</label>
-                   <Input placeholder="John" className="bg-background" />
+                   <Input placeholder="John" className="bg-slate-50" />
                  </div>
                  <div className="space-y-2">
                    <label className="text-sm font-medium">Last Name</label>
-                   <Input placeholder="Doe" className="bg-background" />
+                   <Input placeholder="Doe" className="bg-slate-50" />
                  </div>
                </div>
                
                <div className="space-y-2">
                  <label className="text-sm font-medium">Email Address</label>
-                 <Input type="email" placeholder="john@example.com" className="bg-background" />
+                 <Input type="email" placeholder="john@example.com" className="bg-slate-50" />
                </div>
 
                <div className="space-y-2">
                  <label className="text-sm font-medium">Subject</label>
-                 <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                 <select className="flex h-10 w-full rounded-md border border-input bg-slate-50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                    <option>General Inquiry</option>
                    <option>Admissions</option>
                    <option>Partnerships</option>
@@ -103,10 +103,10 @@ export default async function ContactPage() {
 
                <div className="space-y-2">
                  <label className="text-sm font-medium">Message</label>
-                 <Textarea placeholder="How can we help you?" className="min-h-[150px] bg-background" />
+                 <Textarea placeholder="How can we help you?" className="min-h-[150px] bg-slate-50" />
                </div>
 
-               <Button size="lg" className="w-full">Send Message</Button>
+               <Button size="lg" className="w-full bg-[#0056b3] hover:bg-[#0056b3]/90">Send Message</Button>
              </form>
            </div>
         </div>

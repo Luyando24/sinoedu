@@ -15,13 +15,13 @@ export default async function AboutPage() {
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
   return (
-    <div className="flex flex-col gap-24 py-16">
+    <div className="flex flex-col gap-24 py-16 bg-slate-50">
       {/* Intro Section - Split View */}
       <section className="container">
         <div className="flex flex-col lg:flex-row gap-16 items-center">
           <div className="lg:w-1/2 space-y-8">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-              {getContent(blocks, 'about.hero.title_prefix', 'Pioneering')} <span className="text-brand-red">{getContent(blocks, 'about.hero.title_highlight', 'Educational Bridges')}</span> {getContent(blocks, 'about.hero.title_suffix', 'to China')}
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0056b3]">
+              {getContent(blocks, 'about.hero.title_prefix', 'Pioneering')} <span className="text-[#0056b3]">{getContent(blocks, 'about.hero.title_highlight', 'Educational Bridges')}</span> {getContent(blocks, 'about.hero.title_suffix', 'to China')}
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
               {getContent(blocks, 'about.hero.description', 'Founded on the belief that education knows no borders, Sinoway Education has evolved from a small consultancy to a leading authority in Sino-international student exchange. We are more than agents; we are mentors, strategists, and your first family in a new land.')}
@@ -34,8 +34,8 @@ export default async function AboutPage() {
                 getContent(blocks, 'about.stats.4', "24/7 Student Support")
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-brand-red" />
-                  <span className="font-medium">{item}</span>
+                  <CheckCircle className="h-5 w-5 text-[#0056b3]" />
+                  <span className="font-medium text-[#0056b3]">{item}</span>
                 </div>
               ))}
             </div>
@@ -52,10 +52,10 @@ export default async function AboutPage() {
       </section>
 
       {/* Values Section - 3 Column */}
-      <section className="bg-muted/30 py-20">
+      <section className="bg-white py-20">
         <div className="container space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-4">
-            <h2 className="text-3xl font-bold">{getContent(blocks, 'about.values.title', 'Core Values Driving Us')}</h2>
+            <h2 className="text-3xl font-bold text-[#0056b3]">{getContent(blocks, 'about.values.title', 'Core Values Driving Us')}</h2>
             <p className="text-muted-foreground">{getContent(blocks, 'about.values.subtitle', 'The principles that guide every interaction and decision.')}</p>
           </div>
           
@@ -65,11 +65,11 @@ export default async function AboutPage() {
               { title: getContent(blocks, 'about.values.2.title', "Student-Centric"), desc: getContent(blocks, 'about.values.2.desc', "Your academic goals and personal well-being are our top priority.") },
               { title: getContent(blocks, 'about.values.3.title', "Excellence"), desc: getContent(blocks, 'about.values.3.desc', "We strive for the highest standards in application quality and support.") }
             ].map((value, i) => (
-              <div key={i} className="bg-background p-8 rounded-2xl border hover:border-brand-red transition-colors shadow-sm">
-                <div className="h-12 w-12 bg-brand-red/10 rounded-xl flex items-center justify-center mb-6">
-                  <span className="text-2xl font-bold text-brand-red">{i + 1}</span>
+              <div key={i} className="bg-slate-50 p-8 rounded-2xl border hover:border-[#0056b3] transition-colors shadow-sm">
+                <div className="h-12 w-12 bg-[#0056b3]/10 rounded-xl flex items-center justify-center mb-6">
+                  <span className="text-2xl font-bold text-[#0056b3]">{i + 1}</span>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{value.title}</h3>
+                <h3 className="text-xl font-bold mb-3 text-[#0056b3]">{value.title}</h3>
                 <p className="text-muted-foreground">{value.desc}</p>
               </div>
             ))}
@@ -79,14 +79,14 @@ export default async function AboutPage() {
 
       {/* Team/Office - Large Image */}
       <section className="container">
-        <div className="relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden">
+        <div className="relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden shadow-xl">
           <Image 
             src={getContent(blocks, 'about.team.image', "/images/gallery-5.jpg")}
             alt="Office Environment" 
             fill 
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-[#0056b3]/60 flex items-center justify-center">
              <div className="text-center text-white space-y-4 max-w-2xl px-4">
                <h2 className="text-3xl md:text-4xl font-bold">{getContent(blocks, 'about.team.title', 'Meet Our Experts')}</h2>
                <p className="text-lg text-white/90">

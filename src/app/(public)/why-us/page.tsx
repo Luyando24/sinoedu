@@ -49,11 +49,11 @@ export default async function WhyUsPage() {
   ]
 
   return (
-    <div className="flex flex-col gap-20 py-16">
+    <div className="flex flex-col gap-20 py-16 bg-slate-50">
       {/* Hero */}
       <section className="container text-center space-y-6 max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-          {getContent(blocks, 'whyus.hero.title_prefix', "Why Choose")} <span className="text-brand-red">{getContent(blocks, 'whyus.hero.highlight', "Sinoway?")}</span>
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-[#0056b3]">
+          {getContent(blocks, 'whyus.hero.title_prefix', "Why Choose")} <span className="text-[#0056b3]">{getContent(blocks, 'whyus.hero.highlight', "Sinoway?")}</span>
         </h1>
         <p className="text-xl text-muted-foreground leading-relaxed">
           {getContent(blocks, 'whyus.hero.desc', "Choosing an education consultant is as important as choosing a university. Here is what sets us apart in the crowded landscape of study abroad agencies.")}
@@ -64,11 +64,11 @@ export default async function WhyUsPage() {
       <section className="container">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {reasons.map((reason, i) => (
-            <div key={i} className="bg-muted/20 p-8 rounded-3xl border hover:border-brand-red hover:shadow-lg transition-all group">
-              <div className="h-14 w-14 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <reason.icon className="h-7 w-7 text-brand-red" />
+            <div key={i} className="bg-white p-8 rounded-3xl border hover:border-[#0056b3] hover:shadow-lg transition-all group">
+              <div className="h-14 w-14 rounded-2xl bg-[#0056b3]/10 shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <reason.icon className="h-7 w-7 text-[#0056b3]" />
               </div>
-              <h3 className="text-xl font-bold mb-3">{reason.title}</h3>
+              <h3 className="text-xl font-bold mb-3 text-[#0056b3]">{reason.title}</h3>
               <p className="text-muted-foreground leading-relaxed">
                 {reason.desc}
               </p>
@@ -78,7 +78,7 @@ export default async function WhyUsPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-brand-blue text-white py-20">
+      <section className="bg-[#0056b3] text-white py-20">
         <div className="container text-center space-y-8">
           <h2 className="text-3xl md:text-4xl font-bold">{getContent(blocks, 'whyus.cta.title', "Ready to experience the difference?")}</h2>
           <p className="text-white/80 max-w-2xl mx-auto text-lg">
@@ -86,7 +86,7 @@ export default async function WhyUsPage() {
           </p>
           <div className="flex justify-center gap-4">
             <Link href="/contact">
-               <Button size="lg" variant="secondary" className="font-bold">
+               <Button size="lg" variant="secondary" className="font-bold text-[#0056b3]">
                  {getContent(blocks, 'whyus.cta.button', "Get Free Consultation")}
                </Button>
             </Link>

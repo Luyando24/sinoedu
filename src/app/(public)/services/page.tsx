@@ -49,9 +49,9 @@ export default async function ServicesPage() {
   ]
 
   return (
-    <div className="container py-16 space-y-20">
+    <div className="container py-16 space-y-20 bg-slate-50 min-h-screen">
        <div className="text-center space-y-6 max-w-3xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{getContent(blocks, 'services.hero.title', "Our Service Portfolio")}</h1>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0056b3]">{getContent(blocks, 'services.hero.title', "Our Service Portfolio")}</h1>
         <p className="text-xl text-muted-foreground">
           {getContent(blocks, 'services.hero.desc', "We offer a holistic suite of services designed to handle every aspect of your study abroad journey.")}
         </p>
@@ -59,29 +59,29 @@ export default async function ServicesPage() {
 
       <div className="space-y-12">
         {services.map((service, i) => (
-          <div key={i} className="group flex flex-col md:flex-row gap-8 items-start border-b pb-12 last:border-0">
+          <div key={i} className="group flex flex-col md:flex-row gap-8 items-start border-b border-gray-200 pb-12 last:border-0">
              <div className="md:w-1/3 space-y-4">
-                <div className="h-14 w-14 rounded-2xl bg-brand-red text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div className="h-14 w-14 rounded-2xl bg-[#0056b3] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <service.icon className="h-7 w-7" />
                 </div>
-                <h2 className="text-2xl font-bold">{service.title}</h2>
+                <h2 className="text-2xl font-bold text-[#0056b3]">{service.title}</h2>
                 <p className="text-muted-foreground leading-relaxed">
                   {service.desc}
                 </p>
                 <Link href="/contact">
-                  <Button variant="link" className="p-0 text-brand-red font-semibold group-hover:translate-x-2 transition-transform">
+                  <Button variant="link" className="p-0 text-[#0056b3] font-semibold group-hover:translate-x-2 transition-transform">
                     Inquire Now <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
              </div>
              
-             <div className="md:w-2/3 bg-muted/30 rounded-3xl p-8 hover:bg-muted/50 transition-colors">
-               <h3 className="font-semibold mb-6">What&apos;s Included:</h3>
+             <div className="md:w-2/3 bg-white rounded-3xl p-8 shadow-sm hover:shadow-md transition-all">
+               <h3 className="font-semibold mb-6 text-[#0056b3]">What&apos;s Included:</h3>
                <div className="grid sm:grid-cols-2 gap-4">
                  {service.features.map((feature, j) => (
                    <div key={j} className="flex items-center gap-3">
-                     <CheckCircle className="h-5 w-5 text-brand-blue flex-shrink-0" />
-                     <span className="text-sm md:text-base">{feature}</span>
+                     <CheckCircle className="h-5 w-5 text-[#0056b3] flex-shrink-0" />
+                     <span className="text-sm md:text-base text-gray-700">{feature}</span>
                    </div>
                  ))}
                </div>
@@ -90,13 +90,13 @@ export default async function ServicesPage() {
         ))}
       </div>
       
-      <div className="bg-brand-blue text-white rounded-3xl p-12 text-center space-y-6">
+      <div className="bg-[#0056b3] text-white rounded-3xl p-12 text-center space-y-6 shadow-xl">
         <h2 className="text-3xl font-bold">{getContent(blocks, 'services.cta.title', "Need a Custom Package?")}</h2>
         <p className="text-white/80 max-w-2xl mx-auto">
           {getContent(blocks, 'services.cta.desc', "We understand every student's situation is unique. Contact us to discuss a tailored service plan that fits your specific needs.")}
         </p>
         <Link href="/contact">
-          <Button size="lg" variant="secondary" className="text-brand-blue font-bold">
+          <Button size="lg" variant="secondary" className="text-[#0056b3] font-bold bg-white hover:bg-white/90">
             {getContent(blocks, 'services.cta.button', "Contact Support")}
           </Button>
         </Link>

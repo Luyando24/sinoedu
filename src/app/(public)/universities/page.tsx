@@ -35,9 +35,9 @@ export default async function UniversitiesPage() {
     .order('name')
 
   return (
-    <div className="container py-16 space-y-12">
+    <div className="container py-16 space-y-12 bg-slate-50 min-h-screen">
       <div className="text-center space-y-4 max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold tracking-tight">{getContent(blocks, 'universities.header.title', "Partner Universities")}</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-[#0056b3]">{getContent(blocks, 'universities.header.title', "Partner Universities")}</h1>
         <p className="text-xl text-muted-foreground">
           {getContent(blocks, 'universities.header.desc', "Explore China's top institutions. We are official representatives for these prestigious universities.")}
         </p>
@@ -46,7 +46,7 @@ export default async function UniversitiesPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {universities && universities.length > 0 ? (
           universities.map((uni) => (
-            <Card key={uni.id} className="hover:shadow-lg transition-shadow overflow-hidden flex flex-col">
+            <Card key={uni.id} className="hover:shadow-lg transition-shadow overflow-hidden flex flex-col bg-white border-gray-200">
                {uni.image_url && (
                 <div className="relative h-48 w-full">
                   <Image 
@@ -60,8 +60,8 @@ export default async function UniversitiesPage() {
               <CardHeader className="space-y-4">
                 <div className="flex justify-between items-start">
                   {!uni.image_url && (
-                    <div className="h-12 w-12 rounded-lg bg-brand-red/10 flex items-center justify-center">
-                       <GraduationCap className="h-6 w-6 text-brand-red" />
+                    <div className="h-12 w-12 rounded-lg bg-[#0056b3]/10 flex items-center justify-center">
+                       <GraduationCap className="h-6 w-6 text-[#0056b3]" />
                     </div>
                   )}
                   {uni.logo_url && isAdmin && (
@@ -75,7 +75,7 @@ export default async function UniversitiesPage() {
                     </div>
                   )}
                 </div>
-                <CardTitle className="line-clamp-2">
+                <CardTitle className="line-clamp-2 text-[#0056b3]">
                     {isAdmin ? uni.name : "University in " + (uni.location || "China")}
                 </CardTitle>
               </CardHeader>
@@ -90,7 +90,7 @@ export default async function UniversitiesPage() {
                   </p>
                 )}
                 <div className="flex gap-2">
-                   {uni.ranking && <span className="text-xs bg-muted px-2 py-1 rounded">{uni.ranking}</span>}
+                   {uni.ranking && <span className="text-xs bg-slate-100 px-2 py-1 rounded text-[#0056b3] font-medium">{uni.ranking}</span>}
                 </div>
               </CardContent>
               <CardFooter className="border-t pt-4">
@@ -99,7 +99,7 @@ export default async function UniversitiesPage() {
                      {uni.programs?.[0]?.count || 0} Programs
                    </span>
                    <Link href={`/universities/${uni.id}`}>
-                    <Button variant="ghost" size="sm" className="group">
+                    <Button variant="ghost" size="sm" className="group text-[#0056b3] hover:text-[#0056b3]/80 hover:bg-[#0056b3]/10">
                       View Details <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
@@ -108,8 +108,8 @@ export default async function UniversitiesPage() {
             </Card>
           ))
         ) : (
-          <div className="col-span-full text-center py-20 bg-muted/20 rounded-3xl">
-            <h3 className="text-xl font-semibold">No universities found</h3>
+          <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
+            <h3 className="text-xl font-semibold text-[#0056b3]">No universities found</h3>
             <p className="text-muted-foreground mt-2">Check back later for updates.</p>
           </div>
         )}

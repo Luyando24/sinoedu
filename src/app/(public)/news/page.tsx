@@ -25,9 +25,9 @@ export default async function NewsPage() {
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
   return (
-    <div className="container py-16 space-y-12">
+    <div className="container py-16 space-y-12 bg-slate-50 min-h-screen">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight">{getContent(blocks, 'news.hero.title', 'Latest News & Updates')}</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-[#0056b3]">{getContent(blocks, 'news.hero.title', 'Latest News & Updates')}</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           {getContent(blocks, 'news.hero.desc', 'Stay informed about scholarships, university updates, and student life in China.')}
         </p>
@@ -36,8 +36,8 @@ export default async function NewsPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {posts && posts.length > 0 ? (
           posts.map((item) => (
-            <Card key={item.id} className="overflow-hidden flex flex-col h-full hover:shadow-lg transition-shadow">
-              <div className="relative h-48 w-full bg-muted">
+            <Card key={item.id} className="overflow-hidden flex flex-col h-full hover:shadow-lg transition-shadow bg-white border-gray-200">
+              <div className="relative h-48 w-full bg-slate-100">
                 {item.image_url ? (
                   <Image 
                     src={item.image_url} 
@@ -51,7 +51,7 @@ export default async function NewsPage() {
                   </div>
                 )}
                 {item.category && (
-                  <div className="absolute top-4 left-4 bg-brand-blue text-white text-xs px-2 py-1 rounded-full">
+                  <div className="absolute top-4 left-4 bg-[#0056b3] text-white text-xs px-2 py-1 rounded-full">
                     {item.category}
                   </div>
                 )}
@@ -61,7 +61,7 @@ export default async function NewsPage() {
                   <CalendarDays className="h-4 w-4 mr-2" />
                   {new Date(item.created_at).toLocaleDateString()}
                 </div>
-                <CardTitle className="line-clamp-2 hover:text-brand-red transition-colors">
+                <CardTitle className="line-clamp-2 hover:text-[#0056b3] transition-colors">
                   <Link href={`/news/${item.id}`}>
                     {item.title}
                   </Link>
@@ -74,14 +74,14 @@ export default async function NewsPage() {
               </CardContent>
               <CardFooter>
                 <Link href={`/news/${item.id}`} className="w-full">
-                  <Button variant="outline" className="w-full">Read More</Button>
+                  <Button variant="outline" className="w-full border-[#0056b3] text-[#0056b3] hover:bg-[#0056b3] hover:text-white">Read More</Button>
                 </Link>
               </CardFooter>
             </Card>
           ))
         ) : (
-          <div className="col-span-full text-center py-20 bg-muted/20 rounded-3xl">
-            <h3 className="text-xl font-semibold">{getContent(blocks, 'news.no_news.title', 'No news yet')}</h3>
+          <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
+            <h3 className="text-xl font-semibold text-[#0056b3]">{getContent(blocks, 'news.no_news.title', 'No news yet')}</h3>
             <p className="text-muted-foreground mt-2">{getContent(blocks, 'news.no_news.desc', 'Check back later for the latest updates.')}</p>
           </div>
         )}

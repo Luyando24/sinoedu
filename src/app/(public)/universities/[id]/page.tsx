@@ -49,55 +49,56 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
   const displayName = isAdmin ? university.name : `University in ${university.location || 'China'}`
 
   return (
-    <div className="container py-10 space-y-8">
-      <div className="flex items-center gap-4">
-        <Link href="/universities">
-          <Button variant="ghost" size="sm">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Universities
-          </Button>
-        </Link>
-      </div>
+    <div className="bg-slate-50 min-h-screen py-10">
+      <div className="container space-y-8">
+        <div className="flex items-center gap-4">
+          <Link href="/universities">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Universities
+            </Button>
+          </Link>
+        </div>
 
-      {/* Hero Section */}
-      <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden bg-muted">
-        {university.image_url ? (
-          <Image
-            src={university.image_url}
-            alt={isAdmin ? university.name : "University Campus"}
-            fill
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-muted/50">
-            <School className="h-24 w-24 text-muted-foreground/50" />
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end">
-          <div className="p-8 text-white w-full">
-            <div className="flex flex-col md:flex-row gap-6 md:items-end justify-between">
-              <div className="space-y-4">
-                <div className="flex gap-2">
-                  {university.ranking && (
-                    <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none">
-                      <Trophy className="mr-1 h-3 w-3" /> {university.ranking}
-                    </Badge>
-                  )}
-                  {university.location && (
-                    <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none">
-                      <MapPin className="mr-1 h-3 w-3" /> {university.location}
-                    </Badge>
+        {/* Hero Section */}
+        <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden bg-white shadow-sm">
+          {university.image_url ? (
+            <Image
+              src={university.image_url}
+              alt={isAdmin ? university.name : "University Campus"}
+              fill
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-muted/50">
+              <School className="h-24 w-24 text-muted-foreground/50" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end">
+            <div className="p-8 text-white w-full">
+              <div className="flex flex-col md:flex-row gap-6 md:items-end justify-between">
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    {university.ranking && (
+                      <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none">
+                        <Trophy className="mr-1 h-3 w-3" /> {university.ranking}
+                      </Badge>
+                    )}
+                    {university.location && (
+                      <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none">
+                        <MapPin className="mr-1 h-3 w-3" /> {university.location}
+                      </Badge>
+                    )}
+                  </div>
+                  <h1 className="text-3xl md:text-5xl font-bold">{displayName}</h1>
+                  {university.established_year && (
+                      <p className="text-white/80 flex items-center gap-2">
+                          <CalendarDays className="h-4 w-4" /> Established {university.established_year}
+                      </p>
                   )}
                 </div>
-                <h1 className="text-3xl md:text-5xl font-bold">{displayName}</h1>
-                {university.established_year && (
-                    <p className="text-white/80 flex items-center gap-2">
-                        <CalendarDays className="h-4 w-4" /> Established {university.established_year}
-                    </p>
-                )}
-              </div>
-              
-              <div className="flex gap-3">
+                
+                <div className="flex gap-3">
                 {isAdmin && university.website_url && (
                     <a href={university.website_url} target="_blank" rel="noreferrer">
                         <Button variant="outline" className="bg-white/10 text-white border-white/20 hover:bg-white/20">

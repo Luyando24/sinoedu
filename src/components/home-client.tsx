@@ -3,8 +3,6 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play } from "lucide-react"
-import { FadeIn } from "@/components/ui/motion"
-import { motion } from "framer-motion"
 import Link from "next/link"
 
 type ContentBlock = {
