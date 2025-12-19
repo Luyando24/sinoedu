@@ -110,7 +110,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>admissions@sinoway.com</p>
+                <p>info@sinowayedu.com</p>
               </div>
               <div className="flex gap-4 mt-6">
                 <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
@@ -138,7 +138,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>support@sinoway.com</p>
+                <p>info@sinowayedu.com</p>
               </div>
               <div className="flex gap-3 items-center text-sm mt-4">
                 <Globe className="h-5 w-5 shrink-0" />
@@ -164,7 +164,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>students@sinoway.com</p>
+                <p>info@sinowayedu.com</p>
               </div>
               <div className="flex gap-3 items-start text-sm mt-4">
                 <Globe className="h-5 w-5 shrink-0 mt-1" />

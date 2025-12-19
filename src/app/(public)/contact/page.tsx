@@ -43,8 +43,8 @@ export default async function ContactPage() {
                     icon: Mail, 
                     title: getContent(blocks, 'contact.info.email.title', "Email Us"), 
                     details: [
-                      getContent(blocks, 'contact.info.email.line1', "admissions@sinoway.com"), 
-                      getContent(blocks, 'contact.info.email.line2', "support@sinoway.com")
+                      getContent(blocks, 'contact.info.email.line1', "info@sinowayedu.com"), 
+                      getContent(blocks, 'contact.info.email.line2', "info@sinowayedu.com")
                     ] 
                   },
                   { 
