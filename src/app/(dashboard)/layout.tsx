@@ -17,13 +17,21 @@ export default async function DashboardLayout({
   ]
 
   if (user) {
-    const { data: profile } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    // Use RPC for role check to be safe
+    const { data: roleData } = await supabase.rpc('get_my_role')
+    let userRole = roleData
     
-    if (profile?.role === 'admin') {
+    // Fallback if RPC fails
+    if (!userRole) {
+       const { data: profile } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+       userRole = profile?.role
+    }
+
+    if (userRole === 'admin') {
       sidebarItems = [
         { name: "Overview", href: "/admin", icon: "Shield" },
         { name: "Programs", href: "/admin/programs", icon: "FileText" },
