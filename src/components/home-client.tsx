@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Youtube, BookOpen } from "lucide-react"
+import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Youtube, BookOpen, Trophy, GraduationCap } from "lucide-react"
 import Link from "next/link"
 
 const SLIDER_IMAGES = [
@@ -198,6 +198,35 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
         </div>
       </section>
 
+      {/* Programs Section */}
+      <section className="container">
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">Programs</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { title: "Bachelor", img: "/images/gallery-1.jpg", link: "/programs?level=Bachelor" },
+            { title: "Master", img: "/images/gallery-2.jpg", link: "/programs?level=Master" },
+            { title: "Doctor", img: "/images/gallery-3.jpg", link: "/programs?level=Doctor" },
+            { title: "Short-term Language", img: "/images/gallery-4.jpg", link: "/programs?level=Short-term Language" },
+            { title: "Long-term Language", img: "/images/gallery-5.jpg", link: "/programs?level=Long-term Language" },
+            { title: "College", img: "/images/gallery-6.jpg", link: "/programs?level=College" },
+            { title: "High School", img: "/images/gallery-7.jpg", link: "/programs?level=High School" },
+            { title: "Secondary Vocational Education", img: "/images/gallery-8.jpg", link: "/programs?level=Secondary Vocational Education" },
+            { title: "Senior high school", img: "/images/gallery-9.jpg", link: "/programs?level=Senior high school" },
+          ].map((program, i) => (
+            <Link key={i} href={program.link} className="block group">
+              <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+                <div className="h-64 relative overflow-hidden">
+                  <Image src={program.img} alt={program.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="p-4 bg-[#0056b3] text-white">
+                  <h3 className="text-lg font-bold">{program.title}</h3>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Scholarship Program */}
       <section className="bg-[#2d74c4] py-16">
         <div className="container">
@@ -232,6 +261,36 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                      Local Government<br/>Scholarship
                    </div>
                  </div>
+              </div>
+            </Link>
+
+            {/* University Scholarship */}
+            <Link href="/scholarships#university" className="block transition-transform hover:scale-105 duration-300">
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex flex-col">
+                <div className="h-2/3 relative">
+                   <Image src="/images/gallery-3.jpg" alt="University Scholarship" fill className="object-cover" />
+                </div>
+                <div className="h-1/3 bg-[#1e5aa0] flex items-center justify-center gap-4 text-white p-4">
+                  <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
+                    <Trophy className="h-6 w-6" />
+                  </div>
+                  <span className="text-xl font-semibold">University<br/>Scholarship</span>
+                </div>
+              </div>
+            </Link>
+
+            {/* International Chinese Language Teachers Scholarship */}
+            <Link href="/scholarships#teachers" className="block transition-transform hover:scale-105 duration-300">
+              <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[350px] flex flex-col">
+                <div className="h-2/3 relative">
+                   <Image src="/images/gallery-4.jpg" alt="International Chinese Language Teachers Scholarship" fill className="object-cover" />
+                </div>
+                <div className="h-1/3 bg-[#1e5aa0] flex items-center justify-center gap-4 text-white p-4">
+                  <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
+                    <GraduationCap className="h-6 w-6" />
+                  </div>
+                  <span className="text-xl font-semibold">International Chinese<br/>Language Teachers Scholarship</span>
+                </div>
               </div>
             </Link>
           </div>

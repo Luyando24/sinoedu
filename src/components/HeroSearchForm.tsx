@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
 import { motion } from "framer-motion"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 
 interface HeroSearchFormProps {
@@ -15,6 +15,8 @@ interface HeroSearchFormProps {
 
 export function HeroSearchForm({ className, enableAnimation = true, variant = "hero" }: HeroSearchFormProps) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  
   const [formData, setFormData] = useState({
     city: "",
     degree: "",
@@ -24,6 +26,20 @@ export function HeroSearchForm({ className, enableAnimation = true, variant = "h
     query: "",
     intake: ""
   })
+
+  useEffect(() => {
+    if (searchParams) {
+      setFormData({
+        city: searchParams.get("city") || "",
+        degree: searchParams.get("level") || "",
+        language: searchParams.get("language") || "",
+        duration: searchParams.get("duration") || "",
+        scholarship: searchParams.get("scholarship") || "",
+        query: searchParams.get("query") || "",
+        intake: searchParams.get("intake") || ""
+      })
+    }
+  }, [searchParams])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
