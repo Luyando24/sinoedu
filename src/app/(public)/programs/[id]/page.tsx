@@ -1,10 +1,10 @@
-import Image from "next/image"
-import { createClient } from "@/lib/supabase/server"
-import { notFound } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image";
+import { createClient } from "@/lib/supabase/server";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   MapPin, 
   CalendarDays, 
@@ -19,9 +19,9 @@ import {
   AlertCircle,
   Pencil,
   Trophy
-} from "lucide-react"
+} from "lucide-react";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
 interface AccommodationCosts {
   single?: string;
@@ -30,14 +30,14 @@ interface AccommodationCosts {
 }
 
 export default async function ProgramDetailsPage({ params }: { params: { id: string } }) {
-  const supabase = createClient()
+  const supabase = createClient();
   
   // Check if user is admin
-  const { data: { user } } = await supabase.auth.getUser()
-  let isAdmin = false
+  const { data: { user } } = await supabase.auth.getUser();
+  let isAdmin = false;
   if (user) {
-    const { data: role } = await supabase.rpc('get_my_role')
-    isAdmin = role === 'admin'
+    const { data: role } = await supabase.rpc('get_my_role');
+    isAdmin = role === 'admin';
   }
 
   // Fetch program with university
@@ -45,17 +45,17 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
     .from('programs')
     .select('*, universities(*)')
     .eq('id', params.id)
-    .single()
+    .single();
 
-  if (!program) notFound()
+  if (!program) notFound();
 
   // Handle University Name Privacy
   const universityName = isAdmin 
     ? program.universities?.name 
-    : `Partner University in ${program.universities?.location || program.location || 'China'}`
+    : `Partner University in ${program.universities?.location || program.location || 'China'}`;
 
-  const universityLocation = program.universities?.location || program.location || "China"
-  const accommodationCosts = program.accommodation_costs as unknown as AccommodationCosts
+  const universityLocation = program.universities?.location || program.location || "China";
+  const accommodationCosts = program.accommodation_costs as unknown as AccommodationCosts;
 
   return (
     <div className="bg-slate-50 min-h-screen py-10">
@@ -389,5 +389,5 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
       </div>
     </div>
     </div>
-  )
+  );
 }
