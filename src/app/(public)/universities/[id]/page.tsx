@@ -61,12 +61,13 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
 
         {/* Hero Section */}
         <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden bg-white shadow-sm">
-          {university.image_url ? (
+          {university.cover_image || university.image_url ? (
             <Image
-              src={university.image_url}
+              src={university.cover_image || university.image_url}
               alt={isAdmin ? university.name : "University Campus"}
               fill
               className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 1200px"
               priority
             />
           ) : (
@@ -166,6 +167,7 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
                                     src={image}
                                     alt={`Gallery Image ${index + 1}`}
                                     fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                             </div>

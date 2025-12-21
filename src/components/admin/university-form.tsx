@@ -8,8 +8,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
+import { Loader2, X } from "lucide-react"
 import { FileUpload } from "@/components/ui/file-upload"
+import Image from "next/image"
 
 type University = {
   id: string
@@ -137,7 +138,25 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
           </div>
 
           <div className="space-y-2">
-             <label className="text-sm font-medium">Campus Image</label>
+             <label className="text-sm font-medium">Cover Image</label>
+             <div className="flex gap-4 items-start">
+                <div className="flex-1">
+                    <Input name="cover_image" value={formData.cover_image} onChange={handleChange} placeholder="https://..." />
+                </div>
+                <div className="w-[200px]">
+                    <FileUpload
+                        value={formData.cover_image}
+                        onUpload={(url) => setFormData(prev => ({ ...prev, cover_image: url }))}
+                        bucket="documents"
+                        folder="university-covers"
+                        label="Upload Cover"
+                    />
+                </div>
+             </div>
+          </div>
+
+          <div className="space-y-2">
+             <label className="text-sm font-medium">Campus Image (Legacy)</label>
              <div className="flex gap-4 items-start">
                 <div className="flex-1">
                     <Input name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." />
@@ -179,6 +198,53 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
                     </div>
                 )}
              </div>
+          </div>
+
+          <div className="space-y-4">
+            <label className="text-sm font-medium">Campus Gallery</label>
+            
+            {/* Gallery Grid */}
+            {formData.gallery_images && formData.gallery_images.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    {formData.gallery_images.map((photo, index) => (
+                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
+                            <Image 
+                                src={photo} 
+                                alt={`Gallery ${index + 1}`} 
+                                fill 
+                                className="object-cover"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const newGallery = [...formData.gallery_images];
+                                    newGallery.splice(index, 1);
+                                    setFormData(prev => ({ ...prev, gallery_images: newGallery }));
+                                }}
+                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <FileUpload
+                value=""
+                onUpload={(url) => {
+                    if (url) {
+                        setFormData(prev => ({
+                            ...prev,
+                            gallery_images: [...(prev.gallery_images || []), url]
+                        }))
+                    }
+                }}
+                bucket="documents"
+                folder="university-gallery"
+                accept="image/*"
+                label="Add Gallery Photo"
+            />
           </div>
         </CardContent>
       </Card>
