@@ -17,6 +17,71 @@
     "applyNow": "قدم الآن",
     "viewDetails": "عرض التفاصيل",
     "readMore": "اقرأ المزيد",
-    "search": "بحث"
+    "search": "بحث",
+    "top": "أعلى"
+  },
+  "Home": {
+    "hero": {
+      "title": "خبيرك الأول للدراسة في الصين",
+      "subtitle": "فريق محترف، خدمة احترافية، نجعل الدراسة في الصين أسهل."
+    },
+    "sections": {
+      "sinowayEducation": "Sinoway Education",
+      "programs": "البرامج",
+      "scholarshipProgram": "برنامج المنح الدراسية",
+      "universityApplication": "التقديم للجامعات",
+      "shortTermStudyTour": "جولات دراسية قصيرة المدى",
+      "cityscape": "معالم المدن",
+      "applicationProcess": "عملية التقديم",
+      "journeyBanner": "رحلتك إلى الصين تبدأ هنا"
+    },
+    "sinoway": {
+      "headquarters": "المقر الرئيسي",
+      "internationalSupport": "الدعم الدولي",
+      "internationalSupportDesc": "مركز دعم عبر الإنترنت، متاح عالمياً",
+      "studentServices": "خدمات الطلاب",
+      "studentServicesDesc": "المركز العالمي للطلاب"
+    },
+    "scholarships": {
+      "csc": "منحة الحكومة الصينية",
+      "local": "منحة الحكومة المحلية",
+      "university": "منحة الجامعة",
+      "teachers": "منحة معلمي اللغة الصينية الدوليين",
+      "silk": "منحة طريق الحرير",
+      "enterprise": "منحة الشركات"
+    },
+    "shortTerm": {
+      "academicExperience": "التجربة الأكاديمية",
+      "academicDesc": "زيارة جامعات مرموقة، توسيع الآفاق الدولية، تعزيز مهارات التواصل بين الثقافات.",
+      "culturalPerception": "الإدراك الثقافي",
+      "culturalDesc": "تجربة غامرة في الثقافة والفنون الصينية التقليدية، زيارة المواقع التاريخية.",
+      "languageStudy": "دراسة اللغة",
+      "languageDesc": "دمج تعلم اللغة الصينية مع الأنشطة العملية، تعريف الطلاب باختبار HSK."
+    },
+    "process": {
+      "assessment": "التقييم",
+      "assessmentDesc": "تحديد احتياجات الطالب، فهم الوضع الأكاديمي للطالب مبدئياً",
+      "counseling": "الاستشارة",
+      "counselingDesc": "تطوير استراتيجية، توجيه الطالب في إعداد مواد التقديم",
+      "submission": "التقديم",
+      "submissionDesc": "تقديم الطلبات، تتبع حالة الطلب، واستكمال المواد المطلوبة",
+      "enrollment": "التسجيل",
+      "enrollmentDesc": "الحصول على نتائج القبول، دفع الرسوم المطلوبة"
+    },
+    "more": "المزيد+"
+  },
+  "Footer": {
+    "aboutSinoway": "عن Sinoway",
+    "whyUs": "لماذا نحن",
+    "partners": "شركاؤنا",
+    "cooperativeUniversities": "الجامعات المتعاونة",
+    "ourService": "خدماتنا",
+    "universityApplication": "التقديم الجامعي",
+    "airportPickup": "الاستقبال في المطار",
+    "shortTermStudy": "دراسة قصيرة المدى",
+    "contactUs": "اتصل بنا",
+    "address": "العنوان",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني"
   }
 }

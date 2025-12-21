@@ -17,6 +17,71 @@
     "applyNow": "Aplicar ahora",
     "viewDetails": "Ver detalles",
     "readMore": "Leer más",
-    "search": "Buscar"
+    "search": "Buscar",
+    "top": "ARRIBA"
+  },
+  "Home": {
+    "hero": {
+      "title": "Tu experto para estudiar en China",
+      "subtitle": "Equipo profesional, servicio profesional, haciendo más simple estudiar en China."
+    },
+    "sections": {
+      "sinowayEducation": "Sinoway Education",
+      "programs": "Programas",
+      "scholarshipProgram": "Programa de Becas",
+      "universityApplication": "Solicitud Universitaria",
+      "shortTermStudyTour": "Viaje de Estudio a Corto Plazo",
+      "cityscape": "Paisaje Urbano",
+      "applicationProcess": "Proceso de Solicitud",
+      "journeyBanner": "El viaje a China comienza aquí"
+    },
+    "sinoway": {
+      "headquarters": "Sede Central",
+      "internationalSupport": "Soporte Internacional",
+      "internationalSupportDesc": "Centro de soporte en línea, disponible globalmente",
+      "studentServices": "Servicios Estudiantiles",
+      "studentServicesDesc": "Centro Global de Estudiantes"
+    },
+    "scholarships": {
+      "csc": "Beca del Gobierno Chino",
+      "local": "Beca del Gobierno Local",
+      "university": "Beca Universitaria",
+      "teachers": "Beca para Profesores de Chino",
+      "silk": "Beca de la Ruta de la Seda",
+      "enterprise": "Beca Empresarial"
+    },
+    "shortTerm": {
+      "academicExperience": "Experiencia Académica",
+      "academicDesc": "Visita a universidades prestigiosas, ampliación de perspectivas internacionales.",
+      "culturalPerception": "Percepción Cultural",
+      "culturalDesc": "Inmersión en la cultura y artes tradicionales chinas, visita a sitios históricos.",
+      "languageStudy": "Estudio del Idioma",
+      "languageDesc": "Aprendizaje del idioma chino con actividades prácticas, familiarización con el examen HSK."
+    },
+    "process": {
+      "assessment": "Evaluación",
+      "assessmentDesc": "Identificar necesidades del estudiante, evaluar situación académica",
+      "counseling": "Asesoramiento",
+      "counselingDesc": "Desarrollar estrategia, guiar en preparación de documentos",
+      "submission": "Envío",
+      "submissionDesc": "Enviar solicitudes, rastrear estado, complementar documentos",
+      "enrollment": "Inscripción",
+      "enrollmentDesc": "Obtener resultados de admisión, pagar las tasas requeridas"
+    },
+    "more": "MÁS+"
+  },
+  "Footer": {
+    "aboutSinoway": "Sobre Sinoway",
+    "whyUs": "Por qué nosotros",
+    "partners": "Nuestros socios",
+    "cooperativeUniversities": "Universidades cooperativas",
+    "ourService": "Nuestro servicio",
+    "universityApplication": "Solicitud universitaria",
+    "airportPickup": "Recogida en aeropuerto",
+    "shortTermStudy": "Estudios a corto plazo",
+    "contactUs": "Contáctanos",
+    "address": "Dirección",
+    "phone": "Teléfono",
+    "email": "Correo"
   }
 }

@@ -17,6 +17,71 @@
     "applyNow": "立即申请",
     "viewDetails": "查看详情",
     "readMore": "阅读更多",
-    "search": "搜索"
+    "search": "搜索",
+    "top": "顶部"
+  },
+  "Home": {
+    "hero": {
+      "title": "您留学中国的首选专家",
+      "subtitle": "专业的团队，专业的服务，让留学中国更简单。"
+    },
+    "sections": {
+      "sinowayEducation": "华途教育",
+      "programs": "课程项目",
+      "scholarshipProgram": "奖学金项目",
+      "universityApplication": "大学申请",
+      "shortTermStudyTour": "短期研学",
+      "cityscape": "城市风光",
+      "applicationProcess": "申请流程",
+      "journeyBanner": "中国之旅从这里开始"
+    },
+    "sinoway": {
+      "headquarters": "总部",
+      "internationalSupport": "国际支持",
+      "internationalSupportDesc": "在线支持中心，全球服务",
+      "studentServices": "学生服务",
+      "studentServicesDesc": "全球学生中心"
+    },
+    "scholarships": {
+      "csc": "中国政府奖学金",
+      "local": "地方政府奖学金",
+      "university": "大学奖学金",
+      "teachers": "国际中文教师奖学金",
+      "silk": "丝绸之路奖学金",
+      "enterprise": "企业奖学金"
+    },
+    "shortTerm": {
+      "academicExperience": "学术体验",
+      "academicDesc": "参访名校，拓宽国际视野，提升跨文化交流能力。",
+      "culturalPerception": "文化感知",
+      "culturalDesc": "沉浸式体验中国传统文化艺术，参观名胜古迹，了解中国历史。",
+      "languageStudy": "语言学习",
+      "languageDesc": "中文学习与实践活动相结合，熟悉HSK考试，探索语言魅力。"
+    },
+    "process": {
+      "assessment": "评估",
+      "assessmentDesc": "明确学生需求，初步掌握学生学术背景和申请信息",
+      "counseling": "咨询",
+      "counselingDesc": "制定策略，指导学生准备申请材料",
+      "submission": "递交",
+      "submissionDesc": "递交申请，追踪申请状态，及时补充材料",
+      "enrollment": "录取",
+      "enrollmentDesc": "获得录取结果，解读录取通知书并缴纳相关费用"
+    },
+    "more": "更多+"
+  },
+  "Footer": {
+    "aboutSinoway": "关于华途",
+    "whyUs": "为什么选择我们",
+    "partners": "合作伙伴",
+    "cooperativeUniversities": "国内合作院校",
+    "ourService": "我们的服务",
+    "universityApplication": "大学申请",
+    "airportPickup": "接机服务",
+    "shortTermStudy": "短期留学",
+    "contactUs": "联系我们",
+    "address": "地址",
+    "phone": "电话",
+    "email": "邮箱"
   }
 }

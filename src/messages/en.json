@@ -17,6 +17,71 @@
     "applyNow": "Apply Now",
     "viewDetails": "View Details",
     "readMore": "Read More",
-    "search": "Search"
+    "search": "Search",
+    "top": "TOP"
+  },
+  "Home": {
+    "hero": {
+      "title": "Your Go-to Study-in-China Expert",
+      "subtitle": "Professional team, professional service, making study in China simpler."
+    },
+    "sections": {
+      "sinowayEducation": "Sinoway Education",
+      "programs": "Programs",
+      "scholarshipProgram": "Scholarship Program",
+      "universityApplication": "University application",
+      "shortTermStudyTour": "Short-term Study Tour",
+      "cityscape": "Cityscape",
+      "applicationProcess": "Application Process",
+      "journeyBanner": "Journey to China starts here"
+    },
+    "sinoway": {
+      "headquarters": "Headquarters",
+      "internationalSupport": "International Support",
+      "internationalSupportDesc": "Online Support Center, Available Globally",
+      "studentServices": "Student Services",
+      "studentServicesDesc": "Global Student Center"
+    },
+    "scholarships": {
+      "csc": "Chinese Government Scholarship",
+      "local": "Local Government Scholarship",
+      "university": "University Scholarship",
+      "teachers": "International Chinese Language Teachers Scholarship",
+      "silk": "Silk Road Scholarship",
+      "enterprise": "Enterprise Scholarship"
+    },
+    "shortTerm": {
+      "academicExperience": "Academic Experience",
+      "academicDesc": "Visiting prestigious universities, broaden international perspectives, enhance intercultural communication skills.",
+      "culturalPerception": "Cultural Perception",
+      "culturalDesc": "Immersive experience in traditional Chinese culture and arts, visiting historical sites and monuments, understand Chinese history.",
+      "languageStudy": "Language study",
+      "languageDesc": "Incorporating Chinese language learning with practical activities, familiarize students with HSK examination, explore the charm of language"
+    },
+    "process": {
+      "assessment": "Assessment",
+      "assessmentDesc": "Identify the student's needs, initially grasp the student's academic situation and application information",
+      "counseling": "Counseling",
+      "counselingDesc": "Develop a strategy, guide the student in preparing application materials",
+      "submission": "Submission",
+      "submissionDesc": "Submit applications, track application status, and promptly supplement materials",
+      "enrollment": "Enrollment",
+      "enrollmentDesc": "Obtain admission results, Interpret the admission notification and pay the required fees"
+    },
+    "more": "MORE+"
+  },
+  "Footer": {
+    "aboutSinoway": "About Sinoway",
+    "whyUs": "Why us",
+    "partners": "Our partner",
+    "cooperativeUniversities": "Domestic cooperative universities",
+    "ourService": "Our service",
+    "universityApplication": "University application",
+    "airportPickup": "Airport pick up",
+    "shortTermStudy": "Short-term study abroad",
+    "contactUs": "Contact US",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "E-mail"
   }
 }

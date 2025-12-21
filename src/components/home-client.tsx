@@ -5,7 +5,8 @@ import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Clock, Globe, ArrowUp, MapPin, Phone, Mail, Facebook, Instagram, MessageCircle, HelpCircle, Target, CheckCircle, Play, Youtube, BookOpen, Trophy, GraduationCap, Briefcase } from "lucide-react"
-import Link from "next/link"
+import { Link } from "@/navigation"
+import { useTranslations } from "next-intl"
 
 const SLIDER_IMAGES = [
   "/images/sliders/slider-1.jpg",
@@ -24,6 +25,8 @@ const getContent = (blocks: ContentBlock[], key: string, fallback: string) => {
 }
 
 export function HomeClient({ content }: { content: ContentBlock[] }) {
+  const t = useTranslations('Home')
+  const tCommon = useTranslations('Common')
   const [currentSlide, setCurrentSlide] = useState(0)
 
   useEffect(() => {
@@ -69,10 +72,10 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
           <div className="w-full max-w-6xl mx-auto px-4">
             <div className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 text-center space-y-4">
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide text-white drop-shadow-lg">
-                {getContent(content, 'home.hero.title_expert', 'Your Go-to Study-in-China Expert')}
+                {getContent(content, 'home.hero.title_expert', t('hero.title'))}
               </h1>
               <p className="text-base md:text-xl text-white/90 font-light max-w-3xl mx-auto drop-shadow-md">
-                {getContent(content, 'home.hero.subtitle_long', 'Professional team, professional service, making study in China simpler.')}
+                {getContent(content, 'home.hero.subtitle_long', t('hero.subtitle'))}
               </p>
             </div>
           </div>
@@ -84,13 +87,13 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
           className="absolute bottom-20 right-4 md:bottom-24 md:right-12 z-20 bg-[#2d74c4] hover:bg-[#2d74c4]/90 text-white w-12 h-14 md:w-14 md:h-16 flex flex-col items-center justify-center rounded shadow-lg transition-colors"
         >
           <ArrowUp className="h-5 w-5 md:h-6 md:w-6 mb-1" />
-          <span className="text-[10px] md:text-xs font-bold">TOP</span>
+          <span className="text-[10px] md:text-xs font-bold">{tCommon('top')}</span>
         </button>
       </section>
 
       {/* Sinoway Education Section */}
       <section className="container">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">Sinoway Education</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">{t('sections.sinowayEducation')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Headquarters */}
           <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
@@ -99,7 +102,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                <Image src="/images/gallery-1.jpg" alt="Beijing" fill className="object-cover object-bottom" />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">Headquarters</h3>
+              <h3 className="text-2xl font-semibold mb-4">{t('sinoway.headquarters')}</h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
                 <p>Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China</p>
@@ -150,10 +153,10 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                <Image src="/images/gallery-2.jpg" alt="Support" fill className="object-cover object-bottom" />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">International Support</h3>
+              <h3 className="text-2xl font-semibold mb-4">{t('sinoway.internationalSupport')}</h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>Online Support Center, Available Globally</p>
+                <p>{t('sinoway.internationalSupportDesc')}</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
@@ -176,10 +179,10 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                <Image src="/images/gallery-3.jpg" alt="Student Services" fill className="object-cover object-bottom" />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">Student Services</h3>
+              <h3 className="text-2xl font-semibold mb-4">{t('sinoway.studentServices')}</h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>Global Student Center</p>
+                <p>{t('sinoway.studentServicesDesc')}</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
@@ -200,7 +203,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
 
       {/* Programs Section */}
       <section className="container">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">Programs</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">{t('sections.programs')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             { title: "Bachelor", img: "/images/gallery-1.jpg", link: "/programs?level=Bachelor" },
@@ -230,7 +233,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
       {/* Scholarship Program */}
       <section className="bg-[#2d74c4] py-16">
         <div className="container">
-          <h2 className="text-white text-3xl font-bold mb-8">Scholarship Program</h2>
+          <h2 className="text-white text-3xl font-bold mb-8">{t('sections.scholarshipProgram')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Chinese Government Scholarship */}
             <Link href="/scholarships#csc" className="block transition-transform hover:scale-105 duration-300">
@@ -242,7 +245,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                   <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
                     <span className="text-xl font-bold">¥</span>
                   </div>
-                  <span className="text-xl font-semibold">Chinese Government<br/>Scholarship</span>
+                  <span className="text-xl font-semibold text-center">{t('scholarships.csc')}</span>
                 </div>
               </div>
             </Link>
@@ -257,8 +260,8 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                    <div className="h-20 w-20 bg-[#1e5aa0] rounded-xl flex items-center justify-center shadow-lg text-white">
                       <span className="text-4xl font-bold">¥</span>
                    </div>
-                   <div className="text-[#1e5aa0] text-2xl font-bold">
-                     Local Government<br/>Scholarship
+                   <div className="text-[#1e5aa0] text-2xl font-bold text-center">
+                     {t('scholarships.local')}
                    </div>
                  </div>
               </div>
@@ -274,7 +277,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                   <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
                     <Trophy className="h-6 w-6" />
                   </div>
-                  <span className="text-xl font-semibold">University<br/>Scholarship</span>
+                  <span className="text-xl font-semibold text-center">{t('scholarships.university')}</span>
                 </div>
               </div>
             </Link>
@@ -289,7 +292,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                   <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
                     <GraduationCap className="h-6 w-6" />
                   </div>
-                  <span className="text-xl font-semibold">International Chinese<br/>Language Teachers Scholarship</span>
+                  <span className="text-xl font-semibold text-center">{t('scholarships.teachers')}</span>
                 </div>
               </div>
             </Link>
@@ -304,7 +307,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                   <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
                     <Globe className="h-6 w-6" />
                   </div>
-                  <span className="text-xl font-semibold">Silk Road<br/>Scholarship</span>
+                  <span className="text-xl font-semibold text-center">{t('scholarships.silk')}</span>
                 </div>
               </div>
             </Link>
@@ -319,7 +322,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                   <div className="h-12 w-12 rounded-full border-2 border-white flex items-center justify-center">
                     <Briefcase className="h-6 w-6" />
                   </div>
-                  <span className="text-xl font-semibold">Enterprise<br/>Scholarship</span>
+                  <span className="text-xl font-semibold text-center">{t('scholarships.enterprise')}</span>
                 </div>
               </div>
             </Link>
@@ -330,8 +333,8 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
       {/* University Application */}
       <section className="container">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-[#0056b3] text-3xl font-bold">University application</h2>
-          <Link href="/universities" className="text-[#0056b3] font-bold text-lg hover:underline">MORE+</Link>
+          <h2 className="text-[#0056b3] text-3xl font-bold">{t('sections.universityApplication')}</h2>
+          <Link href="/universities" className="text-[#0056b3] font-bold text-lg hover:underline">{t('more')}</Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {[
@@ -354,7 +357,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
 
       {/* Short-term Study Tour */}
       <section className="container">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">Short-term Study Tour</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">{t('sections.shortTermStudyTour')}</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column */}
           <div className="flex flex-col gap-6">
@@ -364,8 +367,8 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                  <Image src="/images/gallery-4.jpg" alt="Academic Experience" fill className="object-cover" />
                </div>
                <div className="space-y-2">
-                 <h3 className="text-[#0056b3] font-bold text-lg">Academic Experience:</h3>
-                 <p className="text-sm text-gray-600">Visiting prestigious universities, broaden international perspectives, enhance intercultural communication skills.</p>
+                 <h3 className="text-[#0056b3] font-bold text-lg">{t('shortTerm.academicExperience')}:</h3>
+                 <p className="text-sm text-gray-600">{t('shortTerm.academicDesc')}</p>
                </div>
              </div>
 
@@ -375,8 +378,8 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                  <Image src="/images/gallery-7.jpg" alt="Cultural Perception" fill className="object-cover" />
                </div>
                <div className="space-y-2">
-                 <h3 className="text-[#0056b3] font-bold text-lg">Cultural Perception:</h3>
-                 <p className="text-sm text-gray-600">Immersive experience in traditional Chinese culture and arts, visiting historical sites and monuments, understand Chinese history.</p>
+                 <h3 className="text-[#0056b3] font-bold text-lg">{t('shortTerm.culturalPerception')}:</h3>
+                 <p className="text-sm text-gray-600">{t('shortTerm.culturalDesc')}</p>
                </div>
              </div>
           </div>
@@ -387,8 +390,8 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                <Image src="/images/gallery-8.jpg" alt="Language study" fill className="object-cover" />
              </div>
              <div className="p-2 space-y-2">
-               <h3 className="text-[#0056b3] font-bold text-lg">Language study:</h3>
-               <p className="text-sm text-gray-600">Incorporating Chinese language learning with practical activities, familiarize students with HSK examination, explore the charm of language</p>
+               <h3 className="text-[#0056b3] font-bold text-lg">{t('shortTerm.languageStudy')}:</h3>
+               <p className="text-sm text-gray-600">{t('shortTerm.languageDesc')}</p>
              </div>
           </div>
         </div>
@@ -396,7 +399,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
 
       {/* Cityscape */}
       <section className="container">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">Cityscape</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">{t('sections.cityscape')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {[
              { city: "Beijing", img: "/images/gallery-1.jpg" },
@@ -418,28 +421,28 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
 
       {/* Application Process */}
       <section className="container py-8">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-12">Application Process</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-12">{t('sections.applicationProcess')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
           {[
             { 
               icon: HelpCircle, 
-              title: "Assessment", 
-              desc: "Identify the student's needs, initially grasp the student's academic situation and application information" 
+              title: t('process.assessment'), 
+              desc: t('process.assessmentDesc')
             },
             { 
               icon: Target, 
-              title: "Counseling", 
-              desc: "Develop a strategy, guide the student in preparing application materials" 
+              title: t('process.counseling'), 
+              desc: t('process.counselingDesc')
             },
             { 
               icon: Clock, 
-              title: "Submission", 
-              desc: "Submit applications, track application status, and promptly supplement materials" 
+              title: t('process.submission'), 
+              desc: t('process.submissionDesc')
             },
             { 
               icon: CheckCircle, 
-              title: "Enrollment", 
-              desc: "Obtain admission results, Interpret the admission notification and pay the required fees" 
+              title: t('process.enrollment'), 
+              desc: t('process.enrollmentDesc')
             }
           ].map((step, i, arr) => (
             <div key={i} className="flex flex-col items-center text-center relative group">
@@ -469,7 +472,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
         </div>
         <div className="relative z-10 flex items-center gap-8 w-full container justify-center">
            <div className="h-px bg-white/50 w-24 md:w-64"></div>
-           <h2 className="text-2xl md:text-4xl font-bold text-white tracking-wide text-center">Journey to China starts here</h2>
+           <h2 className="text-2xl md:text-4xl font-bold text-white tracking-wide text-center">{t('sections.journeyBanner')}</h2>
            <div className="h-px bg-white/50 w-24 md:w-64"></div>
         </div>
       </section>

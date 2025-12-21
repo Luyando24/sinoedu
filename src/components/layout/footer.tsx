@@ -4,12 +4,25 @@ import { createClient } from "@/lib/supabase/server"
 import { Facebook, Instagram, MessageCircle, Youtube, BookOpen } from "lucide-react"
 
 const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
-  if (!blocks) return fallback
-  const block = blocks.find(b => b.key === key)
-  return block ? block.content : fallback
+  return blocks?.find(b => b.key === key)?.content || fallback
 }
 
-export async function Footer() {
+export function Footer() {
+  // Footer is now a Client Component if we use useTranslations, but let's check if we can keep it server.
+  // Actually, useTranslations works in Server Components in next-intl 3+, but we need to await getTranslations or pass messages.
+  // However, this file is imported in layout which is server.
+  // Let's use getTranslations for async server component.
+  // Wait, Footer is exported as async function Footer(), so it is a Server Component.
+  
+  // We need to use `getTranslations` for server components.
+  // Let's import it.
+  return <FooterContent />
+}
+
+import { getTranslations } from "next-intl/server"
+
+async function FooterContent() {
+  const t = await getTranslations('Footer')
   const supabase = createClient()
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
@@ -36,32 +49,32 @@ export async function Footer() {
             </Link>
             
             <div className="space-y-4">
-              <h4 className="text-[#0056b3] font-bold text-lg">About Sinoway</h4>
+              <h4 className="text-[#0056b3] font-bold text-lg">{t('aboutSinoway')}</h4>
               <ul className="space-y-2 text-sm text-[#0056b3]">
-                <li><Link href="/why-us" className="hover:text-[#0056b3]/80">Why us &rarr;</Link></li>
-                <li><Link href="/partners" className="hover:text-[#0056b3]/80">Our partner &rarr;</Link></li>
-                <li><Link href="/universities" className="hover:text-[#0056b3]/80">Domestic cooperative universities &rarr;</Link></li>
+                <li><Link href="/about" className="hover:text-[#0056b3]/80">{t('whyUs')} &rarr;</Link></li>
+                <li><Link href="/universities" className="hover:text-[#0056b3]/80">{t('partners')} &rarr;</Link></li>
+                <li><Link href="/universities" className="hover:text-[#0056b3]/80">{t('cooperativeUniversities')} &rarr;</Link></li>
               </ul>
             </div>
           </div>
 
           {/* Our Service */}
           <div className="md:w-1/4">
-            <h4 className="text-[#0056b3] font-bold text-lg mb-6">Our service</h4>
+            <h4 className="text-[#0056b3] font-bold text-lg mb-6">{t('ourService')}</h4>
             <ul className="space-y-2 text-sm text-[#0056b3]">
-              <li><Link href="/services" className="hover:text-[#0056b3]/80">University application</Link></li>
-              <li><Link href="/services" className="hover:text-[#0056b3]/80">Airport pick up</Link></li>
-              <li><Link href="/programs" className="hover:text-[#0056b3]/80">Short-term study abroad</Link></li>
+              <li><Link href="/services" className="hover:text-[#0056b3]/80">{t('universityApplication')}</Link></li>
+              <li><Link href="/services" className="hover:text-[#0056b3]/80">{t('airportPickup')}</Link></li>
+              <li><Link href="/programs" className="hover:text-[#0056b3]/80">{t('shortTermStudy')}</Link></li>
             </ul>
           </div>
 
           {/* Contact US */}
           <div className="md:w-1/4">
-             <h4 className="text-[#0056b3] font-bold text-lg mb-6">Contact US</h4>
+             <h4 className="text-[#0056b3] font-bold text-lg mb-6">{t('contactUs')}</h4>
              <div className="space-y-2 text-sm text-[#0056b3]">
-               <p><span className="font-semibold">Address:</span> {getContent(blocks, 'footer.connect.address', 'Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China')}</p>
-               <p><span className="font-semibold">Phone:</span> {getContent(blocks, 'footer.connect.phone', '+8613601965441')}</p>
-               <p><span className="font-semibold">E-mail:</span> {getContent(blocks, 'footer.connect.email', 'info@sinowayedu.com')}</p>
+               <p><span className="font-semibold">{t('address')}:</span> {getContent(blocks, 'footer.connect.address', 'Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China')}</p>
+               <p><span className="font-semibold">{t('phone')}:</span> {getContent(blocks, 'footer.connect.phone', '+8613601965441')}</p>
+               <p><span className="font-semibold">{t('email')}:</span> {getContent(blocks, 'footer.connect.email', 'info@sinowayedu.com')}</p>
              </div>
           </div>
 
