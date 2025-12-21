@@ -54,9 +54,8 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
     ? program.universities?.name 
     : `Partner University in ${program.universities?.location || program.location || 'China'}`
 
-  const universityLocation = program.universities?.location || program.location || "China"
-
-  const accommodationCosts = program.accommodation_costs as unknown as AccommodationCosts
+  const universityLocation = program.universities?.location || program.location || "China";
+  const accommodationCosts = program.accommodation_costs as unknown as AccommodationCosts;
 
   return (
     <div className="bg-slate-50 min-h-screen py-10">
