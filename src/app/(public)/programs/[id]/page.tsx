@@ -89,6 +89,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   src={program.cover_image} 
                   alt={program.title} 
                   fill 
+                  sizes="(max-width: 1024px) 100vw, 400px"
                   className="object-cover"
                   priority
                 />
@@ -237,6 +238,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                                         src={photo}
                                         alt={`Dormitory ${index + 1}`}
                                         fill
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
                                 </div>
