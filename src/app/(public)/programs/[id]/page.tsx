@@ -79,42 +79,56 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
 
         {/* Hero Section */}
         <div className="bg-white rounded-2xl p-8 border shadow-sm">
-          <div className="flex flex-col md:flex-row gap-8 justify-between">
-            <div className="space-y-4 max-w-3xl">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="default" className="bg-[#0056b3] hover:bg-[#0056b3]/90">
-                  {program.level}
-                </Badge>
-                {program.language && (
-                  <Badge variant="secondary">
-                    <Languages className="mr-1 h-3 w-3" /> {program.language} Taught
+          <div className="flex flex-col lg:flex-row gap-8">
+            {program.cover_image && (
+              <div className="w-full lg:w-[400px] h-[300px] relative shrink-0 rounded-xl overflow-hidden bg-slate-100">
+                <Image 
+                  src={program.cover_image} 
+                  alt={program.title} 
+                  fill 
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )}
+            <div className="flex-1 flex flex-col md:flex-row gap-8 justify-between">
+              <div className="space-y-4 max-w-3xl">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="default" className="bg-[#0056b3] hover:bg-[#0056b3]/90">
+                    {program.level}
                   </Badge>
-                )}
-              </div>
-              
-              <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[#0056b3]">
-                {program.title}
-              </h1>
-              
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground text-lg">
+                  {program.language && (
+                    <Badge variant="secondary">
+                      <Languages className="mr-1 h-3 w-3" /> {program.language} Taught
+                    </Badge>
+                  )}
+                </div>
+                
+                <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[#0056b3]">
+                  {program.title}
+                </h1>
+                
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground text-lg">
+                  <div className="flex items-center gap-2">
+                    <Building2 className="h-5 w-5" />
+                    <span className="font-medium text-foreground">{universityName}</span>
+                </div>
                 <div className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5" />
-                  <span className="font-medium text-foreground">{universityName}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                <span>{universityLocation}</span>
+                  <MapPin className="h-5 w-5" />
+                  <span>{universityLocation}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex flex-col gap-3 min-w-[200px]">
-            <Link href="/contact" className="w-full">
-              <Button size="lg" className="w-full text-lg">Apply Now</Button>
-            </Link>
-            <p className="text-xs text-center text-muted-foreground">
-              Deadline: {program.application_deadline || "Rolling Admission"}
-            </p>
+            <div className="flex flex-col gap-3 min-w-[200px]">
+              <Link href="/contact" className="w-full">
+                <Button size="lg" className="w-full text-lg">Apply Now</Button>
+              </Link>
+              <p className="text-xs text-center text-muted-foreground">
+                Deadline: {program.application_deadline || "Rolling Admission"}
+              </p>
+            </div>
+            </div>
           </div>
         </div>
       </div>

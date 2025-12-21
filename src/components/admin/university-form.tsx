@@ -37,6 +37,9 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
     description: initialData?.description || "",
     logo_url: initialData?.logo_url || "",
     image_url: initialData?.image_url || "",
+    cover_image: initialData?.cover_image || "",
+    gallery_images: initialData?.gallery_images || [],
+    video_url: initialData?.video_url || "",
     ranking: initialData?.ranking || "",
     established_year: initialData?.established_year || "",
     website_url: initialData?.website_url || "",
@@ -110,13 +113,68 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
              <label className="text-sm font-medium">Website URL</label>
              <Input name="website_url" value={formData.website_url} onChange={handleChange} placeholder="https://..." />
           </div>
+          
           <div className="space-y-2">
-             <label className="text-sm font-medium">Logo URL</label>
-             <Input name="logo_url" value={formData.logo_url} onChange={handleChange} placeholder="https://..." />
+             <label className="text-sm font-medium">Logo</label>
+             <div className="flex gap-4 items-start">
+                <div className="flex-1">
+                    <Input name="logo_url" value={formData.logo_url} onChange={handleChange} placeholder="https://..." />
+                </div>
+                <div className="w-[200px]">
+                    <FileUpload
+                        value={formData.logo_url}
+                        onUpload={(url) => setFormData(prev => ({ ...prev, logo_url: url }))}
+                        bucket="documents"
+                        folder="university-logos"
+                        label="Upload Logo"
+                    />
+                </div>
+             </div>
           </div>
+
           <div className="space-y-2">
-             <label className="text-sm font-medium">Campus Image URL</label>
-             <Input name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." />
+             <label className="text-sm font-medium">Campus Image</label>
+             <div className="flex gap-4 items-start">
+                <div className="flex-1">
+                    <Input name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." />
+                </div>
+                <div className="w-[200px]">
+                    <FileUpload
+                        value={formData.image_url}
+                        onUpload={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
+                        bucket="documents"
+                        folder="university-images"
+                        label="Upload Image"
+                    />
+                </div>
+             </div>
+          </div>
+
+          <div className="space-y-2">
+             <label className="text-sm font-medium">University Video</label>
+             <div className="space-y-2">
+                <Input 
+                    name="video_url" 
+                    value={formData.video_url} 
+                    onChange={handleChange} 
+                    placeholder="YouTube URL or Upload Video" 
+                />
+                {(!formData.video_url || (!formData.video_url.includes("youtube") && !formData.video_url.includes("youtu.be"))) && (
+                    <FileUpload
+                        value={formData.video_url}
+                        onUpload={(url) => setFormData(prev => ({ ...prev, video_url: url }))}
+                        bucket="documents"
+                        folder="university-videos"
+                        accept="video/*"
+                        label="Upload Video (Local)"
+                    />
+                )}
+                {(formData.video_url && (formData.video_url.includes("youtube") || formData.video_url.includes("youtu.be"))) && (
+                    <div className="p-4 bg-slate-50 rounded text-sm text-muted-foreground">
+                        YouTube video linked.
+                    </div>
+                )}
+             </div>
           </div>
         </CardContent>
       </Card>

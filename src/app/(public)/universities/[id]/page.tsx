@@ -127,6 +127,53 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
                 </CardContent>
             </Card>
 
+            {university.video_url && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Campus Tour</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0 overflow-hidden rounded-b-xl">
+                        {(university.video_url.includes("youtube.com") || university.video_url.includes("youtu.be")) ? (
+                            <div className="aspect-video w-full">
+                                <iframe 
+                                    src={(() => {
+                                        const url = university.video_url;
+                                        if (url.includes("embed")) return url;
+                                        const v = url.split("v=")[1]?.split("&")[0];
+                                        if (v) return `https://www.youtube.com/embed/${v}`;
+                                        const short = url.split("youtu.be/")[1];
+                                        if (short) return `https://www.youtube.com/embed/${short}`;
+                                        return url;
+                                    })()}
+                                    className="w-full h-full" 
+                                    allowFullScreen 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                />
+                            </div>
+                        ) : (
+                            <video src={university.video_url} controls className="w-full aspect-video bg-black" />
+                        )}
+                    </CardContent>
+                </Card>
+            )}
+            {university.gallery_images && university.gallery_images.length > 0 && (
+                <div className="space-y-4">
+                    <h2 className="text-2xl font-bold tracking-tight">Campus Gallery</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {university.gallery_images.map((image: string, index: number) => (
+                            <div key={index} className="relative aspect-video rounded-lg overflow-hidden border bg-slate-100 group">
+                                <Image
+                                    src={image}
+                                    alt={`Gallery Image ${index + 1}`}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <div className="space-y-4">
                 <h2 className="text-2xl font-bold tracking-tight">Available Programs</h2>
                 {university.programs && university.programs.length > 0 ? (
