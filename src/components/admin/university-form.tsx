@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
+import { FileUpload } from "@/components/ui/file-upload"
 
 type University = {
   id: string
@@ -20,6 +21,9 @@ type University = {
   ranking: string | null
   established_year: string | null
   website_url: string | null
+  cover_image: string | null
+  gallery_images: string[] | null
+  video_url: string | null
 }
 
 interface UniversityFormProps {

@@ -57,7 +57,8 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
   const universityLocation = program.universities?.location || program.location || "China";
   
   // Safe cast for accommodation costs
-  const accommodationCosts = program.accommodation_costs as unknown as AccommodationCosts;
+  const rawCosts = program.accommodation_costs || {};
+  const accommodationCosts = rawCosts as AccommodationCosts;
 
   return (
     <div className="bg-slate-50 min-h-screen py-10">
@@ -133,9 +134,8 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           
@@ -389,7 +389,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
           </Card>
         </div>
       </div>
-    </div>
+      </div>
     </div>
   );
 }
