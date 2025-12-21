@@ -66,7 +66,7 @@ create table public.programs (
   
   location text, -- City/Province (can be different from uni location)
   
-  level text check (level in ('Bachelor', 'Masters', 'Master', 'PhD', 'Doctor', 'High School', 'Senior high school', 'Language', 'Short-term Language', 'Long-term Language', 'College', 'Secondary Vocational Education')),
+  level text check (level in ('Bachelor', 'Masters', 'Master', 'PhD', 'Doctor', 'High School', 'Top-up program', 'Language', 'Camp', 'Long-term Language', 'College', 'Secondary Vocational Education')),
   duration text,
   tuition_fee text,
   description text,

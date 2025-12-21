@@ -10,9 +10,9 @@ CHECK (level in (
   'PhD', 
   'Doctor', 
   'High School', 
-  'Senior high school', 
+  'Top-up program', 
   'Language', 
-  'Short-term Language', 
+  'Camp', 
   'Long-term Language', 
   'College', 
   'Secondary Vocational Education'

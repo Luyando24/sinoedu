@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import Image from "next/image"
-import { CheckCircle, Trophy, Users, Globe, ShieldCheck, HeartHandshake } from "lucide-react"
+import { CheckCircle, Trophy, Users, Globe, ShieldCheck, HeartHandshake, ThumbsUp, Crown, Rocket, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { GalleryGrid } from "@/components/about/gallery-grid"
@@ -107,26 +107,43 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Values Section - 3 Column */}
+      {/* Values Section - 4 Column */}
       <section className="bg-white py-20">
         <div className="container space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-4">
-            <h2 className="text-3xl font-bold text-[#0056b3]">{getContent(blocks, 'about.values.title', 'Core Values Driving Us')}</h2>
-            <p className="text-muted-foreground">{getContent(blocks, 'about.values.subtitle', 'The principles that guide every interaction and decision.')}</p>
+          <div className="space-y-4">
+            <h2 className="text-3xl font-bold text-[#0056b3]">Our core values</h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { title: getContent(blocks, 'about.values.1.title', "Integrity First"), desc: getContent(blocks, 'about.values.1.desc', "Transparent processes with no hidden fees or false promises.") },
-              { title: getContent(blocks, 'about.values.2.title', "Student-Centric"), desc: getContent(blocks, 'about.values.2.desc', "Your academic goals and personal well-being are our top priority.") },
-              { title: getContent(blocks, 'about.values.3.title', "Excellence"), desc: getContent(blocks, 'about.values.3.desc', "We strive for the highest standards in application quality and support.") }
+              { 
+                icon: HeartHandshake, 
+                title: "Integrity", 
+                desc: "Provide accurate and reliable information, protect customer privacy, charge reasonably, and ensure the interests of the agent." 
+              },
+              { 
+                icon: ThumbsUp, 
+                title: "Professionalism", 
+                desc: "Understand the enrollment characteristics and processes of various institutions, provide effective advice to agents and students, and ensure a high admission rate." 
+              },
+              { 
+                icon: Crown, 
+                title: "Customer Focus", 
+                desc: "Be responsible for the agent, prioritize the agent's needs and satisfaction, and ensure the agent's interests" 
+              },
+              { 
+                icon: Rocket, 
+                title: "Efficiency", 
+                desc: "Patient and enthusiastic, communicate in a timely manner, follow up promptly, and ensure the application is completed quickly and smoothly" 
+              }
             ].map((value, i) => (
-              <div key={i} className="bg-slate-50 p-8 rounded-2xl border hover:border-[#0056b3] transition-colors shadow-sm">
-                <div className="h-12 w-12 bg-[#0056b3]/10 rounded-xl flex items-center justify-center mb-6">
-                  <span className="text-2xl font-bold text-[#0056b3]">{i + 1}</span>
+              <div key={i} className="bg-gray-200 p-8 rounded-xl relative group hover:shadow-md transition-all">
+                <div className="flex justify-between items-start mb-6">
+                  <value.icon className="h-10 w-10 text-gray-800" strokeWidth={1.5} />
+                  <ArrowUpRight className="h-6 w-6 text-white bg-gray-300 rounded-full p-1" strokeWidth={3} />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-[#0056b3]">{value.title}</h3>
-                <p className="text-muted-foreground">{value.desc}</p>
+                <h3 className="text-xl font-bold mb-4 text-[#0056b3]">{value.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{value.desc}</p>
               </div>
             ))}
           </div>

@@ -206,12 +206,12 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
             { title: "Bachelor", img: "/images/gallery-1.jpg", link: "/programs?level=Bachelor" },
             { title: "Master", img: "/images/gallery-2.jpg", link: "/programs?level=Master" },
             { title: "Doctor", img: "/images/gallery-3.jpg", link: "/programs?level=Doctor" },
-            { title: "Short-term Language", img: "/images/gallery-4.jpg", link: "/programs?level=Short-term Language" },
+            { title: "Camp", img: "/images/gallery-4.jpg", link: "/programs?level=Camp" },
             { title: "Long-term Language", img: "/images/gallery-5.jpg", link: "/programs?level=Long-term Language" },
             { title: "College", img: "/images/gallery-6.jpg", link: "/programs?level=College" },
             { title: "High School", img: "/images/gallery-7.jpg", link: "/programs?level=High School" },
             { title: "Secondary Vocational Education", img: "/images/gallery-8.jpg", link: "/programs?level=Secondary Vocational Education" },
-            { title: "Senior high school", img: "/images/gallery-9.jpg", link: "/programs?level=Senior high school" },
+            { title: "Top-up program", img: "/images/gallery-9.jpg", link: "/programs?level=Top-up program" },
           ].map((program, i) => (
             <Link key={i} href={program.link} className="block group">
               <div className="bg-white shadow-lg rounded-xl overflow-hidden">

@@ -216,11 +216,11 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
               <option value="Bachelor">Bachelor</option>
               <option value="Master">Master</option>
               <option value="Doctor">Doctor</option>
-              <option value="Short-term Language">Short-term Language</option>
+              <option value="Camp">Camp</option>
               <option value="Long-term Language">Long-term Language</option>
               <option value="College">College</option>
               <option value="High School">High School</option>
-              <option value="Senior high school">Senior high school</option>
+              <option value="Top-up program">Top-up program</option>
               <option value="Secondary Vocational Education">Secondary Vocational Education</option>
               <option value="Masters">Masters (Legacy)</option>
               <option value="PhD">PhD (Legacy)</option>
