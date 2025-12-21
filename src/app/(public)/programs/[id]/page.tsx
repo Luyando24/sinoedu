@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
 import { notFound } from "next/navigation"
 import Link from "next/link"
@@ -199,6 +200,53 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
               </CardContent>
             </Card>
           </div>
+
+          {/* Accommodation */}
+          {(program.accommodation_details || (program.dormitory_photos && program.dormitory_photos.length > 0)) && (
+            <div className="space-y-4">
+              <h2 className="text-2xl font-bold flex items-center gap-2">
+                <Building2 className="h-6 w-6 text-brand-blue" />
+                Accommodation
+              </h2>
+              <Card>
+                <CardContent className="pt-6 space-y-6">
+                  {program.accommodation_details && (
+                    <div>
+                        <h3 className="font-semibold mb-2">Details</h3>
+                        <p className="text-muted-foreground leading-relaxed">{program.accommodation_details}</p>
+                    </div>
+                  )}
+                  
+                  {program.off_campus_living && (
+                     <div className="flex items-center gap-2">
+                        <span className="font-semibold">Off-Campus Living:</span>
+                        <span className={program.off_campus_living === 'Allowed' ? "text-green-600" : "text-red-600"}>
+                            {program.off_campus_living}
+                        </span>
+                     </div>
+                  )}
+
+                  {program.dormitory_photos && program.dormitory_photos.length > 0 && (
+                    <div>
+                        <h3 className="font-semibold mb-4">Dormitory Gallery</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {program.dormitory_photos.map((photo: string, index: number) => (
+                                <div key={index} className="relative aspect-video rounded-lg overflow-hidden bg-slate-100 border group">
+                                    <Image
+                                        src={photo}
+                                        alt={`Dormitory ${index + 1}`}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {/* Entry Requirements */}
           <div className="space-y-4">

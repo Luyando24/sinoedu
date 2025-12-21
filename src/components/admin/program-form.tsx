@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { FileUpload } from "@/components/ui/file-upload"
+import { Loader2, Plus, X } from "lucide-react"
+import Image from "next/image"
 
 type Program = {
   id: string
@@ -386,23 +388,47 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
             </select>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Dormitory Photos (URLs)</label>
-            {formData.dormitory_photos.map((photo, index) => (
-              <div key={index} className="flex gap-2">
-                <Input 
-                  value={photo} 
-                  onChange={(e) => handleArrayChange(index, e.target.value, "dormitory_photos")}
-                  placeholder="https://example.com/photo.jpg" 
-                />
-                <Button type="button" variant="ghost" size="icon" onClick={() => removeArrayItem(index, "dormitory_photos")}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-            <Button type="button" variant="outline" size="sm" onClick={() => addArrayItem("dormitory_photos")}>
-              <Plus className="h-4 w-4 mr-2" /> Add Photo URL
-            </Button>
+          <div className="space-y-4">
+            <label className="text-sm font-medium">Dormitory Gallery</label>
+            
+            {/* Gallery Grid */}
+            {formData.dormitory_photos && formData.dormitory_photos.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    {formData.dormitory_photos.filter(url => url && url.trim() !== "").map((photo, index) => (
+                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
+                            <Image 
+                                src={photo} 
+                                alt={`Dormitory ${index + 1}`} 
+                                fill 
+                                className="object-cover"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => removeArrayItem(index, "dormitory_photos")}
+                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <FileUpload
+                value=""
+                onUpload={(url) => {
+                    if (url) {
+                        setFormData(prev => ({
+                            ...prev,
+                            dormitory_photos: [...prev.dormitory_photos, url]
+                        }))
+                    }
+                }}
+                bucket="documents"
+                folder="dormitory-images"
+                accept="image/*"
+                label="Add Dormitory Photo"
+            />
           </div>
         </CardContent>
       </Card>
