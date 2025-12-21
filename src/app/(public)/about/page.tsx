@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import Image from "next/image"
-import { CheckCircle, Trophy, Users, Globe, ShieldCheck, HeartHandshake, ThumbsUp, Crown, Rocket, ArrowUpRight } from "lucide-react"
+import { CheckCircle, Trophy, Users, Globe, ShieldCheck, HeartHandshake, ThumbsUp, Crown, Rocket, ArrowUpRight, Star } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { GalleryGrid } from "@/components/about/gallery-grid"
@@ -172,6 +172,51 @@ export default async function AboutPage() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="bg-white py-20">
+        <div className="container space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-4">
+            <h2 className="text-3xl font-bold text-[#0056b3]">Trusted by Partners Worldwide</h2>
+            <p className="text-muted-foreground">Here&apos;s what our partner agents have to say about working with us.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                text: "Sinoway has been an incredible partner for us. Their team's deep knowledge of Chinese universities and the admission process has helped hundreds of our students secure their spots. The efficiency and transparency they offer are unmatched.",
+                author: "Nguyen Van Minh",
+                role: "Director, Global Education Solutions (Vietnam)"
+              },
+              {
+                text: "Working with Sinoway Edu is a pleasure. They are responsive, professional, and truly care about the students' success. Their support with scholarship applications has been a game-changer for our agency.",
+                author: "Aisha Karimova",
+                role: "Senior Consultant, Future Pathways (Kazakhstan)"
+              },
+              {
+                text: "We value the integrity and reliability of Sinoway. They always deliver on their promises and provide accurate information. A trusted partner for anyone looking to send students to China.",
+                author: "Budi Santoso",
+                role: "Founder, Study Bridge (Indonesia)"
+              }
+            ].map((review, i) => (
+              <div key={i} className="bg-slate-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground italic leading-relaxed">&quot;{review.text}&quot;</p>
+                </div>
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <p className="font-bold text-[#0056b3]">{review.author}</p>
+                  <p className="text-sm text-gray-500">{review.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
