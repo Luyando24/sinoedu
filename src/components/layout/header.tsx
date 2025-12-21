@@ -1,36 +1,19 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { Link, usePathname, useRouter } from "@/navigation"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Menu, X, LogOut, User as UserIcon } from "lucide-react"
 import { useState } from "react"
 import { User } from "@supabase/supabase-js"
 import { createClient } from "@/lib/supabase/client"
-
-const navigation = [
-  { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
-  { name: "Services", href: "/services" },
-  { name: "Universities", href: "/universities" },
-  { name: "Programs", href: "/programs" },
-  { name: "News", href: "/news" },
-  { name: "Contact", href: "/contact" },
-]
-
 import Image from "next/image"
+import { useTranslations } from "next-intl"
+import { LanguageSwitcher } from "./language-switcher"
 
-type ContentBlock = {
-  key: string
-  content: string
-}
-
-const getContent = (blocks: ContentBlock[], key: string, fallback: string) => {
-  return blocks?.find(b => b.key === key)?.content || fallback
-}
-
-export function Header({ content = [], user }: { content?: ContentBlock[], user?: User | null }) {
+export function Header({ user }: { user?: User | null }) {
+  const t = useTranslations('Navigation')
+  const tCommon = useTranslations('Common')
   const pathname = usePathname()
   const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -40,6 +23,16 @@ export function Header({ content = [], user }: { content?: ContentBlock[], user?
     await supabase.auth.signOut()
     router.refresh()
   }
+
+  const navigation = [
+    { name: t('home'), href: "/" },
+    { name: t('about'), href: "/about" },
+    { name: t('services'), href: "/services" },
+    { name: t('universities'), href: "/universities" },
+    { name: t('programs'), href: "/programs" },
+    { name: t('news'), href: "/news" },
+    { name: t('contact'), href: "/contact" },
+  ]
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-[#0056b3] text-white">
@@ -82,6 +75,7 @@ export function Header({ content = [], user }: { content?: ContentBlock[], user?
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <LanguageSwitcher />
           {user ? (
             <div className="flex items-center gap-4">
               <span className="text-sm text-white/90">
@@ -94,19 +88,19 @@ export function Header({ content = [], user }: { content?: ContentBlock[], user?
                 onClick={handleLogout}
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                Logout
+                {t('logout')}
               </Button>
             </div>
           ) : (
             <>
               <Link href="/auth/login">
                 <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 hover:text-white">
-                  {getContent(content, 'header.nav.login', 'Log in')}
+                  {t('login')}
                 </Button>
               </Link>
               <Link href="/auth/register">
                 <Button size="sm" className="bg-white text-[#0056b3] hover:bg-white/90">
-                  {getContent(content, 'header.nav.apply', 'Apply Now')}
+                  {tCommon('applyNow')}
                 </Button>
               </Link>
             </>
@@ -114,12 +108,15 @@ export function Header({ content = [], user }: { content?: ContentBlock[], user?
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button
-          className="flex items-center space-x-2 md:hidden text-white"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X /> : <Menu />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher />
+          <button
+            className="flex items-center space-x-2 text-white"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Nav */}
@@ -157,18 +154,18 @@ export function Header({ content = [], user }: { content?: ContentBlock[], user?
                     }}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    Logout
+                    {t('logout')}
                   </Button>
                 </>
               ) : (
                 <>
                   <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
                     <Button variant="ghost" className="w-full justify-start">
-                      {getContent(content, 'header.nav.login', 'Log in')}
+                      {t('login')}
                     </Button>
                   </Link>
                   <Link href="/auth/register" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full justify-start">{getContent(content, 'header.nav.apply', 'Apply Now')}</Button>
+                    <Button className="w-full justify-start">{tCommon('applyNow')}</Button>
                   </Link>
                 </>
               )}

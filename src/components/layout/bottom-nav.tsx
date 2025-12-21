@@ -1,18 +1,19 @@
 "use client"
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { Link, usePathname } from "@/navigation"
 import { Home, BookOpen, GraduationCap, User } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useTranslations } from "next-intl"
 
 export function BottomNav() {
   const pathname = usePathname()
+  const t = useTranslations('Navigation')
 
   const navItems = [
-    { name: "Home", href: "/", icon: Home },
-    { name: "Programs", href: "/programs", icon: GraduationCap },
-    { name: "Services", href: "/services", icon: BookOpen },
-    { name: "Account", href: "/dashboard", icon: User },
+    { name: t('home'), href: "/", icon: Home },
+    { name: t('programs'), href: "/programs", icon: GraduationCap },
+    { name: t('services'), href: "/services", icon: BookOpen },
+    { name: t('account'), href: "/dashboard", icon: User },
   ]
 
   return (

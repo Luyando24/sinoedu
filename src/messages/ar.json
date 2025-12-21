@@ -1,0 +1,22 @@
+{
+  "Navigation": {
+    "home": "الرئيسية",
+    "about": "من نحن",
+    "services": "خدماتنا",
+    "universities": "الجامعات",
+    "programs": "البرامج",
+    "news": "الأخبار",
+    "contact": "اتصل بنا",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "register": "تسجيل",
+    "account": "حسابي",
+    "dashboard": "لوحة التحكم"
+  },
+  "Common": {
+    "applyNow": "قدم الآن",
+    "viewDetails": "عرض التفاصيل",
+    "readMore": "اقرأ المزيد",
+    "search": "بحث"
+  }
+}

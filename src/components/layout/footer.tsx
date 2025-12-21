@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { Link } from "@/navigation"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
 import { Facebook, Instagram, MessageCircle, Youtube, BookOpen } from "lucide-react"

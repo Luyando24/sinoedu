@@ -1,0 +1,22 @@
+{
+  "Navigation": {
+    "home": "首页",
+    "about": "关于我们",
+    "services": "服务",
+    "universities": "合作院校",
+    "programs": "课程项目",
+    "news": "新闻资讯",
+    "contact": "联系我们",
+    "login": "登录",
+    "logout": "退出",
+    "register": "注册",
+    "account": "账户",
+    "dashboard": "仪表盘"
+  },
+  "Common": {
+    "applyNow": "立即申请",
+    "viewDetails": "查看详情",
+    "readMore": "阅读更多",
+    "search": "搜索"
+  }
+}

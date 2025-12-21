@@ -1,0 +1,22 @@
+{
+  "Navigation": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "universities": "Universities",
+    "programs": "Programs",
+    "news": "News",
+    "contact": "Contact",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "account": "Account",
+    "dashboard": "Dashboard"
+  },
+  "Common": {
+    "applyNow": "Apply Now",
+    "viewDetails": "View Details",
+    "readMore": "Read More",
+    "search": "Search"
+  }
+}

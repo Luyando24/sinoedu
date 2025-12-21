@@ -1,0 +1,22 @@
+{
+  "Navigation": {
+    "home": "Главная",
+    "about": "О нас",
+    "services": "Услуги",
+    "universities": "Университеты",
+    "programs": "Программы",
+    "news": "Новости",
+    "contact": "Контакты",
+    "login": "Войти",
+    "logout": "Выйти",
+    "register": "Регистрация",
+    "account": "Аккаунт",
+    "dashboard": "Личный кабинет"
+  },
+  "Common": {
+    "applyNow": "Подать заявку",
+    "viewDetails": "Подробнее",
+    "readMore": "Читать далее",
+    "search": "Поиск"
+  }
+}

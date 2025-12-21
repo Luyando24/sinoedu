@@ -1,5 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { Sidebar } from "@/components/dashboard/sidebar"
+import { Inter } from "next/font/google";
+import "@/app/globals.css";
+import { Toaster } from "sonner";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default async function DashboardLayout({
   children,
@@ -44,15 +49,20 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
-      <Sidebar items={sidebarItems} />
+    <html lang="en">
+      <body className={inter.className}>
+        <div className="flex min-h-screen bg-muted/20">
+          <Sidebar items={sidebarItems} />
 
-      {/* Main Content */}
-      <main className="flex-1 md:ml-64 mb-16 md:mb-0">
-        <div className="p-4 md:p-8">
-          {children}
+          {/* Main Content */}
+          <main className="flex-1 md:ml-64 mb-16 md:mb-0">
+            <div className="p-4 md:p-8">
+              {children}
+            </div>
+          </main>
         </div>
-      </main>
-    </div>
+        <Toaster position="top-center" />
+      </body>
+    </html>
   )
 }

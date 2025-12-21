@@ -1,0 +1,22 @@
+{
+  "Navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "services": "Services",
+    "universities": "Universités",
+    "programs": "Programmes",
+    "news": "Actualités",
+    "contact": "Contact",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire",
+    "account": "Compte",
+    "dashboard": "Tableau de bord"
+  },
+  "Common": {
+    "applyNow": "Postuler",
+    "viewDetails": "Voir détails",
+    "readMore": "Lire plus",
+    "search": "Rechercher"
+  }
+}
