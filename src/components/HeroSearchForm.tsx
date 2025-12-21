@@ -67,10 +67,25 @@ export function HeroSearchForm({ className, enableAnimation = true, variant = "h
     className
   )
 
-  const inputClasses = "w-full h-12 px-4 rounded-lg bg-white/90 border-0 focus:ring-2 focus:ring-[#0056b3] text-gray-700 font-medium appearance-none cursor-pointer placeholder:text-gray-500 focus:outline-none"
+  const inputClasses = "w-full h-12 px-4 rounded-lg bg-white/90 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-[#0056b3] text-gray-700 font-medium appearance-none cursor-pointer placeholder:text-gray-500 focus:outline-none transition-all"
 
-  const FormContent = () => (
+  const formContent = (
     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Search Input - Moved to top for better UX */}
+        <div className="relative lg:col-span-2">
+           <input 
+              type="text" 
+              name="query"
+              placeholder="Search by keywords (e.g. Computer Science)" 
+              className={inputClasses}
+              value={formData.query}
+              onChange={handleChange}
+           />
+           <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
+              <Search className="h-5 w-5" />
+           </div>
+        </div>
+
         {/* City Select */}
         <div className="relative">
           <select 
@@ -185,18 +200,6 @@ export function HeroSearchForm({ className, enableAnimation = true, variant = "h
           </div>
         </div>
         
-        {/* Search Input */}
-        <div className="relative">
-           <input 
-              type="text" 
-              name="query"
-              placeholder="Search Programs" 
-              className={inputClasses}
-              value={formData.query}
-              onChange={handleChange}
-           />
-        </div>
-
         {/* Intake Select */}
         <div className="relative">
           <select 
@@ -216,7 +219,7 @@ export function HeroSearchForm({ className, enableAnimation = true, variant = "h
           </div>
         </div>
 
-        <Button className="h-12 w-full bg-[#1a3a3a] hover:bg-[#1a3a3a]/90 text-white font-bold rounded-lg transition-all shadow-md hover:shadow-lg">
+        <Button className="h-12 w-full bg-[#0056b3] hover:bg-[#0056b3]/90 text-white font-bold rounded-lg transition-all shadow-md hover:shadow-lg">
            <Search className="mr-2 h-4 w-4" /> Search
         </Button>
       </form>
@@ -230,14 +233,14 @@ export function HeroSearchForm({ className, enableAnimation = true, variant = "h
         transition={{ delay: 0.8, duration: 0.5 }}
         className={containerClasses}
       >
-        <FormContent />
+        {formContent}
       </motion.div>
     )
   }
 
   return (
     <div className={containerClasses}>
-      <FormContent />
+      {formContent}
     </div>
   )
 }
