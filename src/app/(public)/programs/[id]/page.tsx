@@ -55,6 +55,8 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
     : `Partner University in ${program.universities?.location || program.location || 'China'}`;
 
   const universityLocation = program.universities?.location || program.location || "China";
+  
+  // Safe cast for accommodation costs
   const accommodationCosts = program.accommodation_costs as unknown as AccommodationCosts;
 
   return (
