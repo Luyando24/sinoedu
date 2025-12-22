@@ -20,9 +20,10 @@ import {
   DropdownMenuLabel, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Search, Shield, ShieldOff } from "lucide-react"
+import { MoreHorizontal, Search, Shield, ShieldOff, Phone, Link as LinkIcon } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
+import Link from "next/link"
 
 type User = {
   id: string
@@ -30,6 +31,8 @@ type User = {
   name: string | null
   role: string | null
   created_at: string
+  social_media_link: string | null
+  whatsapp_number: string | null
 }
 
 export function UsersTable({ initialUsers, currentUserId }: { initialUsers: User[], currentUserId: string }) {
@@ -92,6 +95,7 @@ export function UsersTable({ initialUsers, currentUserId }: { initialUsers: User
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Contact</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Joined</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
@@ -100,10 +104,22 @@ export function UsersTable({ initialUsers, currentUserId }: { initialUsers: User
           <TableBody>
             {filteredUsers.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="font-medium">
-                  {user.name || "No Name"}
-                </TableCell>
+                <TableCell className="font-medium">{user.name || "N/A"}</TableCell>
                 <TableCell>{user.email}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    {user.whatsapp_number && (
+                      <Link href={`https://wa.me/${user.whatsapp_number.replace(/\D/g, '')}`} target="_blank" className="text-green-600 hover:text-green-700">
+                        <Phone className="h-4 w-4" />
+                      </Link>
+                    )}
+                    {user.social_media_link && (
+                      <Link href={user.social_media_link} target="_blank" className="text-blue-600 hover:text-blue-700">
+                        <LinkIcon className="h-4 w-4" />
+                      </Link>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <Badge variant={user.role === 'admin' ? "default" : "secondary"}>
                     {user.role || 'user'}

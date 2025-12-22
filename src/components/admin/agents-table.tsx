@@ -13,9 +13,10 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Check, X, Search, MoreHorizontal } from "lucide-react"
+import { Check, X, Search, MoreHorizontal, Phone, Link as LinkIcon } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
+import Link from "next/link"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +33,8 @@ type User = {
   role: string | null
   status: string | null
   created_at: string
+  social_media_link: string | null
+  whatsapp_number: string | null
 }
 
 export function AgentsTable({ initialAgents }: { initialAgents: User[] }) {
@@ -95,6 +98,7 @@ export function AgentsTable({ initialAgents }: { initialAgents: User[] }) {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Contact</TableHead>
               <TableHead>Country</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
@@ -104,11 +108,23 @@ export function AgentsTable({ initialAgents }: { initialAgents: User[] }) {
           <TableBody>
             {filteredAgents.map((agent) => (
               <TableRow key={agent.id}>
-                <TableCell className="font-medium">
-                  {agent.name || "No Name"}
-                </TableCell>
+                <TableCell className="font-medium">{agent.name || "N/A"}</TableCell>
                 <TableCell>{agent.email}</TableCell>
-                <TableCell>{agent.country || "-"}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    {agent.whatsapp_number && (
+                      <Link href={`https://wa.me/${agent.whatsapp_number.replace(/\D/g, '')}`} target="_blank" className="text-green-600 hover:text-green-700">
+                        <Phone className="h-4 w-4" />
+                      </Link>
+                    )}
+                    {agent.social_media_link && (
+                      <Link href={agent.social_media_link} target="_blank" className="text-blue-600 hover:text-blue-700">
+                        <LinkIcon className="h-4 w-4" />
+                      </Link>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>{agent.country || "N/A"}</TableCell>
                 <TableCell>
                   <Badge variant={
                     agent.status === 'active' ? "default" : 

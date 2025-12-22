@@ -45,6 +45,7 @@ export default async function DashboardLayout({
         { name: "Universities", href: "/admin/universities", icon: "LayoutDashboard" },
         { name: "Messages", href: "/admin/messages", icon: "Mail" },
         { name: "Posts", href: "/admin/posts", icon: "FileText" },
+        { name: "Reviews", href: "/admin/reviews", icon: "Star" },
         { name: "Content", href: "/admin/content", icon: "FileEdit" },
       ]
     }

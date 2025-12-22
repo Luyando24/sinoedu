@@ -16,6 +16,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
   const [country, setCountry] = useState("")
+  const [socialMediaLink, setSocialMediaLink] = useState("")
+  const [whatsappNumber, setWhatsappNumber] = useState("")
   const [role, setRole] = useState("user") // 'user' or 'agent'
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -35,6 +37,8 @@ export default function RegisterPage() {
           data: {
             name,
             country,
+            social_media_link: socialMediaLink,
+            whatsapp_number: whatsappNumber,
             role, // Pass role to metadata
           },
           emailRedirectTo: `${location.origin}/auth/callback`,
@@ -128,6 +132,24 @@ export default function RegisterPage() {
               value={country}
               onChange={(e) => setCountry(e.target.value)}
               required
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="whatsapp" className="text-sm font-medium">WhatsApp Number (Optional)</label>
+            <Input
+              id="whatsapp"
+              placeholder="+1234567890"
+              value={whatsappNumber}
+              onChange={(e) => setWhatsappNumber(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="social" className="text-sm font-medium">Social Media Link (Optional)</label>
+            <Input
+              id="social"
+              placeholder="LinkedIn, Instagram, or Facebook profile"
+              value={socialMediaLink}
+              onChange={(e) => setSocialMediaLink(e.target.value)}
             />
           </div>
           <div className="space-y-2">

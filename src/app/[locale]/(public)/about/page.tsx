@@ -16,6 +16,7 @@ const getContent = (blocks: { key: string; content: string }[] | null, key: stri
 export default async function AboutPage() {
   const supabase = createClient()
   const { data: blocks } = await supabase.from('content_blocks').select('*')
+  const { data: reviews } = await supabase.from('agent_reviews').select('*').order('created_at', { ascending: true })
 
   const reasons = [
     {
@@ -184,38 +185,81 @@ export default async function AboutPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                text: "Sinoway has been an incredible partner for us. Their team's deep knowledge of Chinese universities and the admission process has helped hundreds of our students secure their spots. The efficiency and transparency they offer are unmatched.",
-                author: "Nguyen Van Minh",
-                role: "Director, Global Education Solutions (Vietnam)"
-              },
-              {
-                text: "Working with Sinoway Edu is a pleasure. They are responsive, professional, and truly care about the students' success. Their support with scholarship applications has been a game-changer for our agency.",
-                author: "Aisha Karimova",
-                role: "Senior Consultant, Future Pathways (Kazakhstan)"
-              },
-              {
-                text: "We value the integrity and reliability of Sinoway. They always deliver on their promises and provide accurate information. A trusted partner for anyone looking to send students to China.",
-                author: "Budi Santoso",
-                role: "Founder, Study Bridge (Indonesia)"
-              }
-            ].map((review, i) => (
-              <div key={i} className="bg-slate-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-                <div className="space-y-4">
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    ))}
+            {reviews && reviews.length > 0 ? (
+              reviews.map((review) => (
+                <div key={review.id} className="bg-slate-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground italic leading-relaxed">&quot;{review.content}&quot;</p>
                   </div>
-                  <p className="text-muted-foreground italic leading-relaxed">&quot;{review.text}&quot;</p>
+                  <div className="mt-8 pt-6 border-t border-gray-200 flex items-center gap-4">
+                    {review.image_url ? (
+                      <div className="h-12 w-12 relative rounded-full overflow-hidden shrink-0">
+                        <Image 
+                          src={review.image_url} 
+                          alt={review.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-12 w-12 rounded-full bg-[#0056b3]/10 flex items-center justify-center shrink-0 text-[#0056b3] font-bold">
+                        {review.name.charAt(0)}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-bold text-[#0056b3]">{review.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {review.role}
+                        {review.role && review.country && " • "}
+                        {review.country}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <p className="font-bold text-[#0056b3]">{review.author}</p>
-                  <p className="text-sm text-gray-500">{review.role}</p>
+              ))
+            ) : (
+              // Fallback to hardcoded if no reviews in DB (or until migration is run)
+              [
+                {
+                  text: "Sinoway has been an incredible partner for us. Their team's deep knowledge of Chinese universities and the admission process has helped hundreds of our students secure their spots. The efficiency and transparency they offer are unmatched.",
+                  author: "Nguyen Van Minh",
+                  role: "Director, Global Education Solutions",
+                  country: "Vietnam"
+                },
+                {
+                  text: "Working with Sinoway Edu is a pleasure. They are responsive, professional, and truly care about the students' success. Their support with scholarship applications has been a game-changer for our agency.",
+                  author: "Aisha Karimova",
+                  role: "Senior Consultant, Future Pathways",
+                  country: "Kazakhstan"
+                },
+                {
+                  text: "We value the integrity and reliability of Sinoway. They always deliver on their promises and provide accurate information. A trusted partner for anyone looking to send students to China.",
+                  author: "Budi Santoso",
+                  role: "Founder, Study Bridge",
+                  country: "Indonesia"
+                }
+              ].map((review, i) => (
+                <div key={i} className="bg-slate-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground italic leading-relaxed">&quot;{review.text}&quot;</p>
+                  </div>
+                  <div className="mt-8 pt-6 border-t border-gray-200">
+                    <p className="font-bold text-[#0056b3]">{review.author}</p>
+                    <p className="text-sm text-gray-500">{review.role} ({review.country})</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </section>
