@@ -190,16 +190,16 @@ export default async function AboutPage() {
                 <div key={review.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-center md:items-start">
                   <div className="shrink-0">
                     {review.image_url ? (
-                      <div className="h-24 w-24 relative rounded-full overflow-hidden shrink-0">
+                      <div className="h-24 w-24 relative rounded-xl overflow-hidden shrink-0">
                         <Image 
                           src={review.image_url} 
                           alt={review.name}
                           fill
-                          className="object-cover"
+                          className="object-cover object-top"
                         />
                       </div>
                     ) : (
-                      <div className="h-24 w-24 rounded-full bg-[#0056b3]/10 flex items-center justify-center shrink-0 text-[#0056b3] font-bold text-3xl">
+                      <div className="h-24 w-24 rounded-xl bg-[#0056b3]/10 flex items-center justify-center shrink-0 text-[#0056b3] font-bold text-3xl">
                         {review.name.charAt(0)}
                       </div>
                     )}
@@ -239,7 +239,7 @@ export default async function AboutPage() {
               ].map((review, i) => (
                 <div key={i} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-center md:items-start">
                    <div className="shrink-0">
-                      <div className="h-24 w-24 rounded-full bg-[#0056b3]/10 flex items-center justify-center shrink-0 text-[#0056b3] font-bold text-3xl">
+                      <div className="h-24 w-24 rounded-xl bg-[#0056b3]/10 flex items-center justify-center shrink-0 text-[#0056b3] font-bold text-3xl">
                         {review.author.charAt(0)}
                       </div>
                    </div>
