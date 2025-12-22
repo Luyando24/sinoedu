@@ -32,7 +32,7 @@ type User = {
   created_at: string
 }
 
-export function UsersTable({ initialUsers }: { initialUsers: User[] }) {
+export function UsersTable({ initialUsers, currentUserId }: { initialUsers: User[], currentUserId: string }) {
   const [users, setUsers] = useState(initialUsers)
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(false)
