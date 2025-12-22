@@ -97,15 +97,16 @@ export default async function AboutPage() {
               ))}
             </div>
           </div>
-          <div className="lg:w-1/2 relative p-4 md:p-8">
-            <div className="absolute inset-0 bg-white rounded-3xl shadow-2xl -z-10" />
-            <div className="relative h-[450px] w-full rounded-2xl overflow-hidden shadow-lg mt-4">
-              <Image 
-                src="/images/about/founder.jpg"
-                alt="Steven - Founder of Sinoway Education" 
-                fill 
-                className="object-cover"
-              />
+          <div className="lg:w-1/2 flex justify-center items-center">
+            <div className="w-full bg-white rounded-3xl shadow-2xl p-6 pt-10">
+              <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-inner">
+                <Image 
+                  src="/images/about/founder.jpg"
+                  alt="Steven - Founder of Sinoway Education" 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
             </div>
           </div>
         </div>
