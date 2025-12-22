@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { FloatingWhatsApp } from "@/components/layout/floating-whatsapp";
 import { createClient } from "@/lib/supabase/server"
 
 export default async function PublicLayout({
@@ -15,6 +16,7 @@ export default async function PublicLayout({
       <Header user={user} />
       <main className="flex-1">{children}</main>
       <Footer />
+      <FloatingWhatsApp />
     </div>
   );
 }
