@@ -51,7 +51,7 @@ export default async function UniversitiesPage() {
                 <div className="relative h-48 w-full">
                   <Image 
                     src={uni.image_url} 
-                    alt={isAdmin ? uni.name : "Partner University"}
+                    alt={hasPrivilegedAccess ? uni.name : "Partner University"}
                     fill
                     className="object-cover"
                   />
@@ -64,7 +64,7 @@ export default async function UniversitiesPage() {
                        <GraduationCap className="h-6 w-6 text-[#0056b3]" />
                     </div>
                   )}
-                  {uni.logo_url && isAdmin && (
+                  {uni.logo_url && hasPrivilegedAccess && (
                     <div className="relative h-12 w-12">
                       <Image 
                         src={uni.logo_url} 
@@ -76,7 +76,7 @@ export default async function UniversitiesPage() {
                   )}
                 </div>
                 <CardTitle className="line-clamp-2 text-[#0056b3]">
-                    {isAdmin ? uni.name : "University in " + (uni.location || "China")}
+                    {hasPrivilegedAccess ? uni.name : "University in " + (uni.location || "China")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex-1">

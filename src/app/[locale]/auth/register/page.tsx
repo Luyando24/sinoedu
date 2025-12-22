@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
   const [country, setCountry] = useState("")
+  const [role, setRole] = useState("user") // 'user' or 'agent'
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const supabase = createClient()
@@ -25,7 +26,8 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      console.log("Attempting registration for:", email)
+      console.log("Attempting registration for:", email, "Role:", role)
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -33,6 +35,7 @@ export default function RegisterPage() {
           data: {
             name,
             country,
+            role, // Pass role to metadata
           },
           emailRedirectTo: `${location.origin}/auth/callback`,
         },
@@ -47,12 +50,17 @@ export default function RegisterPage() {
       }
 
       if (data?.user && data?.user?.identities?.length === 0) {
-         console.warn("User already registered or email confirmation required (identities empty)")
+         console.warn("User already registered or email confirmation required")
          toast.error("This email is already registered.")
          return
       }
 
-      toast.success("Account created successfully! You can now log in.")
+      if (role === 'agent') {
+        toast.success("Agent account request submitted! Please wait for admin approval.")
+      } else {
+        toast.success("Account created successfully! You can now log in.")
+      }
+      
       router.push("/auth/login")
     } catch (error) {
       console.error("Unexpected Registration Error:", error)
@@ -72,6 +80,25 @@ export default function RegisterPage() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleRegister} className="space-y-4">
+          
+          {/* Role Selection */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div 
+              className={`cursor-pointer border rounded-lg p-4 text-center transition-all ${role === 'user' ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-muted hover:border-primary/50'}`}
+              onClick={() => setRole('user')}
+            >
+              <div className="font-semibold">Student</div>
+              <div className="text-xs text-muted-foreground mt-1">For personal application</div>
+            </div>
+            <div 
+              className={`cursor-pointer border rounded-lg p-4 text-center transition-all ${role === 'agent' ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-muted hover:border-primary/50'}`}
+              onClick={() => setRole('agent')}
+            >
+              <div className="font-semibold">Agent</div>
+              <div className="text-xs text-muted-foreground mt-1">For managing students</div>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-medium">Full Name</label>
             <Input

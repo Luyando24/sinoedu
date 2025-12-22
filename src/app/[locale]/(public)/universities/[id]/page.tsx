@@ -100,7 +100,7 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
                 </div>
                 
                 <div className="flex gap-3">
-                {isAdmin && university.website_url && (
+                {hasPrivilegedAccess && university.website_url && (
                     <a href={university.website_url} target="_blank" rel="noreferrer">
                         <Button variant="outline" className="bg-white/10 text-white border-white/20 hover:bg-white/20">
                             <Globe className="mr-2 h-4 w-4" /> Website
