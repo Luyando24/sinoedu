@@ -20,7 +20,7 @@ import {
   DropdownMenuLabel, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Search, Shield, ShieldOff, UserCog } from "lucide-react"
+import { MoreHorizontal, Search, Shield, ShieldOff } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 
