@@ -68,44 +68,49 @@ export default async function AboutPage() {
         <GalleryGrid images={galleryImages} />
       </section>
 
-      {/* Intro Section - Split View */}
+      {/* Intro Section - Redesigned Blue Card Style */}
       <section className="container">
-        <div className="flex flex-col lg:flex-row gap-16 items-center">
-          <div className="lg:w-1/2 space-y-8">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#0056b3]">
-              Meet Our <span className="text-[#0056b3]">Founder</span>
-            </h1>
-            <div className="space-y-4">
-              <h2 className="text-2xl font-semibold text-[#0056b3]">
-                Steven Yang
-              </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                {getContent(blocks, 'about.hero.description', "As the founder of Sinoway Edu, I’ve steered our team in empowering international students to pursue studies in China since 2018. With nearly 8 years of dedicated experience in cross-border education consulting, we’ve forged partnerships with over 600 prestigious Chinese universities and supported more than 15,000 students in their study-in-China journey.")}
-              </p>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                getContent(blocks, 'about.stats.1', "10+ Years Experience"),
-                getContent(blocks, 'about.stats.2', "Official University Partners"),
-                getContent(blocks, 'about.stats.3', "98% Visa Success Rate"),
-                getContent(blocks, 'about.stats.4', "24/7 Student Support")
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-[#0056b3]" />
-                  <span className="font-medium text-[#0056b3]">{item}</span>
+        <div className="bg-[#0056b3] rounded-[2.5rem] p-6 md:p-12 lg:p-16 relative overflow-hidden">
+          <div className="relative z-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 md:mb-12">Meet our Founder</h2>
+            
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
+              {/* Image Area - Pushed to right */}
+              <div className="w-full lg:w-7/12 lg:ml-auto">
+                 <div className="relative h-[350px] md:h-[500px] w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10">
+                   <Image 
+                     src="/images/about/founder.jpg"
+                     alt="Steven - Founder of Sinoway Education" 
+                     fill 
+                     className="object-cover"
+                   />
+                 </div>
+              </div>
+
+              {/* Text Card - Overlapping Left */}
+              <div className="w-full lg:w-1/2 lg:absolute lg:left-0 lg:top-[55%] lg:-translate-y-1/2 z-20">
+                <div className="bg-white p-6 md:p-10 rounded-2xl shadow-2xl">
+                  <h3 className="text-2xl font-bold text-[#0056b3] mb-4">
+                    Steven Yang
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed mb-6 text-base md:text-lg">
+                    {getContent(blocks, 'about.hero.description', "As the founder of Sinoway Edu, I’ve steered our team in empowering international students to pursue studies in China since 2018. With nearly 8 years of dedicated experience in cross-border education consulting, we’ve forged partnerships with over 600 prestigious Chinese universities and supported more than 15,000 students in their study-in-China journey.")}
+                  </p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 pt-6 border-t border-gray-100">
+                    {[
+                        getContent(blocks, 'about.stats.1', "10+ Years Experience"),
+                        getContent(blocks, 'about.stats.2', "Official University Partners"),
+                        getContent(blocks, 'about.stats.3', "98% Visa Success Rate"),
+                        getContent(blocks, 'about.stats.4', "24/7 Student Support")
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-[#0056b3] shrink-0" />
+                        <span className="font-medium text-sm md:text-base text-gray-700">{item}</span>
+                        </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-          <div className="lg:w-1/2 flex justify-center items-center">
-            <div className="w-full bg-white rounded-3xl shadow-2xl p-6 pt-10">
-              <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-inner">
-                <Image 
-                  src="/images/about/founder.jpg"
-                  alt="Steven - Founder of Sinoway Education" 
-                  fill 
-                  className="object-cover"
-                />
               </div>
             </div>
           </div>
