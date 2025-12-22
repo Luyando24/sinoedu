@@ -27,7 +27,7 @@ async function FooterContent() {
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
   return (
-    <footer className="bg-white pt-16 pb-8 border-t">
+    <footer className="bg-white pt-16 pb-24 md:pb-8 border-t">
       <div className="container">
         <div className="flex flex-col md:flex-row justify-between gap-12">
           
