@@ -18,6 +18,7 @@ export default async function UniversitiesPage() {
   
   // Check if user is admin
   const { data: { user } } = await supabase.auth.getUser()
+  let hasPrivilegedAccess = false
   if (user) {
     // Secure RPC check
     const { data: role } = await supabase.rpc('get_my_role')

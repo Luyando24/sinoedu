@@ -269,7 +269,7 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
 
         {/* Right Column: Sidebar */}
         <div className="space-y-6">
-            {isAdmin && university.logo_url && (
+            {hasPrivilegedAccess && university.logo_url && (
                 <Card className="overflow-hidden flex justify-center p-6 bg-white">
                     <div className="relative h-32 w-32">
                         <Image 
