@@ -18,7 +18,6 @@ type University = {
   location: string | null
   description: string | null
   logo_url: string | null
-  image_url: string | null
   ranking: string | null
   established_year: string | null
   website_url: string | null
@@ -42,7 +41,6 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
     location: initialData?.location || "",
     description: initialData?.description || "",
     logo_url: initialData?.logo_url || "",
-    image_url: initialData?.image_url || "",
     cover_image: initialData?.cover_image || "",
     gallery_images: initialData?.gallery_images || [],
     dormitory_images: initialData?.dormitory_images || [],
@@ -152,24 +150,6 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
                         bucket="documents"
                         folder="university-covers"
                         label="Upload Cover"
-                    />
-                </div>
-             </div>
-          </div>
-
-          <div className="space-y-2">
-             <label className="text-sm font-medium">Campus Image (Legacy)</label>
-             <div className="flex gap-4 items-start">
-                <div className="flex-1">
-                    <Input name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." />
-                </div>
-                <div className="w-[200px]">
-                    <FileUpload
-                        value={formData.image_url}
-                        onUpload={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
-                        bucket="documents"
-                        folder="university-images"
-                        label="Upload Image"
                     />
                 </div>
              </div>

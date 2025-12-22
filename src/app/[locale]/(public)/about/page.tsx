@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import Image from "next/image"
-import { CheckCircle, Trophy, Users, Globe, ShieldCheck, HeartHandshake, ThumbsUp, Crown, Rocket, ArrowUpRight, Star } from "lucide-react"
+import { CheckCircle, Trophy, Users, Globe, ShieldCheck, HeartHandshake, ThumbsUp, Crown, Rocket, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { GalleryGrid } from "@/components/about/gallery-grid"
@@ -184,21 +184,13 @@ export default async function AboutPage() {
             <p className="text-muted-foreground">Here&apos;s what our partner agents have to say about working with us.</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {reviews && reviews.length > 0 ? (
               reviews.map((review) => (
-                <div key={review.id} className="bg-slate-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-                  <div className="space-y-4">
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                    <p className="text-muted-foreground italic leading-relaxed">&quot;{review.content}&quot;</p>
-                  </div>
-                  <div className="mt-8 pt-6 border-t border-gray-200 flex items-center gap-4">
+                <div key={review.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-center md:items-start">
+                  <div className="shrink-0">
                     {review.image_url ? (
-                      <div className="h-12 w-12 relative rounded-full overflow-hidden shrink-0">
+                      <div className="h-24 w-24 relative rounded-full overflow-hidden shrink-0">
                         <Image 
                           src={review.image_url} 
                           alt={review.name}
@@ -207,18 +199,19 @@ export default async function AboutPage() {
                         />
                       </div>
                     ) : (
-                      <div className="h-12 w-12 rounded-full bg-[#0056b3]/10 flex items-center justify-center shrink-0 text-[#0056b3] font-bold">
+                      <div className="h-24 w-24 rounded-full bg-[#0056b3]/10 flex items-center justify-center shrink-0 text-[#0056b3] font-bold text-3xl">
                         {review.name.charAt(0)}
                       </div>
                     )}
-                    <div>
-                      <p className="font-bold text-[#0056b3]">{review.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {review.role}
-                        {review.role && review.country && " • "}
-                        {review.country}
-                      </p>
-                    </div>
+                  </div>
+                  <div className="flex-1 text-center md:text-left space-y-2">
+                    <h3 className="font-bold text-lg text-gray-900">{review.name}</h3>
+                    <p className="font-bold text-[#0056b3]">
+                      {review.country}
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      {review.content}
+                    </p>
                   </div>
                 </div>
               ))
@@ -244,19 +237,19 @@ export default async function AboutPage() {
                   country: "Indonesia"
                 }
               ].map((review, i) => (
-                <div key={i} className="bg-slate-50 p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-                  <div className="space-y-4">
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                    <p className="text-muted-foreground italic leading-relaxed">&quot;{review.text}&quot;</p>
-                  </div>
-                  <div className="mt-8 pt-6 border-t border-gray-200">
-                    <p className="font-bold text-[#0056b3]">{review.author}</p>
-                    <p className="text-sm text-gray-500">{review.role} ({review.country})</p>
-                  </div>
+                <div key={i} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6 items-center md:items-start">
+                   <div className="shrink-0">
+                      <div className="h-24 w-24 rounded-full bg-[#0056b3]/10 flex items-center justify-center shrink-0 text-[#0056b3] font-bold text-3xl">
+                        {review.author.charAt(0)}
+                      </div>
+                   </div>
+                   <div className="flex-1 text-center md:text-left space-y-2">
+                     <h3 className="font-bold text-lg text-gray-900">{review.author}</h3>
+                     <p className="font-bold text-[#0056b3]">{review.country}</p>
+                     <p className="text-muted-foreground leading-relaxed text-sm">
+                       {review.text}
+                     </p>
+                   </div>
                 </div>
               ))
             )}
