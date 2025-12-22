@@ -24,6 +24,7 @@ type University = {
   website_url: string | null
   cover_image: string | null
   gallery_images: string[] | null
+  dormitory_images: string[] | null
   video_url: string | null
 }
 
@@ -44,6 +45,7 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
     image_url: initialData?.image_url || "",
     cover_image: initialData?.cover_image || "",
     gallery_images: initialData?.gallery_images || [],
+    dormitory_images: initialData?.dormitory_images || [],
     video_url: initialData?.video_url || "",
     ranking: initialData?.ranking || "",
     established_year: initialData?.established_year || "",
@@ -244,6 +246,53 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
                 folder="university-gallery"
                 accept="image/*"
                 label="Add Gallery Photo"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <label className="text-sm font-medium">Dormitory Images</label>
+            
+            {/* Dormitory Grid */}
+            {formData.dormitory_images && formData.dormitory_images.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    {formData.dormitory_images.map((photo, index) => (
+                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
+                            <Image 
+                                src={photo} 
+                                alt={`Dormitory ${index + 1}`} 
+                                fill 
+                                className="object-cover"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const newDormImages = [...formData.dormitory_images];
+                                    newDormImages.splice(index, 1);
+                                    setFormData(prev => ({ ...prev, dormitory_images: newDormImages }));
+                                }}
+                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <FileUpload
+                value=""
+                onUpload={(url) => {
+                    if (url) {
+                        setFormData(prev => ({
+                            ...prev,
+                            dormitory_images: [...(prev.dormitory_images || []), url]
+                        }))
+                    }
+                }}
+                bucket="documents"
+                folder="university-dormitory"
+                accept="image/*"
+                label="Add Dormitory Photo"
             />
           </div>
         </CardContent>

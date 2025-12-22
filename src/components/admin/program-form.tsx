@@ -121,6 +121,39 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     setFormData(prev => ({ ...prev, [field]: newArray }))
   }
 
+  const handleCopyFromUniversity = async () => {
+    if (!formData.university_id) {
+        toast.error("Please select a university first")
+        return
+    }
+
+    setLoading(true)
+    try {
+        const { data, error } = await supabase
+            .from('universities')
+            .select('dormitory_images')
+            .eq('id', formData.university_id)
+            .single()
+        
+        if (error) throw error
+
+        if (data?.dormitory_images && data.dormitory_images.length > 0) {
+            setFormData(prev => ({ 
+                ...prev, 
+                dormitory_photos: [...prev.dormitory_photos.filter(p => p.trim() !== ""), ...data.dormitory_images]
+            }))
+            toast.success(`Imported ${data.dormitory_images.length} images from university`)
+        } else {
+            toast.warning("Selected university has no dormitory images")
+        }
+    } catch (error) {
+        console.error(error)
+        toast.error("Failed to fetch university images")
+    } finally {
+        setLoading(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -389,7 +422,12 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           </div>
 
           <div className="space-y-4">
-            <label className="text-sm font-medium">Dormitory Gallery</label>
+            <div className="flex justify-between items-center">
+                <label className="text-sm font-medium">Dormitory Gallery</label>
+                <Button type="button" variant="outline" size="sm" onClick={handleCopyFromUniversity}>
+                    Import from University
+                </Button>
+            </div>
             
             {/* Gallery Grid */}
             {formData.dormitory_photos && formData.dormitory_photos.length > 0 && (
