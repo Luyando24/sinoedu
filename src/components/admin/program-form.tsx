@@ -223,17 +223,6 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
             <label className="text-sm font-medium">Program ID Code</label>
             <Input name="program_id_code" value={formData.program_id_code} onChange={handleChange} placeholder="e.g. SWGZGZHSXY-2" />
           </div>
-          <div className="col-span-2 space-y-2">
-            <label className="text-sm font-medium">Program Cover Image</label>
-            <FileUpload
-              value={formData.cover_image}
-              onUpload={(url) => setFormData(prev => ({ ...prev, cover_image: url }))}
-              bucket="documents"
-              folder="program-covers"
-              accept="image/*"
-              label="Upload Cover Image"
-            />
-          </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">University</label>
             <select 
