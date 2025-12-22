@@ -63,9 +63,10 @@ export function AgentsTable({ initialAgents }: { initialAgents: User[] }) {
       
       toast.success(`Agent ${action === 'approve' ? 'approved' : 'rejected'} successfully`)
       router.refresh()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(`Error ${action}ing agent:`, error)
-      toast.error(error.message || `Failed to ${action} agent`)
+      const errorMessage = error instanceof Error ? error.message : `Failed to ${action} agent`
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }

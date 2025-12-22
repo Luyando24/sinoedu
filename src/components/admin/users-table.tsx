@@ -60,9 +60,10 @@ export function UsersTable({ initialUsers }: { initialUsers: User[] }) {
       setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u))
       toast.success(`User role updated to ${newRole}`)
       router.refresh()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating role:', error)
-      toast.error(error.message || "Failed to update user role")
+      const errorMessage = error instanceof Error ? error.message : "Failed to update user role"
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }

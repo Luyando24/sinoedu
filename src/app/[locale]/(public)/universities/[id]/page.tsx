@@ -92,10 +92,42 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
                     )}
                   </div>
                   <h1 className="text-3xl md:text-5xl font-bold">{displayName}</h1>
-                  {university.established_year && (
-                      <p className="text-white/80 flex items-center gap-2">
-                          <CalendarDays className="h-4 w-4" /> Established {university.established_year}
-                      </p>
+                  
+                  <div className="flex flex-wrap gap-4 text-white/90 text-sm md:text-base">
+                    {university.established_year && (
+                        <div className="flex items-center gap-2">
+                            <CalendarDays className="h-4 w-4" /> 
+                            <span>Est. {university.established_year}</span>
+                        </div>
+                    )}
+                    {university.type && (
+                        <div className="flex items-center gap-2">
+                            <School className="h-4 w-4" /> 
+                            <span>{university.type}</span>
+                        </div>
+                    )}
+                    {university.total_students && (
+                        <div className="flex items-center gap-2">
+                            <Users className="h-4 w-4" /> 
+                            <span>{university.total_students} Students</span>
+                        </div>
+                    )}
+                    {university.international_students && (
+                        <div className="flex items-center gap-2">
+                            <Globe className="h-4 w-4" /> 
+                            <span>{university.international_students} Int. Students</span>
+                        </div>
+                    )}
+                  </div>
+
+                  {university.tags && university.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {university.tags.map((tag: string) => (
+                        <Badge key={tag} variant="secondary" className="bg-amber-400/90 hover:bg-amber-400 text-black border-none font-medium">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
                   )}
                 </div>
                 

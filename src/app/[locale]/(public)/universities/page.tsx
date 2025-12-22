@@ -18,14 +18,11 @@ export default async function UniversitiesPage() {
   
   // Check if user is admin
   const { data: { user } } = await supabase.auth.getUser()
-  let isAdmin = false
   if (user) {
     // Secure RPC check
     const { data: role } = await supabase.rpc('get_my_role')
-    isAdmin = role === 'admin'
-  }
-
-  // Fetch content blocks
+    hasPrivilegedAccess = role === 'admin' || role === 'agent'
+  }// Fetch content blocks
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
   // Fetch universities directly
