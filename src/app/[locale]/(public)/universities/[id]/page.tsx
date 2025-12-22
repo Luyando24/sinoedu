@@ -46,7 +46,7 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
   // Let's assume the name hiding is for the list view to encourage sign-up/contact, 
   // but if they get to the details page (e.g. via direct link), we should probably respect the rule.
   
-  const displayName = isAdmin ? university.name : `University in ${university.location || 'China'}`
+  const displayName = hasPrivilegedAccess ? university.name : `University in ${university.location || 'China'}`
 
   return (
     <div className="bg-slate-50 min-h-screen py-10">
@@ -64,7 +64,7 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
           {university.cover_image || university.image_url ? (
             <Image
               src={university.cover_image || university.image_url}
-              alt={isAdmin ? university.name : "University Campus"}
+              alt={hasPrivilegedAccess ? university.name : "University Campus"}
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 1200px"
