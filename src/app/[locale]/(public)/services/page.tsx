@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import { CheckCircle, FileText, GraduationCap, Plane, Home, Users, ArrowRight } from "lucide-react"
+import { CheckCircle, FileText, GraduationCap, Plane, Home, Users, ArrowRight, Languages, Lock, Building2, Briefcase } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -45,6 +45,30 @@ export default async function ServicesPage() {
       title: getContent(blocks, 'services.5.title', "Arrival & Orientation"),
       desc: getContent(blocks, 'services.5.desc', "A warm welcome to ensure you settle in comfortably and confidently."),
       features: ["Airport Pickup Service", "SIM Card & Bank Account Setup", "Campus Tour", "Cultural Integration Workshops"]
+    },
+    {
+      icon: Languages,
+      title: getContent(blocks, 'services.6.title', "Translation Services"),
+      desc: getContent(blocks, 'services.6.desc', "Professional translation for your academic and personal documents."),
+      features: ["Academic Transcript Translation", "Degree Certificate Translation", "Personal Statement Translation", "Legal Document Translation"]
+    },
+    {
+      icon: Lock,
+      title: getContent(blocks, 'services.7.title', "Document Authentication"),
+      desc: getContent(blocks, 'services.7.desc', "Official verification and notarization services for your critical documents."),
+      features: ["Embassy Legalization", "Ministry of Foreign Affairs Attestation", "Notary Public Services", "Apostille Services"]
+    },
+    {
+      icon: Building2,
+      title: getContent(blocks, 'services.8.title', "Company Registration"),
+      desc: getContent(blocks, 'services.8.desc', "Expert assistance for international entrepreneurs looking to start a business in China."),
+      features: ["Business License Application", "Tax Registration", "Bank Account Opening", "Office Address Registration"]
+    },
+    {
+      icon: Briefcase,
+      title: getContent(blocks, 'services.9.title', "Job Search Support"),
+      desc: getContent(blocks, 'services.9.desc', "Career guidance and support for students and graduates seeking employment in China."),
+      features: ["Resume/CV Optimization", "Interview Coaching", "Job Market Insights", "Work Visa (Z Visa) Consultation"]
     }
   ]
 
