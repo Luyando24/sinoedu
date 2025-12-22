@@ -32,12 +32,14 @@ interface AccommodationCosts {
 export default async function ProgramDetailsPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
   
-  // Check if user is admin
+  // Check if user is admin or agent
   const { data: { user } } = await supabase.auth.getUser();
   let isAdmin = false;
+  let hasPrivilegedAccess = false;
   if (user) {
     const { data: role } = await supabase.rpc('get_my_role');
     isAdmin = role === 'admin';
+    hasPrivilegedAccess = role === 'admin' || role === 'agent';
   }
 
   // Fetch program with university
@@ -50,7 +52,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
   if (!program) notFound();
 
   // Handle University Name Privacy
-  const universityName = isAdmin 
+  const universityName = hasPrivilegedAccess 
     ? program.universities?.name 
     : `Partner University in ${program.universities?.location || program.location || 'China'}`;
 

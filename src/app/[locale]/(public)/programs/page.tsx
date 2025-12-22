@@ -34,6 +34,14 @@ export default async function ProgramsPage({
 
   const supabase = createClient()
   
+  // Check if user is admin or agent
+  const { data: { user } } = await supabase.auth.getUser()
+  let hasPrivilegedAccess = false
+  if (user) {
+    const { data: role } = await supabase.rpc('get_my_role')
+    hasPrivilegedAccess = role === 'admin' || role === 'agent'
+  }
+  
   // Fetch content blocks
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
@@ -93,7 +101,11 @@ export default async function ProgramsPage({
                      <h3 className="text-2xl font-bold group-hover:text-[#0056b3] transition-colors">{program.title}</h3>
                      <div className="flex items-center gap-2 text-muted-foreground mt-1">
                        <MapPin className="h-4 w-4" />
-                       <span className="font-medium">{program.universities?.name || "University"}</span>
+                       <span className="font-medium">
+                         {hasPrivilegedAccess 
+                           ? (program.universities?.name || "University") 
+                           : `University in ${program.universities?.location || program.location || 'China'}`}
+                       </span>
                        {program.location && <span>• {program.location}</span>}
                      </div>
                    </div>
