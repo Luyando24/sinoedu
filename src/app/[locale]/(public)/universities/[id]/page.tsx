@@ -21,12 +21,12 @@ export const dynamic = 'force-dynamic'
 export default async function UniversityDetailsPage({ params }: { params: { id: string } }) {
   const supabase = createClient()
   
-  // Check if user is admin
+  // Check if user is admin or agent
   const { data: { user } } = await supabase.auth.getUser()
-  let isAdmin = false
+  let hasPrivilegedAccess = false
   if (user) {
     const { data: role } = await supabase.rpc('get_my_role')
-    isAdmin = role === 'admin'
+    hasPrivilegedAccess = role === 'admin' || role === 'agent'
   }
 
   // Fetch university with programs
