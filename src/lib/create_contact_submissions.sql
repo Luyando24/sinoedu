@@ -6,6 +6,7 @@ create table public.contact_submissions (
   first_name text,
   last_name text,
   email text not null,
+  whatsapp_number text,
   subject text,
   message text,
   status text default 'new' check (status in ('new', 'read', 'replied', 'archived')),

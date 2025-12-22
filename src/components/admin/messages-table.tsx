@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Mail, Eye } from "lucide-react"
+import { Search, Mail, Eye, Phone } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
 
@@ -223,6 +223,12 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
                 <span className="font-bold text-right">Email:</span>
                 <span className="col-span-3">{selectedMessage.email}</span>
               </div>
+              {selectedMessage.whatsapp_number && (
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <span className="font-bold text-right">WhatsApp:</span>
+                  <span className="col-span-3">{selectedMessage.whatsapp_number}</span>
+                </div>
+              )}
               <div className="grid grid-cols-4 items-center gap-4">
                 <span className="font-bold text-right">Subject:</span>
                 <span className="col-span-3">{selectedMessage.subject}</span>
