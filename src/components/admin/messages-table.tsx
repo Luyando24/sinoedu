@@ -34,6 +34,7 @@ type Message = {
   message: string
   status: string
   created_at: string
+  whatsapp_number?: string
 }
 
 export function MessagesTable({ initialMessages }: { initialMessages: Message[] }) {
@@ -225,7 +226,10 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
               </div>
               {selectedMessage.whatsapp_number && (
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <span className="font-bold text-right">WhatsApp:</span>
+                  <span className="font-bold text-right flex items-center justify-end gap-2">
+                    <Phone className="h-4 w-4" />
+                    WhatsApp:
+                  </span>
                   <span className="col-span-3">{selectedMessage.whatsapp_number}</span>
                 </div>
               )}

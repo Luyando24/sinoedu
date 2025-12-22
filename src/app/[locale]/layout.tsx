@@ -4,6 +4,7 @@ import {Inter} from "next/font/google";
 import "@/app/globals.css";
 import {Toaster} from "sonner";
 import {BottomNav} from "@/components/layout/bottom-nav";
+import {AnalyticsTracker} from "@/components/analytics/analytics-tracker";
 import type { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -26,6 +27,7 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
+          <AnalyticsTracker />
           {children}
           <BottomNav />
           <Toaster position="top-center" />

@@ -39,6 +39,7 @@ export default async function DashboardLayout({
     if (userRole === 'admin') {
       sidebarItems = [
         { name: "Overview", href: "/admin", icon: "Shield" },
+        { name: "Analytics", href: "/admin/analytics", icon: "BarChart" },
         { name: "Users", href: "/admin/users", icon: "User" },
         { name: "Agents", href: "/admin/agents", icon: "UserCog" },
         { name: "Programs", href: "/admin/programs", icon: "FileText" },
