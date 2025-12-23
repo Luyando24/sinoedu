@@ -208,6 +208,25 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
                 </div>
             )}
 
+            {university.dormitory_images && university.dormitory_images.length > 0 && (
+                <div className="space-y-4">
+                    <h2 className="text-2xl font-bold tracking-tight">Dormitory Gallery</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {university.dormitory_images.map((image: string, index: number) => (
+                            <div key={index} className="relative aspect-video rounded-lg overflow-hidden border bg-slate-100 group">
+                                <Image
+                                    src={image}
+                                    alt={`Dormitory Image ${index + 1}`}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <div className="space-y-4">
                 <h2 className="text-2xl font-bold tracking-tight">Available Programs</h2>
                 {university.programs && university.programs.length > 0 ? (

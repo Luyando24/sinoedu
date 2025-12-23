@@ -120,22 +120,22 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   <div className="flex items-center gap-2">
                     <Building2 className="h-5 w-5" />
                     <span className="font-medium text-foreground">{universityName}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5" />
-                  <span>{universityLocation}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5" />
+                    <span>{universityLocation}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex flex-col gap-3 min-w-[200px]">
-              <Link href="/contact" className="w-full">
-                <Button size="lg" className="w-full text-lg">Apply Now</Button>
-              </Link>
-              <p className="text-xs text-center text-muted-foreground">
-                Deadline: {program.application_deadline || "Rolling Admission"}
-              </p>
-            </div>
+              <div className="flex flex-col gap-3 min-w-[200px]">
+                <Link href="/contact" className="w-full">
+                  <Button size="lg" className="w-full text-lg">Apply Now</Button>
+                </Link>
+                <p className="text-xs text-center text-muted-foreground">
+                  Deadline: {program.application_deadline || "Rolling Admission"}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
               About the Program
             </h2>
             <Card>
-              <CardContent className="pt-6 leading-relaxed text-muted-foreground">
+              <CardContent className="pt-6 leading-relaxed text-muted-foreground whitespace-pre-wrap">
                 {program.description || "No description available for this program."}
               </CardContent>
             </Card>
@@ -219,7 +219,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   {program.accommodation_details && (
                     <div>
                         <h3 className="font-semibold mb-2">Details</h3>
-                        <p className="text-muted-foreground leading-relaxed">{program.accommodation_details}</p>
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{program.accommodation_details}</p>
                     </div>
                   )}
                   
@@ -266,7 +266,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                 {program.requirements && (
                    <div>
                      <h3 className="font-semibold mb-2">General Requirements</h3>
-                     <p className="text-muted-foreground">{program.requirements}</p>
+                     <p className="text-muted-foreground whitespace-pre-wrap">{program.requirements}</p>
                    </div>
                 )}
                 
@@ -284,14 +284,14 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                 {program.language_requirements && (
                    <div>
                      <h3 className="font-semibold mb-2">Language Requirements</h3>
-                     <p className="text-muted-foreground">{program.language_requirements}</p>
+                     <p className="text-muted-foreground whitespace-pre-wrap">{program.language_requirements}</p>
                    </div>
                 )}
 
                 {program.age_requirements && (
                    <div>
                      <h3 className="font-semibold mb-2">Age Limit</h3>
-                     <p className="text-muted-foreground">{program.age_requirements}</p>
+                     <p className="text-muted-foreground whitespace-pre-wrap">{program.age_requirements}</p>
                    </div>
                 )}
               </CardContent>
@@ -309,9 +309,9 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                 {program.required_documents && Array.isArray(program.required_documents) && program.required_documents.length > 0 ? (
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {program.required_documents.map((doc: string, i: number) => (
-                      <li key={i} className="flex items-center gap-2 text-muted-foreground">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />
-                        <span>{doc}</span>
+                      <li key={i} className="flex items-start gap-2 text-muted-foreground">
+                        <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-1" />
+                        <span className="whitespace-pre-wrap">{doc}</span>
                       </li>
                     ))}
                   </ul>
@@ -336,7 +336,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-sm">
-                <p>{program.scholarship_details}</p>
+                <p className="whitespace-pre-wrap">{program.scholarship_details}</p>
               </CardContent>
             </Card>
           )}

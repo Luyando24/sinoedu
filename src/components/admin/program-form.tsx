@@ -522,10 +522,11 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
             {formData.required_documents.map((doc, index) => (
               <div key={index} className="flex gap-2">
-                <Input 
+                <Textarea 
                   value={doc} 
                   onChange={(e) => handleArrayChange(index, e.target.value, "required_documents")}
-                  placeholder="e.g. Passport" 
+                  placeholder="e.g. Passport"
+                  className="min-h-[40px]"
                 />
                 <Button type="button" variant="ghost" size="icon" onClick={() => removeArrayItem(index, "required_documents")}>
                   <X className="h-4 w-4" />
