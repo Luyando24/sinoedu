@@ -90,6 +90,8 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     
     accommodation_single: initialData?.accommodation_costs?.single || "",
     accommodation_double: initialData?.accommodation_costs?.double || "",
+    accommodation_triple: initialData?.accommodation_costs?.triple || "",
+    accommodation_quad: initialData?.accommodation_costs?.quad || "",
     accommodation_details: initialData?.accommodation_details || "",
     off_campus_living: initialData?.off_campus_living || "Not Allowed",
     
@@ -160,7 +162,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
     try {
       // Destructure to remove flat fields that aren't in schema
-      const { accommodation_single, accommodation_double, ...rest } = formData
+      const { accommodation_single, accommodation_double, accommodation_triple, accommodation_quad, ...rest } = formData
 
       const payload = {
         ...rest,
@@ -169,7 +171,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
         required_documents: formData.required_documents.filter((i: string) => i.trim() !== ""),
         accommodation_costs: {
             single: accommodation_single,
-            double: accommodation_double
+            double: accommodation_double,
+            triple: accommodation_triple,
+            quad: accommodation_quad
         }
       }
       
@@ -481,6 +485,41 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           
           <div className="space-y-2">
             <label className="text-sm font-medium">Required Documents</label>
+            
+            <div className="flex flex-wrap gap-2 mb-2">
+                {[
+                  "Application form",
+                  "Passport",
+                  "Passport-sized photos",
+                  "Original copy of highest academic certificate",
+                  "Original copy of academic transcripts (highest education)",
+                  "Signature",
+                  "Original copy of police clearance certificate",
+                  "Medical examination form",
+                  "Letter of recommendation from high school"
+                ].map((doc) => (
+                    <Button 
+                        key={doc} 
+                        type="button" 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-xs h-auto py-1"
+                        onClick={() => {
+                            if (!formData.required_documents.includes(doc)) {
+                                setFormData(prev => ({
+                                    ...prev,
+                                    required_documents: [...prev.required_documents.filter(d => d !== ""), doc]
+                                }))
+                            } else {
+                                toast.info("Document already added")
+                            }
+                        }}
+                    >
+                        <Plus className="h-3 w-3 mr-1" /> {doc}
+                    </Button>
+                ))}
+            </div>
+
             {formData.required_documents.map((doc, index) => (
               <div key={index} className="flex gap-2">
                 <Input 
