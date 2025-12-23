@@ -26,6 +26,8 @@ export const dynamic = 'force-dynamic';
 interface AccommodationCosts {
   single?: string;
   double?: string;
+  triple?: string;
+  quad?: string;
   [key: string]: string | undefined;
 }
 
@@ -368,6 +370,18 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                         <div className="flex justify-between pl-2">
                             <span>Double Room</span>
                             <span className="font-medium">{accommodationCosts.double}</span>
+                        </div>
+                    )}
+                    {accommodationCosts.triple && (
+                        <div className="flex justify-between pl-2">
+                            <span>3-Person Room</span>
+                            <span className="font-medium">{accommodationCosts.triple}</span>
+                        </div>
+                    )}
+                    {accommodationCosts.quad && (
+                        <div className="flex justify-between pl-2">
+                            <span>4-Person Room</span>
+                            <span className="font-medium">{accommodationCosts.quad}</span>
                         </div>
                     )}
                  </div>

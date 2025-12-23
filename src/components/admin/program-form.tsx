@@ -35,7 +35,7 @@ type Program = {
   registration_fee: string | null
   application_fee_status: string | null
   scholarship_details: string | null
-  accommodation_costs: { single: string; double: string } | null
+  accommodation_costs: { single: string; double: string; triple?: string; quad?: string } | null
   accommodation_details: string | null
   off_campus_living: string | null
   dormitory_photos: string[] | null
@@ -391,6 +391,14 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
             <div className="space-y-2">
                 <label className="text-sm font-medium">Double Room Cost</label>
                 <Input name="accommodation_double" value={formData.accommodation_double} onChange={handleChange} placeholder="e.g. ¥N/A" />
+            </div>
+            <div className="space-y-2">
+                <label className="text-sm font-medium">3-Person Room Cost</label>
+                <Input name="accommodation_triple" value={formData.accommodation_triple} onChange={handleChange} placeholder="e.g. ¥N/A" />
+            </div>
+            <div className="space-y-2">
+                <label className="text-sm font-medium">4-Person Room Cost</label>
+                <Input name="accommodation_quad" value={formData.accommodation_quad} onChange={handleChange} placeholder="e.g. ¥N/A" />
             </div>
           </div>
           <div className="space-y-2">
