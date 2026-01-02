@@ -12,9 +12,15 @@ interface HeroSearchFormProps {
   className?: string
   enableAnimation?: boolean
   variant?: "hero" | "plain"
+  initialIntakes?: { id: string, name: string }[]
 }
 
-export function HeroSearchForm({ className, enableAnimation = true, variant = "hero" }: HeroSearchFormProps) {
+export function HeroSearchForm({
+  className,
+  enableAnimation = true,
+  variant = "hero",
+  initialIntakes = []
+}: HeroSearchFormProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -27,7 +33,7 @@ export function HeroSearchForm({ className, enableAnimation = true, variant = "h
     query: "",
     intake: ""
   })
-  const [activeIntakes, setActiveIntakes] = useState<{ id: string, name: string }[]>([])
+  const [activeIntakes, setActiveIntakes] = useState<{ id: string, name: string }[]>(initialIntakes)
 
   useEffect(() => {
     if (searchParams) {
@@ -44,6 +50,9 @@ export function HeroSearchForm({ className, enableAnimation = true, variant = "h
   }, [searchParams])
 
   useEffect(() => {
+    // Only fetch if initialIntakes were not provided
+    if (initialIntakes.length > 0) return
+
     const fetchIntakes = async () => {
       const supabase = createClient()
       const { data } = await supabase
@@ -58,7 +67,7 @@ export function HeroSearchForm({ className, enableAnimation = true, variant = "h
       }
     }
     fetchIntakes()
-  }, [])
+  }, [initialIntakes])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
