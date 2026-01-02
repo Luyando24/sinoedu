@@ -52,13 +52,19 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
   const supabase = createClient()
   const [loading, setLoading] = useState(false)
   const [universities, setUniversities] = useState<{ id: string, name: string }[]>([])
+  const [intakePeriods, setIntakePeriods] = useState<{ id: string, name: string }[]>([])
 
   useEffect(() => {
-    const fetchUniversities = async () => {
-      const { data } = await supabase.from('universities').select('id, name')
-      if (data) setUniversities(data)
+    const fetchData = async () => {
+      const [uniRes, intakeRes] = await Promise.all([
+        supabase.from('universities').select('id, name'),
+        supabase.from('intake_periods').select('id, name').eq('is_active', true).order('name')
+      ])
+
+      if (uniRes.data) setUniversities(uniRes.data)
+      if (intakeRes.data) setIntakePeriods(intakeRes.data)
     }
-    fetchUniversities()
+    fetchData()
   }, [supabase])
 
   const [formData, setFormData] = useState({
@@ -72,31 +78,31 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     description: initialData?.description || "",
     requirements: initialData?.requirements || "",
     location: initialData?.location || "",
-    
+
     language: initialData?.language || "",
     intake: initialData?.intake || "",
     application_deadline: initialData?.application_deadline || "",
-    
+
     age_requirements: initialData?.age_requirements || "",
     nationality_restrictions: initialData?.nationality_restrictions || "no",
     language_requirements: initialData?.language_requirements || "",
     applicants_inside_china: initialData?.applicants_inside_china || "Not Accepted",
-    
+
     academic_requirements: initialData?.academic_requirements || [""],
-    
+
     registration_fee: initialData?.registration_fee || "",
     application_fee_status: initialData?.application_fee_status || "",
     scholarship_details: initialData?.scholarship_details || "",
-    
+
     accommodation_single: initialData?.accommodation_costs?.single || "",
     accommodation_double: initialData?.accommodation_costs?.double || "",
     accommodation_triple: initialData?.accommodation_costs?.triple || "",
     accommodation_quad: initialData?.accommodation_costs?.quad || "",
     accommodation_details: initialData?.accommodation_details || "",
     off_campus_living: initialData?.off_campus_living || "Not Allowed",
-    
+
     dormitory_photos: initialData?.dormitory_photos || [""],
-    
+
     processing_speed: initialData?.processing_speed || "",
     required_documents: initialData?.required_documents || [""]
   })
@@ -125,34 +131,34 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
   const handleCopyFromUniversity = async () => {
     if (!formData.university_id) {
-        toast.error("Please select a university first")
-        return
+      toast.error("Please select a university first")
+      return
     }
 
     setLoading(true)
     try {
-        const { data, error } = await supabase
-            .from('universities')
-            .select('dormitory_images')
-            .eq('id', formData.university_id)
-            .single()
-        
-        if (error) throw error
+      const { data, error } = await supabase
+        .from('universities')
+        .select('dormitory_images')
+        .eq('id', formData.university_id)
+        .single()
 
-        if (data?.dormitory_images && data.dormitory_images.length > 0) {
-            setFormData(prev => ({ 
-                ...prev, 
-                dormitory_photos: [...prev.dormitory_photos.filter(p => p.trim() !== ""), ...data.dormitory_images]
-            }))
-            toast.success(`Imported ${data.dormitory_images.length} images from university`)
-        } else {
-            toast.warning("Selected university has no dormitory images")
-        }
+      if (error) throw error
+
+      if (data?.dormitory_images && data.dormitory_images.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          dormitory_photos: [...prev.dormitory_photos.filter(p => p.trim() !== ""), ...data.dormitory_images]
+        }))
+        toast.success(`Imported ${data.dormitory_images.length} images from university`)
+      } else {
+        toast.warning("Selected university has no dormitory images")
+      }
     } catch (error) {
-        console.error(error)
-        toast.error("Failed to fetch university images")
+      console.error(error)
+      toast.error("Failed to fetch university images")
     } finally {
-        setLoading(false)
+      setLoading(false)
     }
   }
 
@@ -170,13 +176,13 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
         dormitory_photos: formData.dormitory_photos.filter((i: string) => i.trim() !== ""),
         required_documents: formData.required_documents.filter((i: string) => i.trim() !== ""),
         accommodation_costs: {
-            single: accommodation_single,
-            double: accommodation_double,
-            triple: accommodation_triple,
-            quad: accommodation_quad
+          single: accommodation_single,
+          double: accommodation_double,
+          triple: accommodation_triple,
+          quad: accommodation_quad
         }
       }
-      
+
       // Look up school_name if needed for backward compatibility or display, 
       // but we are relying on university_id now. 
       // We will fill school_name with the university name just in case legacy code needs it
@@ -199,7 +205,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
         if (error) throw error
         toast.success("Program created successfully")
       }
-      
+
       router.push("/admin/programs")
       router.refresh()
     } catch (error) {
@@ -212,7 +218,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto pb-20">
-      
+
       {/* Basic Information */}
       <Card>
         <CardHeader>
@@ -229,9 +235,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">University</label>
-            <select 
-              name="university_id" 
-              value={formData.university_id} 
+            <select
+              name="university_id"
+              value={formData.university_id}
               onChange={handleChange}
               required
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -248,9 +254,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Level</label>
-            <select 
-              name="level" 
-              value={formData.level} 
+            <select
+              name="level"
+              value={formData.level}
               onChange={handleChange}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
@@ -278,7 +284,21 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Intake</label>
-            <Input name="intake" value={formData.intake} onChange={handleChange} placeholder="e.g. Autumn 2025" />
+            <select
+              name="intake"
+              value={formData.intake}
+              onChange={handleChange}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option value="">Select Intake</option>
+              {intakePeriods.map((intake) => (
+                <option key={intake.id} value={intake.name}>{intake.name}</option>
+              ))}
+              {/* Fallback for legacy data or if no DB intakes exist yet */}
+              {formData.intake && !intakePeriods.some(i => i.name === formData.intake) && (
+                <option value={formData.intake}>{formData.intake} (Current)</option>
+              )}
+            </select>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Application Deadline</label>
@@ -324,9 +344,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Applicants Inside China</label>
-            <select 
-              name="applicants_inside_china" 
-              value={formData.applicants_inside_china} 
+            <select
+              name="applicants_inside_china"
+              value={formData.applicants_inside_china}
               onChange={handleChange}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
@@ -334,15 +354,15 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
               <option value="Not Accepted">Not Accepted</option>
             </select>
           </div>
-          
+
           <div className="col-span-2 space-y-2">
             <label className="text-sm font-medium">Academic Requirements (List)</label>
             {formData.academic_requirements.map((req, index) => (
               <div key={index} className="flex gap-2">
-                <Input 
-                  value={req} 
+                <Input
+                  value={req}
                   onChange={(e) => handleArrayChange(index, e.target.value, "academic_requirements")}
-                  placeholder="e.g. High School Diploma" 
+                  placeholder="e.g. High School Diploma"
                 />
                 <Button type="button" variant="ghost" size="icon" onClick={() => removeArrayItem(index, "academic_requirements")}>
                   <X className="h-4 w-4" />
@@ -389,20 +409,20 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-                <label className="text-sm font-medium">Single Room Cost</label>
-                <Input name="accommodation_single" value={formData.accommodation_single} onChange={handleChange} placeholder="e.g. ¥N/A" />
+              <label className="text-sm font-medium">Single Room Cost</label>
+              <Input name="accommodation_single" value={formData.accommodation_single} onChange={handleChange} placeholder="e.g. ¥N/A" />
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-medium">Double Room Cost</label>
-                <Input name="accommodation_double" value={formData.accommodation_double} onChange={handleChange} placeholder="e.g. ¥N/A" />
+              <label className="text-sm font-medium">Double Room Cost</label>
+              <Input name="accommodation_double" value={formData.accommodation_double} onChange={handleChange} placeholder="e.g. ¥N/A" />
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-medium">3-Person Room Cost</label>
-                <Input name="accommodation_triple" value={formData.accommodation_triple} onChange={handleChange} placeholder="e.g. ¥N/A" />
+              <label className="text-sm font-medium">3-Person Room Cost</label>
+              <Input name="accommodation_triple" value={formData.accommodation_triple} onChange={handleChange} placeholder="e.g. ¥N/A" />
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-medium">4-Person Room Cost</label>
-                <Input name="accommodation_quad" value={formData.accommodation_quad} onChange={handleChange} placeholder="e.g. ¥N/A" />
+              <label className="text-sm font-medium">4-Person Room Cost</label>
+              <Input name="accommodation_quad" value={formData.accommodation_quad} onChange={handleChange} placeholder="e.g. ¥N/A" />
             </div>
           </div>
           <div className="space-y-2">
@@ -411,9 +431,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Off-Campus Living</label>
-            <select 
-              name="off_campus_living" 
-              value={formData.off_campus_living} 
+            <select
+              name="off_campus_living"
+              value={formData.off_campus_living}
               onChange={handleChange}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
@@ -424,49 +444,49 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-                <label className="text-sm font-medium">Dormitory Gallery</label>
-                <Button type="button" variant="outline" size="sm" onClick={handleCopyFromUniversity}>
-                    Import from University
-                </Button>
+              <label className="text-sm font-medium">Dormitory Gallery</label>
+              <Button type="button" variant="outline" size="sm" onClick={handleCopyFromUniversity}>
+                Import from University
+              </Button>
             </div>
-            
+
             {/* Gallery Grid */}
             {formData.dormitory_photos && formData.dormitory_photos.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    {formData.dormitory_photos.filter(url => url && url.trim() !== "").map((photo, index) => (
-                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
-                            <Image 
-                                src={photo} 
-                                alt={`Dormitory ${index + 1}`} 
-                                fill 
-                                className="object-cover"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => removeArrayItem(index, "dormitory_photos")}
-                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                                <X className="h-4 w-4" />
-                            </button>
-                        </div>
-                    ))}
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {formData.dormitory_photos.filter(url => url && url.trim() !== "").map((photo, index) => (
+                  <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
+                    <Image
+                      src={photo}
+                      alt={`Dormitory ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeArrayItem(index, "dormitory_photos")}
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             )}
 
             <FileUpload
-                value=""
-                onUpload={(url) => {
-                    if (url) {
-                        setFormData(prev => ({
-                            ...prev,
-                            dormitory_photos: [...prev.dormitory_photos, url]
-                        }))
-                    }
-                }}
-                bucket="documents"
-                folder="dormitory-images"
-                accept="image/*"
-                label="Add Dormitory Photo"
+              value=""
+              onUpload={(url) => {
+                if (url) {
+                  setFormData(prev => ({
+                    ...prev,
+                    dormitory_photos: [...prev.dormitory_photos, url]
+                  }))
+                }
+              }}
+              bucket="documents"
+              folder="dormitory-images"
+              accept="image/*"
+              label="Add Dormitory Photo"
             />
           </div>
         </CardContent>
@@ -482,48 +502,48 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
             <label className="text-sm font-medium">Processing Speed</label>
             <Input name="processing_speed" value={formData.processing_speed} onChange={handleChange} placeholder="e.g. usually 2-4 weeks" />
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Required Documents</label>
-            
+
             <div className="flex flex-wrap gap-2 mb-2">
-                {[
-                  "Application form",
-                  "Passport",
-                  "Passport-sized photos",
-                  "Original copy of highest academic certificate",
-                  "Original copy of academic transcripts (highest education)",
-                  "Signature",
-                  "Original copy of police clearance certificate",
-                  "Medical examination form",
-                  "Letter of recommendation from high school"
-                ].map((doc) => (
-                    <Button 
-                        key={doc} 
-                        type="button" 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-xs h-auto py-1"
-                        onClick={() => {
-                            if (!formData.required_documents.includes(doc)) {
-                                setFormData(prev => ({
-                                    ...prev,
-                                    required_documents: [...prev.required_documents.filter(d => d !== ""), doc]
-                                }))
-                            } else {
-                                toast.info("Document already added")
-                            }
-                        }}
-                    >
-                        <Plus className="h-3 w-3 mr-1" /> {doc}
-                    </Button>
-                ))}
+              {[
+                "Application form",
+                "Passport",
+                "Passport-sized photos",
+                "Original copy of highest academic certificate",
+                "Original copy of academic transcripts (highest education)",
+                "Signature",
+                "Original copy of police clearance certificate",
+                "Medical examination form",
+                "Letter of recommendation from high school"
+              ].map((doc) => (
+                <Button
+                  key={doc}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="text-xs h-auto py-1"
+                  onClick={() => {
+                    if (!formData.required_documents.includes(doc)) {
+                      setFormData(prev => ({
+                        ...prev,
+                        required_documents: [...prev.required_documents.filter(d => d !== ""), doc]
+                      }))
+                    } else {
+                      toast.info("Document already added")
+                    }
+                  }}
+                >
+                  <Plus className="h-3 w-3 mr-1" /> {doc}
+                </Button>
+              ))}
             </div>
 
             {formData.required_documents.map((doc, index) => (
               <div key={index} className="flex gap-2">
-                <Textarea 
-                  value={doc} 
+                <Textarea
+                  value={doc}
                   onChange={(e) => handleArrayChange(index, e.target.value, "required_documents")}
                   placeholder="e.g. Passport"
                   className="min-h-[40px]"

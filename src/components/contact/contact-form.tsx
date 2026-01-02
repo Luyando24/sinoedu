@@ -100,7 +100,7 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">WhatsApp Number (Optional)</label>
+        <label className="text-sm font-medium">WhatsApp or WeChat Number (Optional)</label>
         <Input
           {...register("whatsappNumber")}
           placeholder="+1234567890"

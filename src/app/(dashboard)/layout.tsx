@@ -25,15 +25,15 @@ export default async function DashboardLayout({
     // Use RPC for role check to be safe
     const { data: roleData } = await supabase.rpc('get_my_role')
     let userRole = roleData
-    
+
     // Fallback if RPC fails
     if (!userRole) {
-       const { data: profile } = await supabase
+      const { data: profile } = await supabase
         .from('users')
         .select('role')
         .eq('id', user.id)
         .single()
-       userRole = profile?.role
+      userRole = profile?.role
     }
 
     if (userRole === 'admin') {
@@ -43,6 +43,7 @@ export default async function DashboardLayout({
         { name: "Users", href: "/admin/users", icon: "User" },
         { name: "Agents", href: "/admin/agents", icon: "UserCog" },
         { name: "Programs", href: "/admin/programs", icon: "FileText" },
+        { name: "Intakes", href: "/admin/intakes", icon: "Calendar" },
         { name: "Universities", href: "/admin/universities", icon: "LayoutDashboard" },
         { name: "Messages", href: "/admin/messages", icon: "Mail" },
         { name: "Posts", href: "/admin/posts", icon: "FileText" },

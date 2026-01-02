@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import { Mail, MapPin, Phone } from "lucide-react"
+import { Mail, MapPin, Phone, MessageCircle } from "lucide-react"
 
 export const dynamic = 'force-dynamic'
 
@@ -49,6 +49,20 @@ export default async function ContactPage() {
                     title: getContent(blocks, 'contact.info.phone.title', "Call Us"), 
                     details: [
                       getContent(blocks, 'contact.info.phone.line1.v2', "+8613601965441")
+                    ] 
+                  },
+                  { 
+                    icon: MessageCircle, 
+                    title: 'WhatsApp', 
+                    details: [
+                      '+8613601965441'
+                    ] 
+                  },
+                  {
+                    icon: MessageCircle, 
+                    title: 'WeChat', 
+                    details: [
+                      'SinowayEdu'
                     ] 
                   },
                 ].map((item, i) => (
