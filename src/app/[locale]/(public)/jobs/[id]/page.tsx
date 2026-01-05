@@ -69,14 +69,16 @@ export default async function JobDetailPage({ params }: { params: { id: string }
 
                         <div className="prose prose-slate max-w-none">
                             <h2 className="text-2xl font-bold mb-4">Job Description</h2>
-                            <div className="whitespace-pre-wrap text-slate-700 leading-relaxed mb-8">
-                                {job.description}
-                            </div>
+                            <div
+                                className="text-slate-700 leading-relaxed mb-8"
+                                dangerouslySetInnerHTML={{ __html: job.description || "" }}
+                            />
 
                             <h2 className="text-2xl font-bold mb-4">Requirements</h2>
-                            <div className="whitespace-pre-wrap text-slate-700 leading-relaxed">
-                                {job.requirements}
-                            </div>
+                            <div
+                                className="text-slate-700 leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: job.requirements || "" }}
+                            />
                         </div>
 
                         <div className="pt-8 border-t flex items-center justify-between">

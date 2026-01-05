@@ -1,14 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
+import dynamic from 'next/dynamic'
+import 'react-quill/dist/quill.snow.css'
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 type Job = {
     id: string
@@ -53,6 +56,30 @@ export function JobForm({ initialData }: JobFormProps) {
             setFormData(prev => ({ ...prev, [name]: value }))
         }
     }
+
+    const handleDescriptionChange = (content: string) => {
+        setFormData(prev => ({ ...prev, description: content }))
+    }
+
+    const handleRequirementsChange = (content: string) => {
+        setFormData(prev => ({ ...prev, requirements: content }))
+    }
+
+    const modules = useMemo(() => ({
+        toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['link', 'clean']
+        ],
+    }), [])
+
+    const formats = [
+        'header',
+        'bold', 'italic', 'underline', 'strike',
+        'list', 'bullet',
+        'link'
+    ]
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -131,11 +158,29 @@ export function JobForm({ initialData }: JobFormProps) {
                     </div>
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Job Description</label>
-                        <Textarea name="description" value={formData.description} onChange={handleChange} className="min-h-[150px]" />
+                        <div className="min-h-[250px] mb-12">
+                            <ReactQuill
+                                theme="snow"
+                                value={formData.description || ""}
+                                onChange={handleDescriptionChange}
+                                modules={modules}
+                                formats={formats}
+                                className="h-[200px]"
+                            />
+                        </div>
                     </div>
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Requirements</label>
-                        <Textarea name="requirements" value={formData.requirements} onChange={handleChange} className="min-h-[150px]" />
+                        <div className="min-h-[250px] mb-12">
+                            <ReactQuill
+                                theme="snow"
+                                value={formData.requirements || ""}
+                                onChange={handleRequirementsChange}
+                                modules={modules}
+                                formats={formats}
+                                className="h-[200px]"
+                            />
+                        </div>
                     </div>
                     <div className="flex items-center space-x-2 pt-4">
                         <input
