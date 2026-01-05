@@ -54,7 +54,10 @@ export default async function ProgramsPage({
 
   const intakes = intakeData?.map(i => ({ id: i.name, name: i.name })) || []
 
-  let queryBuilder = supabase.from('programs').select('*, universities(name)')
+  let queryBuilder = supabase
+    .from('programs')
+    .select('*, universities(name)')
+    .eq('is_active', true)
 
   if (query) {
     queryBuilder = queryBuilder.ilike('title', `%${query}%`)

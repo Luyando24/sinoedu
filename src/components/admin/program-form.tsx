@@ -41,6 +41,7 @@ type Program = {
   dormitory_photos: string[] | null
   processing_speed: string | null
   required_documents: string[] | null
+  is_active: boolean;
 }
 
 interface ProgramFormProps {
@@ -104,12 +105,18 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     dormitory_photos: initialData?.dormitory_photos || [""],
 
     processing_speed: initialData?.processing_speed || "",
-    required_documents: initialData?.required_documents || [""]
+    required_documents: initialData?.required_documents || [""],
+    is_active: initialData?.is_active ?? true
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    const { name, value, type } = e.target
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked
+      setFormData(prev => ({ ...prev, [name]: checked }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
   }
 
   // Helper for array fields
@@ -303,6 +310,19 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           <div className="space-y-2">
             <label className="text-sm font-medium">Application Deadline</label>
             <Input name="application_deadline" value={formData.application_deadline} onChange={handleChange} placeholder="e.g. Nov 30, 2025" />
+          </div>
+          <div className="flex items-center space-x-2 pt-6">
+            <input
+              type="checkbox"
+              id="is_active"
+              name="is_active"
+              checked={formData.is_active}
+              onChange={handleChange}
+              className="h-4 w-4 rounded border-gray-300 text-[#0056b3] focus:ring-[#0056b3]"
+            />
+            <label htmlFor="is_active" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Active Status (Visible to Public)
+            </label>
           </div>
         </CardContent>
       </Card>

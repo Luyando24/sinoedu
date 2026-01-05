@@ -14,7 +14,7 @@ export default async function ProgramsPage() {
 
   const { data: programs } = await supabase
     .from('programs')
-    .select('id, program_id_code, title, level, location, university_id, universities(name)')
+    .select('id, program_id_code, title, level, location, university_id, is_active, universities(name)')
     .order('created_at', { ascending: false })
 
   return (

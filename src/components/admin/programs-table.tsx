@@ -3,24 +3,26 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Plus, Search, Pencil, Trash } from "lucide-react"
+import { MoreHorizontal, Plus, Search, Pencil, Trash, CheckCircle2, XCircle } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 
@@ -34,6 +36,7 @@ type Program = {
   } | { name: string }[] | null
   level: string | null
   location: string | null
+  is_active: boolean
 }
 
 import { ProgramImporter } from "./program-importer"
@@ -42,12 +45,12 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
   const [programs, setPrograms] = useState(initialPrograms)
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(false)
-  
+
   const router = useRouter()
   const supabase = createClient()
 
   if (loading) {
-     // prevent unused variable warning
+    // prevent unused variable warning
   }
 
   const getUniversityName = (program: Program) => {
@@ -58,7 +61,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
     return program.universities.name || ""
   }
 
-  const filteredPrograms = programs.filter(program => 
+  const filteredPrograms = programs.filter(program =>
     program.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     getUniversityName(program).toLowerCase().includes(searchQuery.toLowerCase()) ||
     (program.program_id_code && program.program_id_code.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -86,6 +89,26 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
     }
   }
 
+  const toggleStatus = async (id: string, currentStatus: boolean) => {
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('programs')
+        .update({ is_active: !currentStatus })
+        .eq('id', id)
+
+      if (error) throw error
+
+      setPrograms(programs.map(p => p.id === id ? { ...p, is_active: !currentStatus } : p))
+      toast.success(`Program marked as ${!currentStatus ? 'active' : 'inactive'}`)
+      router.refresh()
+    } catch {
+      toast.error("Failed to update status")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -99,12 +122,12 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
           />
         </div>
         <div className="flex gap-2">
-            <ProgramImporter />
-            <Link href="/admin/programs/new">
+          <ProgramImporter />
+          <Link href="/admin/programs/new">
             <Button>
-                <Plus className="mr-2 h-4 w-4" /> Add Program
+              <Plus className="mr-2 h-4 w-4" /> Add Program
             </Button>
-            </Link>
+          </Link>
         </div>
       </div>
 
@@ -117,6 +140,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
               <TableHead>University</TableHead>
               <TableHead>Level</TableHead>
               <TableHead>Location</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead className="w-[70px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -129,6 +153,17 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
                   <TableCell>{getUniversityName(program) || "-"}</TableCell>
                   <TableCell>{program.level || "-"}</TableCell>
                   <TableCell>{program.location || "-"}</TableCell>
+                  <TableCell>
+                    {program.is_active ? (
+                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-none">
+                        Active
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-100 border-none">
+                        Inactive
+                      </Badge>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -144,7 +179,21 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
                             <Pencil className="mr-2 h-4 w-4" /> Edit
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
+                          onClick={() => toggleStatus(program.id, program.is_active)}
+                          disabled={loading}
+                        >
+                          {program.is_active ? (
+                            <>
+                              <XCircle className="mr-2 h-4 w-4" /> Mark Inactive
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle2 className="mr-2 h-4 w-4" /> Mark Active
+                            </>
+                          )}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
                           className="text-red-600 focus:text-red-600"
                           onClick={() => deleteProgram(program.id)}
                           disabled={loading}
@@ -158,7 +207,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={7} className="h-24 text-center">
                   No programs found.
                 </TableCell>
               </TableRow>

@@ -99,6 +99,7 @@ create table public.programs (
   processing_speed text,
   required_documents text[], -- List of documents
 
+  is_active boolean default true,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
