@@ -74,7 +74,7 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
         if (error) throw error
         toast.success("University created successfully")
       }
-      
+
       router.push("/admin/universities")
       router.refresh()
     } catch (error) {
@@ -105,174 +105,176 @@ export function UniversityForm({ initialData }: UniversityFormProps) {
             <Textarea name="description" value={formData.description} onChange={handleChange} className="min-h-[100px]" />
           </div>
           <div className="grid md:grid-cols-2 gap-4">
-             <div className="space-y-2">
-                <label className="text-sm font-medium">Ranking</label>
-                <Input name="ranking" value={formData.ranking} onChange={handleChange} placeholder="e.g. Top 5" />
-             </div>
-             <div className="space-y-2">
-                <label className="text-sm font-medium">Established Year</label>
-                <Input name="established_year" value={formData.established_year} onChange={handleChange} placeholder="e.g. 1898" />
-             </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Ranking</label>
+              <Input name="ranking" value={formData.ranking} onChange={handleChange} placeholder="e.g. Top 5" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Established Year</label>
+              <Input name="established_year" value={formData.established_year} onChange={handleChange} placeholder="e.g. 1898" />
+            </div>
           </div>
           <div className="space-y-2">
-             <label className="text-sm font-medium">Website URL</label>
-             <Input name="website_url" value={formData.website_url} onChange={handleChange} placeholder="https://..." />
-          </div>
-          
-          <div className="space-y-2">
-             <label className="text-sm font-medium">Logo</label>
-             <div className="flex gap-4 items-start">
-                <div className="flex-1">
-                    <Input name="logo_url" value={formData.logo_url} onChange={handleChange} placeholder="https://..." />
-                </div>
-                <div className="w-[200px]">
-                    <FileUpload
-                        value={formData.logo_url}
-                        onUpload={(url) => setFormData(prev => ({ ...prev, logo_url: url }))}
-                        bucket="documents"
-                        folder="university-logos"
-                        label="Upload Logo"
-                    />
-                </div>
-             </div>
+            <label className="text-sm font-medium">Website URL</label>
+            <Input name="website_url" value={formData.website_url} onChange={handleChange} placeholder="https://..." />
           </div>
 
           <div className="space-y-2">
-             <label className="text-sm font-medium">Cover Image</label>
-             <div className="flex gap-4 items-start">
-                <div className="flex-1">
-                    <Input name="cover_image" value={formData.cover_image} onChange={handleChange} placeholder="https://..." />
-                </div>
-                <div className="w-[200px]">
-                    <FileUpload
-                        value={formData.cover_image}
-                        onUpload={(url) => setFormData(prev => ({ ...prev, cover_image: url }))}
-                        bucket="documents"
-                        folder="university-covers"
-                        label="Upload Cover"
-                    />
-                </div>
-             </div>
-          </div>
-
-          <div className="space-y-2">
-             <label className="text-sm font-medium">University Video</label>
-             <div className="space-y-2">
-                <Input 
-                    name="video_url" 
-                    value={formData.video_url} 
-                    onChange={handleChange} 
-                    placeholder="YouTube URL or Upload Video" 
+            <label className="text-sm font-medium">Logo</label>
+            <div className="flex gap-4 items-start">
+              <div className="flex-1">
+                <Input name="logo_url" value={formData.logo_url} onChange={handleChange} placeholder="https://..." />
+              </div>
+              <div className="w-[200px]">
+                <FileUpload
+                  value={formData.logo_url}
+                  onUpload={(url) => setFormData(prev => ({ ...prev, logo_url: url }))}
+                  bucket="documents"
+                  folder="university-logos"
+                  label="Upload Logo"
                 />
-                {(!formData.video_url || (!formData.video_url.includes("youtube") && !formData.video_url.includes("youtu.be"))) && (
-                    <FileUpload
-                        value={formData.video_url}
-                        onUpload={(url) => setFormData(prev => ({ ...prev, video_url: url }))}
-                        bucket="documents"
-                        folder="university-videos"
-                        accept="video/*"
-                        label="Upload Video (Local)"
-                    />
-                )}
-                {(formData.video_url && (formData.video_url.includes("youtube") || formData.video_url.includes("youtu.be"))) && (
-                    <div className="p-4 bg-slate-50 rounded text-sm text-muted-foreground">
-                        YouTube video linked.
-                    </div>
-                )}
-             </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Cover Image</label>
+            <div className="flex gap-4 items-start">
+              <div className="flex-1">
+                <Input name="cover_image" value={formData.cover_image} onChange={handleChange} placeholder="https://..." />
+              </div>
+              <div className="w-[200px]">
+                <FileUpload
+                  value={formData.cover_image}
+                  onUpload={(url) => setFormData(prev => ({ ...prev, cover_image: url }))}
+                  bucket="documents"
+                  folder="university-covers"
+                  label="Upload Cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">University Video</label>
+            <div className="space-y-2">
+              <Input
+                name="video_url"
+                value={formData.video_url}
+                onChange={handleChange}
+                placeholder="YouTube URL or Upload Video"
+              />
+              {(!formData.video_url || (!formData.video_url.includes("youtube") && !formData.video_url.includes("youtu.be"))) && (
+                <FileUpload
+                  value={formData.video_url}
+                  onUpload={(url) => setFormData(prev => ({ ...prev, video_url: url }))}
+                  bucket="documents"
+                  folder="university-videos"
+                  accept="video/*"
+                  label="Upload Video (Local)"
+                />
+              )}
+              {(formData.video_url && (formData.video_url.includes("youtube") || formData.video_url.includes("youtu.be"))) && (
+                <div className="p-4 bg-slate-50 rounded text-sm text-muted-foreground">
+                  YouTube video linked.
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="space-y-4">
             <label className="text-sm font-medium">Campus Gallery</label>
-            
+
             {/* Gallery Grid */}
             {formData.gallery_images && formData.gallery_images.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    {formData.gallery_images.map((photo, index) => (
-                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
-                            <Image 
-                                src={photo} 
-                                alt={`Gallery ${index + 1}`} 
-                                fill 
-                                className="object-cover"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const newGallery = [...formData.gallery_images];
-                                    newGallery.splice(index, 1);
-                                    setFormData(prev => ({ ...prev, gallery_images: newGallery }));
-                                }}
-                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                                <X className="h-4 w-4" />
-                            </button>
-                        </div>
-                    ))}
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {formData.gallery_images.map((photo, index) => (
+                  <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
+                    <Image
+                      src={photo}
+                      alt={`Gallery ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newGallery = [...formData.gallery_images];
+                        newGallery.splice(index, 1);
+                        setFormData(prev => ({ ...prev, gallery_images: newGallery }));
+                      }}
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             )}
 
             <FileUpload
-                value=""
-                onUpload={(url) => {
-                    if (url) {
-                        setFormData(prev => ({
-                            ...prev,
-                            gallery_images: [...(prev.gallery_images || []), url]
-                        }))
-                    }
-                }}
-                bucket="documents"
-                folder="university-gallery"
-                accept="image/*"
-                label="Add Gallery Photo"
+              value=""
+              multiple={true}
+              onUpload={() => { }} // dummy for compatibility
+              onUploadMultiple={(urls) => {
+                setFormData(prev => ({
+                  ...prev,
+                  gallery_images: [...(prev.gallery_images || []), ...urls]
+                }))
+              }}
+              bucket="documents"
+              folder="university-gallery"
+              accept="image/*"
+              label="Add Gallery Photo(s)"
+              description="You can select multiple images"
             />
           </div>
 
           <div className="space-y-4">
             <label className="text-sm font-medium">Dormitory Images</label>
-            
+
             {/* Dormitory Grid */}
             {formData.dormitory_images && formData.dormitory_images.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    {formData.dormitory_images.map((photo, index) => (
-                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
-                            <Image 
-                                src={photo} 
-                                alt={`Dormitory ${index + 1}`} 
-                                fill 
-                                className="object-cover"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    const newDormImages = [...formData.dormitory_images];
-                                    newDormImages.splice(index, 1);
-                                    setFormData(prev => ({ ...prev, dormitory_images: newDormImages }));
-                                }}
-                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                                <X className="h-4 w-4" />
-                            </button>
-                        </div>
-                    ))}
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {formData.dormitory_images.map((photo, index) => (
+                  <div key={index} className="relative aspect-square rounded-lg overflow-hidden border group">
+                    <Image
+                      src={photo}
+                      alt={`Dormitory ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newDormImages = [...formData.dormitory_images];
+                        newDormImages.splice(index, 1);
+                        setFormData(prev => ({ ...prev, dormitory_images: newDormImages }));
+                      }}
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             )}
 
             <FileUpload
-                value=""
-                onUpload={(url) => {
-                    if (url) {
-                        setFormData(prev => ({
-                            ...prev,
-                            dormitory_images: [...(prev.dormitory_images || []), url]
-                        }))
-                    }
-                }}
-                bucket="documents"
-                folder="university-dormitory"
-                accept="image/*"
-                label="Add Dormitory Photo"
+              value=""
+              multiple={true}
+              onUpload={() => { }} // dummy for compatibility
+              onUploadMultiple={(urls) => {
+                setFormData(prev => ({
+                  ...prev,
+                  dormitory_images: [...(prev.dormitory_images || []), ...urls]
+                }))
+              }}
+              bucket="documents"
+              folder="university-dormitory"
+              accept="image/*"
+              label="Add Dormitory Photo(s)"
+              description="You can select multiple images"
             />
           </div>
         </CardContent>

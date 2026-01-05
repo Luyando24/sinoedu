@@ -11,6 +11,8 @@ import Image from "next/image"
 interface FileUploadProps {
   value?: string | null
   onUpload: (url: string) => void
+  onUploadMultiple?: (urls: string[]) => void
+  multiple?: boolean
   bucket?: string
   folder?: string
   accept?: string
@@ -18,11 +20,13 @@ interface FileUploadProps {
   description?: string
 }
 
-export function FileUpload({ 
-  value, 
-  onUpload, 
-  bucket = "documents", 
-  folder = "uploads", 
+export function FileUpload({
+  value,
+  onUpload,
+  onUploadMultiple,
+  multiple = false,
+  bucket = "documents",
+  folder = "uploads",
   accept = "image/*",
   label = "Upload File",
   description
@@ -32,29 +36,40 @@ export function FileUpload({
   const supabase = createClient()
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const files = e.target.files
+    if (!files || files.length === 0) return
 
     setIsUploading(true)
     try {
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${folder}/${Math.random().toString(36).substring(2)}.${fileExt}`
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const fileExt = file.name.split('.').pop()
+        const fileName = `${folder}/${Math.random().toString(36).substring(2)}.${fileExt}`
 
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(fileName, file)
+        const { error: uploadError } = await supabase.storage
+          .from(bucket)
+          .upload(fileName, file)
 
-      if (uploadError) throw uploadError
+        if (uploadError) throw uploadError
 
-      const { data } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(fileName)
+        const { data } = supabase.storage
+          .from(bucket)
+          .getPublicUrl(fileName)
 
-      onUpload(data.publicUrl)
-      toast.success("File uploaded successfully")
+        return data.publicUrl
+      })
+
+      const publicUrls = await Promise.all(uploadPromises)
+
+      if (multiple && onUploadMultiple) {
+        onUploadMultiple(publicUrls)
+      } else if (publicUrls.length > 0) {
+        onUpload(publicUrls[0])
+      }
+
+      toast.success(files.length > 1 ? "Files uploaded successfully" : "File uploaded successfully")
     } catch (error) {
       console.error(error)
-      toast.error("Failed to upload file")
+      toast.error("Failed to upload file(s)")
     } finally {
       setIsUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -78,20 +93,20 @@ export function FileUpload({
           </Button>
         )}
       </div>
-      
+
       {value ? (
         <div className="relative rounded-lg border overflow-hidden bg-slate-50">
           {isImage ? (
             <div className="relative aspect-video w-full h-48">
-              <Image 
-                src={value} 
-                alt="Preview" 
-                fill 
+              <Image
+                src={value}
+                alt="Preview"
+                fill
                 className="object-cover"
               />
             </div>
           ) : isVideo ? (
-             <video src={value} controls className="w-full max-h-48" />
+            <video src={value} controls className="w-full max-h-48" />
           ) : (
             <div className="flex items-center p-4 gap-3">
               <FileIcon className="h-8 w-8 text-blue-500" />
@@ -105,9 +120,9 @@ export function FileUpload({
           )}
         </div>
       ) : (
-        <div 
-            className="border-2 border-dashed border-gray-200 rounded-lg p-6 hover:bg-slate-50 transition-colors cursor-pointer text-center"
-            onClick={() => fileInputRef.current?.click()}
+        <div
+          className="border-2 border-dashed border-gray-200 rounded-lg p-6 hover:bg-slate-50 transition-colors cursor-pointer text-center"
+          onClick={() => fileInputRef.current?.click()}
         >
           <div className="flex flex-col items-center gap-2">
             {isUploading ? (
@@ -122,12 +137,13 @@ export function FileUpload({
           </div>
         </div>
       )}
-      
-      <Input 
-        type="file" 
+
+      <Input
+        type="file"
         ref={fileInputRef}
-        className="hidden" 
+        className="hidden"
         accept={accept}
+        multiple={multiple}
         onChange={handleFileChange}
       />
     </div>
