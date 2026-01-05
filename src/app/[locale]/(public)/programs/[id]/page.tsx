@@ -271,7 +271,14 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   {program.requirements && (
                     <div>
                       <h3 className="font-semibold mb-2">General Requirements</h3>
-                      <p className="text-muted-foreground whitespace-pre-wrap">{program.requirements}</p>
+                      <ul className="grid grid-cols-1 gap-3">
+                        {program.requirements.split('\n').filter((req: string) => req.trim() !== '').map((req: string, i: number) => (
+                          <li key={i} className="flex items-start gap-2 text-muted-foreground">
+                            <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-1" />
+                            <span className="whitespace-pre-wrap">{req.trim()}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
 
