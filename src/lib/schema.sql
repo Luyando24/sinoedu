@@ -248,3 +248,80 @@ create policy "Users can view their own documents"
 create policy "Admins can view all documents"
   on storage.objects for select
   using (bucket_id = 'documents' and exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+-- Create Jobs table
+create table public.jobs (
+  id uuid default uuid_generate_v4() primary key,
+  title text not null,
+  company text,
+  location text,
+  type text check (type in ('Full-time', 'Part-time', 'Internship', 'Freelance')),
+  description text,
+  requirements text,
+  salary_range text,
+  category text,
+  is_active boolean default true,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable RLS for jobs
+alter table public.jobs enable row level security;
+
+-- Policies for jobs
+create policy "Jobs are viewable by everyone" on public.jobs
+  for select using (is_active = true);
+
+create policy "Admins can manage all jobs" on public.jobs
+  for all using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+-- Create Job Profiles table
+create table public.job_profiles (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.users(id) on delete cascade not null unique,
+  full_name text,
+  phone text,
+  bio text,
+  portfolio_url text,
+  resume_url text,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable RLS for job profiles
+alter table public.job_profiles enable row level security;
+
+-- Policies for job profiles
+create policy "Users can view their own job profile" on public.job_profiles
+  for select using (auth.uid() = user_id);
+
+create policy "Users can update their own job profile" on public.job_profiles
+  for insert with check (auth.uid() = user_id);
+
+create policy "Users can update their own job profile" on public.job_profiles
+  for update using (auth.uid() = user_id);
+
+create policy "Admins can view all job profiles" on public.job_profiles
+  for select using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));
+
+-- Create Job Applications table
+create table public.job_applications (
+  id uuid default uuid_generate_v4() primary key,
+  job_id uuid references public.jobs(id) on delete cascade not null,
+  user_id uuid references public.users(id) on delete cascade not null,
+  status text default 'Pending' check (status in ('Pending', 'Reviewing', 'Rejected', 'Accepted')),
+  resume_url_snapshot text, -- Link to resume at time of application
+  cover_letter text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable RLS for job applications
+alter table public.job_applications enable row level security;
+
+-- Policies for job applications
+create policy "Users can view their own applications" on public.job_applications
+  for select using (auth.uid() = user_id);
+
+create policy "Users can submit applications" on public.job_applications
+  for insert with check (auth.uid() = user_id);
+
+create policy "Admins can view and manage all applications" on public.job_applications
+  for all using (exists (select 1 from public.users where id = auth.uid() and role = 'admin'));

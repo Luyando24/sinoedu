@@ -30,6 +30,7 @@ export function Header({ user }: { user?: User | null }) {
     { name: t('services'), href: "/services" },
     { name: t('universities'), href: "/universities" },
     { name: t('programs'), href: "/programs" },
+    { name: t('jobs'), href: "/jobs" },
     { name: t('news'), href: "/news" },
     { name: t('contact'), href: "/contact" },
   ]
@@ -78,12 +79,12 @@ export function Header({ user }: { user?: User | null }) {
           <LanguageSwitcher />
           {user ? (
             <div className="flex items-center gap-4">
-              <span className="text-sm text-white/90">
+              <Link href="/profile/job" className="text-sm text-white/90 hover:text-white underline-offset-4 hover:underline">
                 {user.email}
-              </span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
                 className="text-white hover:bg-white/10 hover:text-white"
                 onClick={handleLogout}
               >
@@ -141,12 +142,16 @@ export function Header({ user }: { user?: User | null }) {
             <div className="flex flex-col gap-2 pt-4">
               {user ? (
                 <>
-                  <div className="px-4 py-2 text-sm text-muted-foreground flex items-center gap-2">
+                  <Link
+                    href="/profile/job"
+                    className="px-4 py-2 text-sm text-muted-foreground flex items-center gap-2 hover:bg-slate-50 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     <UserIcon className="h-4 w-4" />
                     {user.email}
-                  </div>
-                  <Button 
-                    variant="ghost" 
+                  </Link>
+                  <Button
+                    variant="ghost"
                     className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
                     onClick={() => {
                       handleLogout()
