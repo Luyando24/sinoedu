@@ -164,15 +164,20 @@ export function ProgramImporter() {
       const range = XLSX.utils.decode_range(ws['!ref'])
       const dateCols = [7, 8] // Indexes for intake (H) and application_deadline (I)
       
+      // Extend range to 1000 rows to ensure future entries also respect text format
+      range.e.r = Math.max(range.e.r, 1000)
+      ws['!ref'] = XLSX.utils.encode_range(range)
+
       for (let R = range.s.r; R <= range.e.r; ++R) {
         if (R === 0) continue // Skip header row
         
         dateCols.forEach(C => {
           const cellRef = XLSX.utils.encode_cell({ c: C, r: R })
-          if (ws[cellRef]) {
-            ws[cellRef].z = '@' // Text format
-            ws[cellRef].t = 's' // Force string type
+          if (!ws[cellRef]) {
+             ws[cellRef] = { t: 's', v: '' } // Initialize empty cell as string
           }
+          ws[cellRef].z = '@' // Text format
+          ws[cellRef].t = 's' // Force string type
         })
       }
     }
@@ -256,10 +261,37 @@ export function ProgramImporter() {
             language: (r.language || r.Language || 'English') as string,
             intake: (r.intake || r.Intake || null) as string | null,
             application_deadline: (r.application_deadline || r.Deadline || null) as string | null,
+            is_active: r.is_active === 'TRUE' || r.is_active === true || r.is_active === 'true',
+
+            // Eligibility
+            age_requirements: (r.age_requirements || null) as string | null,
+            nationality_restrictions: (r.nationality_restrictions || null) as string | null,
+            language_requirements: (r.language_requirements || null) as string | null,
+            applicants_inside_china: (r.applicants_inside_china || null) as string | null,
+
+            // Financial
+            registration_fee: (r.registration_fee || null) as string | null,
+            application_fee_status: (r.application_fee_status || null) as string | null,
+            scholarship_details: (r.scholarship_details || null) as string | null,
+
+            // Accommodation
+            accommodation_details: (r.accommodation_details || null) as string | null,
+            off_campus_living: (r.off_campus_living || null) as string | null,
+            
+            // Accommodation Costs (Store as JSON)
+            accommodation_costs: {
+                single: (r.accommodation_single || null) as string | null,
+                double: (r.accommodation_double || null) as string | null,
+                triple: (r.accommodation_triple || null) as string | null,
+                quad: (r.accommodation_quad || null) as string | null,
+            },
+
+            // Other
+            processing_speed: (r.processing_speed || null) as string | null,
             
             // Default arrays/json for complex fields if missing
-            academic_requirements: r.academic_requirements ? [r.academic_requirements] : [],
-            required_documents: r.required_documents ? [r.required_documents] : [],
+            academic_requirements: r.academic_requirements ? (r.academic_requirements as string).split('\n').filter(Boolean) : [],
+            required_documents: r.required_documents ? (r.required_documents as string).split('\n').filter(Boolean) : [],
           }
       }).filter(item => item.title) // Ensure title exists
 
