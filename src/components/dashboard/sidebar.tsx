@@ -4,15 +4,16 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { LogOut, LayoutDashboard, FileText, User, CreditCard, Shield, LucideIcon, FileEdit, Mail, Star, UserCog, BarChart } from "lucide-react"
+import { LogOut, LayoutDashboard, FileText, User, CreditCard, Shield, LucideIcon, FileEdit, Mail, Star, UserCog, BarChart, Calendar, Briefcase, ClipboardList, Users } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import Image from "next/image"
 
-interface SidebarItem {
+export interface SidebarItem {
   name: string
   href: string
   icon: string
+  group?: string
 }
 
 const iconMap: Record<string, LucideIcon> = {
@@ -25,7 +26,11 @@ const iconMap: Record<string, LucideIcon> = {
   Mail,
   Star,
   UserCog,
-  BarChart
+  BarChart,
+  Calendar,
+  Briefcase,
+  ClipboardList,
+  Users
 }
 
 interface SidebarProps {
@@ -49,35 +54,69 @@ export function Sidebar({ items }: SidebarProps) {
       <div className="flex h-16 items-center border-b px-6">
         <Link href="/" className="flex items-center gap-2">
           <div className="relative h-8 w-8">
-            <Image 
-              src="/images/logo-new.jpg" 
-              alt="Sinoway Logo" 
-              fill 
+            <Image
+              src="/images/logo-new.jpg"
+              alt="Sinoway Logo"
+              fill
               className="object-contain"
             />
           </div>
           <span className="font-bold text-lg">DASHBOARD</span>
         </Link>
       </div>
-      <div className="flex flex-col gap-2 p-4">
-        {items.map((item) => {
-          const Icon = iconMap[item.icon] || LayoutDashboard
+      <div className="flex flex-col gap-6 p-4">
+        {(() => {
+          const groups: Record<string, SidebarItem[]> = {}
+          const ungrouped: SidebarItem[] = []
+
+          items.forEach(item => {
+            if (item.group) {
+              if (!groups[item.group]) groups[item.group] = []
+              groups[item.group].push(item)
+            } else {
+              ungrouped.push(item)
+            }
+          })
+
+          const renderItem = (item: SidebarItem) => {
+            const Icon = iconMap[item.icon] || LayoutDashboard
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
+                  pathname === item.href
+                    ? "bg-muted text-foreground"
+                    : "text-muted-foreground"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {item.name}
+              </Link>
+            )
+          }
+
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground",
-                pathname === item.href
-                  ? "bg-muted text-foreground"
-                  : "text-muted-foreground"
+            <>
+              {ungrouped.length > 0 && (
+                <div className="flex flex-col gap-1">
+                  {ungrouped.map(renderItem)}
+                </div>
               )}
-            >
-              <Icon className="h-4 w-4" />
-              {item.name}
-            </Link>
+              {Object.entries(groups).map(([groupName, groupItems]) => (
+                <div key={groupName} className="space-y-1">
+                  <h4 className="px-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
+                    {groupName}
+                  </h4>
+                  <div className="flex flex-col gap-1">
+                    {groupItems.map(renderItem)}
+                  </div>
+                </div>
+              ))}
+            </>
           )
-        })}
+        })()}
       </div>
       <div className="absolute bottom-4 left-4 right-4">
         <Button variant="outline" className="w-full justify-start gap-3" onClick={handleSignOut}>

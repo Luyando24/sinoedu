@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
-import { Sidebar } from "@/components/dashboard/sidebar"
+import { Sidebar, SidebarItem } from "@/components/dashboard/sidebar"
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { Toaster } from "sonner";
@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  let sidebarItems = [
+  let sidebarItems: SidebarItem[] = [
     { name: "Dashboard", href: "/dashboard", icon: "LayoutDashboard" },
     { name: "My Application", href: "/dashboard/application", icon: "FileText" },
     { name: "Profile", href: "/dashboard/profile", icon: "User" },
@@ -38,17 +38,28 @@ export default async function DashboardLayout({
 
     if (userRole === 'admin') {
       sidebarItems = [
-        { name: "Overview", href: "/admin", icon: "Shield" },
-        { name: "Analytics", href: "/admin/analytics", icon: "BarChart" },
-        { name: "Users", href: "/admin/users", icon: "User" },
-        { name: "Agents", href: "/admin/agents", icon: "UserCog" },
-        { name: "Programs", href: "/admin/programs", icon: "FileText" },
-        { name: "Intakes", href: "/admin/intakes", icon: "Calendar" },
-        { name: "Universities", href: "/admin/universities", icon: "LayoutDashboard" },
-        { name: "Messages", href: "/admin/messages", icon: "Mail" },
-        { name: "Posts", href: "/admin/posts", icon: "FileText" },
-        { name: "Reviews", href: "/admin/reviews", icon: "Star" },
-        { name: "Content", href: "/admin/content", icon: "FileEdit" },
+        // Overview
+        { name: "Overview", href: "/admin", icon: "Shield", group: "Overview" },
+        { name: "Analytics", href: "/admin/analytics", icon: "BarChart", group: "Overview" },
+
+        // Academic
+        { name: "Universities", href: "/admin/universities", icon: "LayoutDashboard", group: "Academic" },
+        { name: "Programs", href: "/admin/programs", icon: "FileText", group: "Academic" },
+        { name: "Intakes", href: "/admin/intakes", icon: "Calendar", group: "Academic" },
+        { name: "Reviews", href: "/admin/reviews", icon: "Star", group: "Academic" },
+
+        // Careers
+        { name: "Job Listings", href: "/admin/jobs", icon: "Briefcase", group: "Careers" },
+        { name: "Applications", href: "/admin/jobs/applications", icon: "ClipboardList", group: "Careers" },
+
+        // Community
+        { name: "Posts", href: "/admin/posts", icon: "FileText", group: "Community" },
+        { name: "Messages", href: "/admin/messages", icon: "Mail", group: "Community" },
+
+        // Administration
+        { name: "Users", href: "/admin/users", icon: "Users", group: "Administration" },
+        { name: "Agents", href: "/admin/agents", icon: "UserCog", group: "Administration" },
+        { name: "Content", href: "/admin/content", icon: "FileEdit", group: "Administration" },
       ]
     }
   }

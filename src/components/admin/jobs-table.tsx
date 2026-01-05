@@ -20,7 +20,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Plus, Search, Pencil, Trash, CheckCircle2, XCircle, Briefcase } from "lucide-react"
+import { MoreHorizontal, Plus, Search, Pencil, Trash, CheckCircle2, XCircle } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"

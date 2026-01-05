@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
 import { FileUpload } from "@/components/ui/file-upload"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
@@ -127,7 +126,7 @@ export function JobApplicationForm({ jobId, jobTitle, userId }: { jobId: string;
                         <Button className="w-full bg-[#0056b3]">Log in to Apply</Button>
                     </Link>
                     <p className="text-xs text-center mt-3 text-muted-foreground">
-                        Don't have an account? <Link href="/auth/register" className="text-blue-600 hover:underline">Register here</Link>
+                        Don&apos;t have an account? <Link href="/auth/register" className="text-blue-600 hover:underline">Register here</Link>
                     </p>
                 </CardContent>
             </Card>
