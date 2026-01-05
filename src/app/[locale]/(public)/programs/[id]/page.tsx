@@ -70,10 +70,10 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
   const accommodationCosts = rawCosts as AccommodationCosts;
 
   return (
-    <div className="bg-slate-50 min-h-screen py-10">
-      <div className="container space-y-8">
+    <div className="bg-slate-50 min-h-screen py-6 md:py-10">
+      <div className="container px-4 md:px-6 space-y-6 md:space-y-8">
         {/* Navigation & Admin Controls */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <Link href={`/universities/${program.university_id}`}>
             <Button variant="ghost" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to University
@@ -90,10 +90,10 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
         </div>
 
         {/* Hero Section */}
-        <div className="bg-white rounded-2xl p-8 border shadow-sm">
-          <div className="flex flex-col lg:flex-row gap-8">
+        <div className="bg-white rounded-2xl p-4 md:p-6 lg:p-8 border shadow-sm">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {program.cover_image && (
-              <div className="w-full lg:w-[400px] h-[300px] relative shrink-0 rounded-xl overflow-hidden bg-slate-100">
+              <div className="w-full lg:w-[400px] h-[250px] sm:h-[300px] relative shrink-0 rounded-xl overflow-hidden bg-slate-100">
                 <Image
                   src={program.cover_image}
                   alt={program.title}
@@ -104,7 +104,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                 />
               </div>
             )}
-            <div className="flex-1 flex flex-col md:flex-row gap-8 justify-between">
+            <div className="flex-1 flex flex-col md:flex-row gap-6 md:gap-8 justify-between">
               <div className="space-y-4 max-w-3xl">
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="default" className="bg-[#0056b3] hover:bg-[#0056b3]/90">
@@ -145,9 +145,9 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6 md:space-y-8">
 
             {/* Key Details Grid */}
             <Card>
@@ -206,7 +206,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                 About the Program
               </h2>
               <Card>
-                <CardContent className="pt-6 leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                <CardContent className="pt-6 leading-relaxed text-muted-foreground whitespace-pre-wrap break-words">
                   {program.description || "No description available for this program."}
                 </CardContent>
               </Card>
@@ -224,7 +224,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                     {program.accommodation_details && (
                       <div>
                         <h3 className="font-semibold mb-2">Details</h3>
-                        <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{program.accommodation_details}</p>
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap break-words">{program.accommodation_details}</p>
                       </div>
                     )}
 
@@ -275,7 +275,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                         {program.requirements.split('\n').filter((req: string) => req.trim() !== '').map((req: string, i: number) => (
                           <li key={i} className="flex items-start gap-2 text-muted-foreground">
                             <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-1" />
-                            <span className="whitespace-pre-wrap">{req.trim()}</span>
+                            <span className="whitespace-pre-wrap break-words">{req.trim()}</span>
                           </li>
                         ))}
                       </ul>
@@ -296,14 +296,14 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   {program.language_requirements && (
                     <div>
                       <h3 className="font-semibold mb-2">Language Requirements</h3>
-                      <p className="text-muted-foreground whitespace-pre-wrap">{program.language_requirements}</p>
+                      <p className="text-muted-foreground whitespace-pre-wrap break-words">{program.language_requirements}</p>
                     </div>
                   )}
 
                   {program.age_requirements && (
                     <div>
                       <h3 className="font-semibold mb-2">Age Limit</h3>
-                      <p className="text-muted-foreground whitespace-pre-wrap">{program.age_requirements}</p>
+                      <p className="text-muted-foreground whitespace-pre-wrap break-words">{program.age_requirements}</p>
                     </div>
                   )}
                 </CardContent>
@@ -323,7 +323,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                       {program.required_documents.map((doc: string, i: number) => (
                         <li key={i} className="flex items-start gap-2 text-muted-foreground">
                           <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-1" />
-                          <span className="whitespace-pre-wrap">{doc}</span>
+                          <span className="whitespace-pre-wrap break-words">{doc}</span>
                         </li>
                       ))}
                     </ul>
@@ -348,7 +348,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm">
-                  <p className="whitespace-pre-wrap">{program.scholarship_details}</p>
+                  <p className="whitespace-pre-wrap break-words">{program.scholarship_details}</p>
                 </CardContent>
               </Card>
             )}

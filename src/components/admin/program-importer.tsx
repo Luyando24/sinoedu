@@ -45,31 +45,79 @@ export function ProgramImporter() {
     const templateData = [
       {
         title: "Bachelor of Computer Science",
+        program_id_code: "CS-ZJU-001",
         university: "Zhejiang University", // Must match existing university
-        level: "Bachelor",
         location: "Hangzhou",
+        level: "Bachelor",
         duration: "4 Years",
-        tuition_fee: "20,000 RMB/Year",
-        description: "Comprehensive CS program taught in English.",
-        requirements: "High School Diploma, IELTS 6.0",
         language: "English",
         intake: "September 2025",
         application_deadline: "2025-06-30",
-        program_id_code: "CS-ZJU-001"
+        is_active: "TRUE", // or FALSE
+        
+        description: "Comprehensive CS program taught in English.",
+        requirements: "High School Diploma, IELTS 6.0",
+        
+        // Eligibility
+        age_requirements: "18-25",
+        nationality_restrictions: "None",
+        language_requirements: "IELTS 6.0 or TOEFL 80",
+        applicants_inside_china: "Accepted",
+        academic_requirements: "High School Diploma\nTranscripts", // Array items separated by newline
+        
+        // Financial
+        tuition_fee: "20,000 RMB/Year",
+        registration_fee: "400 RMB",
+        application_fee_status: "Non-refundable",
+        scholarship_details: "Full scholarship available for top students",
+        
+        // Accommodation
+        accommodation_single: "12000 RMB/Year",
+        accommodation_double: "6000 RMB/Year",
+        accommodation_triple: "4000 RMB/Year",
+        accommodation_quad: "3000 RMB/Year",
+        accommodation_details: "Private bathroom, AC, Internet",
+        off_campus_living: "Allowed",
+        
+        // Other
+        processing_speed: "Fast",
+        required_documents: "Passport\nPhoto\nDiploma\nTranscripts" // Array items separated by newline
       },
       {
         title: "MBA",
+        program_id_code: "MBA-BLCU-002",
         university: "Beijing Language and Culture University",
-        level: "Master",
         location: "Beijing",
+        level: "Master",
         duration: "2 Years",
-        tuition_fee: "30,000 RMB/Year",
-        description: "Focus on international business management.",
-        requirements: "Bachelor Degree, 2 years work experience",
         language: "English",
         intake: "September 2025",
         application_deadline: "2025-05-15",
-        program_id_code: "MBA-BLCU-002"
+        is_active: "TRUE",
+
+        description: "Focus on international business management.",
+        requirements: "Bachelor Degree, 2 years work experience",
+
+        age_requirements: "22-40",
+        nationality_restrictions: "None",
+        language_requirements: "IELTS 6.5",
+        applicants_inside_china: "Accepted",
+        academic_requirements: "Bachelor Degree\nTranscripts",
+
+        tuition_fee: "30,000 RMB/Year",
+        registration_fee: "800 RMB",
+        application_fee_status: "Non-refundable",
+        scholarship_details: "Partial scholarship available",
+
+        accommodation_single: "15000 RMB/Year",
+        accommodation_double: "8000 RMB/Year",
+        accommodation_triple: "",
+        accommodation_quad: "",
+        accommodation_details: "Shared kitchen",
+        off_campus_living: "Not Allowed",
+
+        processing_speed: "Normal",
+        required_documents: "Passport\nPhoto\nDegree Certificate\nTranscripts\nRecommendation Letters"
       }
     ]
 
@@ -79,19 +127,55 @@ export function ProgramImporter() {
     // Set column widths
     const wscols = [
       { wch: 30 }, // title
+      { wch: 15 }, // program_id_code
       { wch: 35 }, // university
-      { wch: 10 }, // level
       { wch: 15 }, // location
+      { wch: 10 }, // level
       { wch: 10 }, // duration
-      { wch: 15 }, // tuition_fee
-      { wch: 40 }, // description
-      { wch: 30 }, // requirements
       { wch: 10 }, // language
       { wch: 15 }, // intake
       { wch: 15 }, // application_deadline
-      { wch: 15 }, // program_id_code
+      { wch: 10 }, // is_active
+      { wch: 40 }, // description
+      { wch: 30 }, // requirements
+      { wch: 15 }, // age_requirements
+      { wch: 20 }, // nationality_restrictions
+      { wch: 20 }, // language_requirements
+      { wch: 20 }, // applicants_inside_china
+      { wch: 30 }, // academic_requirements
+      { wch: 15 }, // tuition_fee
+      { wch: 15 }, // registration_fee
+      { wch: 20 }, // application_fee_status
+      { wch: 30 }, // scholarship_details
+      { wch: 15 }, // accommodation_single
+      { wch: 15 }, // accommodation_double
+      { wch: 15 }, // accommodation_triple
+      { wch: 15 }, // accommodation_quad
+      { wch: 30 }, // accommodation_details
+      { wch: 15 }, // off_campus_living
+      { wch: 15 }, // processing_speed
+      { wch: 30 }, // required_documents
     ]
     ws['!cols'] = wscols
+
+    // Apply text format to date columns (Intake and Application Deadline)
+    // to prevent Excel from auto-formatting them as dates
+    if (ws['!ref']) {
+      const range = XLSX.utils.decode_range(ws['!ref'])
+      const dateCols = [7, 8] // Indexes for intake (H) and application_deadline (I)
+      
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+        if (R === 0) continue // Skip header row
+        
+        dateCols.forEach(C => {
+          const cellRef = XLSX.utils.encode_cell({ c: C, r: R })
+          if (ws[cellRef]) {
+            ws[cellRef].z = '@' // Text format
+            ws[cellRef].t = 's' // Force string type
+          }
+        })
+      }
+    }
 
     XLSX.utils.book_append_sheet(wb, ws, "Template")
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" })
