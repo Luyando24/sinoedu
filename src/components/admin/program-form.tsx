@@ -276,9 +276,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
               <option value="High School">High School</option>
               <option value="Top-up program">Top-up program</option>
               <option value="Secondary Vocational Education">Secondary Vocational Education</option>
-              <option value="Masters">Masters (Legacy)</option>
-              <option value="PhD">PhD (Legacy)</option>
-              <option value="Language">Language Program (Legacy)</option>
+              <option value="Masters">Masters</option>
+              <option value="PhD">PhD</option>
+              <option value="Language">Language Program</option>
             </select>
           </div>
           <div className="space-y-2">

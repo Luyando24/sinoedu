@@ -103,7 +103,7 @@ export default async function JobsPage({
                                     </div>
                                 )}
                                 <p className="text-sm text-muted-foreground line-clamp-2 mt-2">
-                                    {job.description}
+                                    {job.description?.replace(/<[^>]*>/g, '')}
                                 </p>
                             </CardContent>
                             <CardFooter className="pt-0">

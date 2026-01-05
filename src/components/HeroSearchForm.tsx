@@ -155,9 +155,9 @@ export function HeroSearchForm({
           <option value="High School">High School</option>
           <option value="Top-up program">Top-up program</option>
           <option value="Secondary Vocational Education">Secondary Vocational Education</option>
-          <option value="Masters">Masters (Legacy)</option>
-          <option value="PhD">PhD (Legacy)</option>
-          <option value="Language">Language Program (Legacy)</option>
+          <option value="Masters">Masters</option>
+          <option value="PhD">PhD</option>
+          <option value="Language">Language Program</option>
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
           <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
