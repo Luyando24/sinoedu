@@ -89,7 +89,7 @@ async function FooterContent() {
                 <Link href="#" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
                   <div className="font-bold text-xl">VK</div>
                 </Link>
-                <Link href="#" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
+                <Link href="https://www.instagram.com/sinowayedu/" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
                   <Instagram className="h-8 w-8" />
                 </Link>
                 <Link href="https://wa.me/8613601965441" className="h-12 w-12 bg-[#3b82f6] rounded-lg flex items-center justify-center text-white hover:bg-[#3b82f6]/90 transition-colors">
