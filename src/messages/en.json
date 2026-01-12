@@ -21,6 +21,20 @@
     "search": "Search",
     "top": "TOP"
   },
+  "Metadata": {
+    "title": "Sinoway Education - Study in China",
+    "description": "Your trusted partner for Chinese education. Apply for scholarships and admissions in top Chinese universities.",
+    "homeTitle": "Sinoway Education | Your Go-to Study-in-China Expert",
+    "homeDescription": "Apply for Chinese Government Scholarships, local government scholarships, and university admissions with Sinoway Education.",
+    "aboutTitle": "About Us | Sinoway Education",
+    "aboutDescription": "Learn about Sinoway Education, our mission, and our professional team dedicated to making study in China simpler.",
+    "jobsTitle": "Jobs in China | Sinoway Education",
+    "jobsDescription": "Find the latest job opportunities in China for international students and professionals.",
+    "programsTitle": "Degree Programs in China | Sinoway Education",
+    "programsDescription": "Browse Bachelor's, Master's, and PhD programs in top Chinese universities.",
+    "universitiesTitle": "Universities in China | Sinoway Education",
+    "universitiesDescription": "Explore top Chinese universities and find the perfect campus for your studies."
+  },
   "Home": {
     "hero": {
       "title": "Your Go-to Study-in-China Expert",

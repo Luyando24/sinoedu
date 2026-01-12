@@ -21,6 +21,20 @@
     "search": "搜索",
     "top": "顶部"
   },
+  "Metadata": {
+    "title": "华途教育 - 留学中国",
+    "description": "您值得信赖的中国教育合作伙伴。申请中国顶尖大学的奖学金和入学名额。",
+    "homeTitle": "华途教育 | 您留学中国的首选专家",
+    "homeDescription": "通过华途教育申请中国政府奖学金、地方政府奖学金及大学录取。",
+    "aboutTitle": "关于我们 | 华途教育",
+    "aboutDescription": "了解华途教育、我们的使命以及致力于让留学中国更简单的专业团队。",
+    "jobsTitle": "中国职位 | 华途教育",
+    "jobsDescription": "为国际学生和专业人士寻找中国最新的就业机会。",
+    "programsTitle": "中国学位项目 | 华途教育",
+    "programsDescription": "浏览中国顶尖大学的学士、硕士和博士项目。",
+    "universitiesTitle": "中国大学 | 华途教育",
+    "universitiesDescription": "探索中国顶尖大学，为您的学习找到完美的校园。"
+  },
   "Home": {
     "hero": {
       "title": "您留学中国的首选专家",
