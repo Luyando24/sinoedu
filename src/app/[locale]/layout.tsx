@@ -5,6 +5,7 @@ import "@/app/globals.css";
 import { Toaster } from "sonner";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
+import JsonLd from "@/components/seo/json-ld";
 import type { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -64,6 +65,7 @@ export default async function LocaleLayout({
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
           <AnalyticsTracker />
+          <JsonLd />
           {children}
           <BottomNav />
           <Toaster position="top-center" />
