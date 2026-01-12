@@ -19,6 +19,7 @@ export async function generateMetadata({
   return {
     title: t('title'),
     description: t('description'),
+    keywords: t('keywords'),
     metadataBase: new URL('https://sinowayedu.com'), // Replace with actual domain
     alternates: {
       canonical: '/',
