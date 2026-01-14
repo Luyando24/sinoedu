@@ -5,7 +5,7 @@ export default function JsonLd() {
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
         "name": "Sinoway Education",
-        "alternateName": ["Sinoway", "Sinowayedu", "华途教育", "华途国际教育"],
+        "alternateName": ["Sinoway", "Sinowayedu", "华途教育", "华途国际教育", "华途教育科技"],
         "url": "https://sinowayedu.com",
         "logo": "https://sinowayedu.com/logo.png",
         "contactPoint": {
