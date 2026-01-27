@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
-import { Plus, Trophy, Edit2, Trash2 } from "lucide-react"
+import { Plus, Trophy, Edit2 } from "lucide-react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
