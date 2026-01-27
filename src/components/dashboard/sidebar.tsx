@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { LogOut, LayoutDashboard, FileText, User, CreditCard, Shield, LucideIcon, FileEdit, Mail, Star, UserCog, BarChart, Calendar, Briefcase, ClipboardList, Users } from "lucide-react"
+import { LogOut, LayoutDashboard, FileText, User, CreditCard, Shield, LucideIcon, FileEdit, Mail, Star, UserCog, BarChart, Calendar, Briefcase, ClipboardList, Users, Trophy } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import Image from "next/image"
@@ -30,7 +30,8 @@ const iconMap: Record<string, LucideIcon> = {
   Calendar,
   Briefcase,
   ClipboardList,
-  Users
+  Users,
+  Trophy
 }
 
 interface SidebarProps {

@@ -35,6 +35,7 @@ type Program = {
   registration_fee: string | null
   application_fee_status: string | null
   scholarship_details: string | null
+  scholarship_id: string | null
   accommodation_costs: { single: string; double: string; triple?: string; quad?: string } | null
   accommodation_details: string | null
   off_campus_living: string | null
@@ -54,16 +55,19 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
   const [loading, setLoading] = useState(false)
   const [universities, setUniversities] = useState<{ id: string, name: string }[]>([])
   const [intakePeriods, setIntakePeriods] = useState<{ id: string, name: string }[]>([])
+  const [scholarships, setScholarships] = useState<{ id: string, name: string }[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const [uniRes, intakeRes] = await Promise.all([
+      const [uniRes, intakeRes, scholarshipRes] = await Promise.all([
         supabase.from('universities').select('id, name'),
-        supabase.from('intake_periods').select('id, name').eq('is_active', true).order('name')
+        supabase.from('intake_periods').select('id, name').eq('is_active', true).order('name'),
+        supabase.from('scholarships').select('id, name').eq('is_active', true).order('name')
       ])
 
       if (uniRes.data) setUniversities(uniRes.data)
       if (intakeRes.data) setIntakePeriods(intakeRes.data)
+      if (scholarshipRes.data) setScholarships(scholarshipRes.data)
     }
     fetchData()
   }, [supabase])
@@ -72,6 +76,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     program_id_code: initialData?.program_id_code || "",
     title: initialData?.title || "",
     university_id: initialData?.university_id || "",
+    scholarship_id: initialData?.scholarship_id || "",
     cover_image: initialData?.cover_image || "",
     level: initialData?.level || "Bachelor",
     duration: initialData?.duration || "",
@@ -179,6 +184,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
       const payload = {
         ...rest,
+        scholarship_id: formData.scholarship_id || null,
         academic_requirements: formData.academic_requirements.filter((i: string) => i.trim() !== ""),
         dormitory_photos: formData.dormitory_photos.filter((i: string) => i.trim() !== ""),
         required_documents: formData.required_documents.filter((i: string) => i.trim() !== ""),
@@ -414,8 +420,22 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
             <label className="text-sm font-medium">Application Fee Status</label>
             <Input name="application_fee_status" value={formData.application_fee_status} onChange={handleChange} placeholder="e.g. Refundable" />
           </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Scholarship Type</label>
+            <select
+              name="scholarship_id"
+              value={formData.scholarship_id}
+              onChange={handleChange}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option value="">No Scholarship</option>
+              {scholarships.map((s) => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </select>
+          </div>
           <div className="space-y-2 col-span-2">
-            <label className="text-sm font-medium">Scholarship Information</label>
+            <label className="text-sm font-medium">Scholarship Details</label>
             <Textarea name="scholarship_details" value={formData.scholarship_details} onChange={handleChange} placeholder="Details about available scholarships..." />
           </div>
         </CardContent>

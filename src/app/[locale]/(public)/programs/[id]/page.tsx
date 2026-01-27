@@ -44,10 +44,10 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
     hasPrivilegedAccess = role === 'admin' || role === 'agent';
   }
 
-  // Fetch program with university
+  // Fetch program with university and scholarship
   const { data: program } = await supabase
     .from('programs')
-    .select('*, universities(*)')
+    .select('*, universities(*), scholarships(name)')
     .eq('id', params.id)
     .single();
 
@@ -339,16 +339,16 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Scholarship Info */}
-            {(program.scholarship_details) && (
+            {(program.scholarship_id || program.scholarship_details) && (
               <Card className="bg-gradient-to-br from-brand-gold/10 to-transparent border-brand-gold/20">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-brand-gold-dark">
                     <Trophy className="h-5 w-5" />
-                    Scholarship Available
+                    {program.scholarships?.name || "Scholarship Available"}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm">
-                  <p className="whitespace-pre-wrap break-words">{program.scholarship_details}</p>
+                  <p className="whitespace-pre-wrap break-words">{program.scholarship_details || "Contact us for more details about this scholarship."}</p>
                 </CardContent>
               </Card>
             )}

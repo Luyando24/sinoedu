@@ -28,17 +28,22 @@ export function ProgramImporter() {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [universities, setUniversities] = useState<{id: string, name: string}[]>([])
+  const [scholarships, setScholarships] = useState<{id: string, name: string}[]>([])
   
   const router = useRouter()
   const supabase = createClient()
 
-  // Fetch universities for mapping
+  // Fetch universities and scholarships for mapping
   useEffect(() => {
-    const fetchUniversities = async () => {
-        const { data } = await supabase.from('universities').select('id, name')
-        if (data) setUniversities(data)
+    const fetchData = async () => {
+        const [uniRes, scholarshipRes] = await Promise.all([
+          supabase.from('universities').select('id, name'),
+          supabase.from('scholarships').select('id, name')
+        ])
+        if (uniRes.data) setUniversities(uniRes.data)
+        if (scholarshipRes.data) setScholarships(scholarshipRes.data)
     }
-    if (open) fetchUniversities()
+    if (open) fetchData()
   }, [open, supabase])
 
   const handleDownloadTemplate = () => {
@@ -69,6 +74,7 @@ export function ProgramImporter() {
         tuition_fee: "20,000 RMB/Year",
         registration_fee: "400 RMB",
         application_fee_status: "Non-refundable",
+        scholarship_type: "CSC Scholarship", // Must match existing scholarship name
         scholarship_details: "Full scholarship available for top students",
         
         // Accommodation
@@ -107,6 +113,7 @@ export function ProgramImporter() {
         tuition_fee: "30,000 RMB/Year",
         registration_fee: "800 RMB",
         application_fee_status: "Non-refundable",
+        scholarship_type: "Provincial Scholarship",
         scholarship_details: "Partial scholarship available",
 
         accommodation_single: "15000 RMB/Year",
@@ -146,6 +153,7 @@ export function ProgramImporter() {
       { wch: 15 }, // tuition_fee
       { wch: 15 }, // registration_fee
       { wch: 20 }, // application_fee_status
+      { wch: 20 }, // scholarship_type
       { wch: 30 }, // scholarship_details
       { wch: 15 }, // accommodation_single
       { wch: 15 }, // accommodation_double
@@ -236,6 +244,12 @@ export function ProgramImporter() {
       return match ? match.id : null
   }
 
+  const findScholarshipId = (name: string): string | null => {
+      if (!name) return null
+      const match = scholarships.find(s => s.name.toLowerCase() === name.toLowerCase())
+      return match ? match.id : null
+  }
+
   const handleImport = async () => {
     if (previewData.length === 0) return
 
@@ -247,11 +261,14 @@ export function ProgramImporter() {
           const r = row as Record<string, unknown>
           const uniName = (r.university || r.University || r.school || r.School) as string
           const uniId = findUniversityId(uniName)
+          const scholarshipName = (r.scholarship_type || r.ScholarshipType || r.scholarship || r.Scholarship) as string
+          const scholarshipId = findScholarshipId(scholarshipName)
 
           return {
             title: (r.title || r.Title || r.Program) as string,
             program_id_code: (r.program_id_code || r.Code || null) as string | null,
             university_id: uniId,
+            scholarship_id: scholarshipId,
             level: (r.level || r.Level || 'Bachelor') as string,
             location: (r.location || r.Location || null) as string | null,
             duration: (r.duration || r.Duration || null) as string | null,

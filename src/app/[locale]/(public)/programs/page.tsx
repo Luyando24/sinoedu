@@ -54,9 +54,18 @@ export default async function ProgramsPage({
 
   const intakes = intakeData?.map(i => ({ id: i.name, name: i.name })) || []
 
+  // Fetch active scholarships
+  const { data: scholarshipData } = await supabase
+    .from('scholarships')
+    .select('id, name')
+    .eq('is_active', true)
+    .order('name')
+
+  const scholarships = scholarshipData || []
+
   let queryBuilder = supabase
     .from('programs')
-    .select('*, universities(name)')
+    .select('*, universities(name), scholarships(name)')
     .eq('is_active', true)
 
   if (query) {
@@ -78,8 +87,16 @@ export default async function ProgramsPage({
     queryBuilder = queryBuilder.ilike('intake', `%${intake}%`)
   }
   if (scholarship) {
-    // Simple keyword search in scholarship details
-    queryBuilder = queryBuilder.ilike('scholarship_details', `%${scholarship}%`)
+    if (scholarship === 'any') {
+      queryBuilder = queryBuilder.not('scholarship_id', 'is', null)
+    } else if (scholarship === 'none') {
+      queryBuilder = queryBuilder.is('scholarship_id', null)
+    } else if (scholarship.length === 36) { // Likely a UUID
+      queryBuilder = queryBuilder.eq('scholarship_id', scholarship)
+    } else {
+      // Fallback for keyword search
+      queryBuilder = queryBuilder.ilike('scholarship_details', `%${scholarship}%`)
+    }
   }
 
   const { data: programs } = await queryBuilder
@@ -97,7 +114,12 @@ export default async function ProgramsPage({
         </div>
       </div>
 
-      <HeroSearchForm variant="plain" enableAnimation={false} initialIntakes={intakes} />
+      <HeroSearchForm 
+        variant="plain" 
+        enableAnimation={false} 
+        initialIntakes={intakes} 
+        initialScholarships={scholarships} 
+      />
 
       <div className="space-y-6">
         {programs && programs.length > 0 ? (
@@ -138,7 +160,7 @@ export default async function ProgramsPage({
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <GraduationCap className="h-4 w-4 text-[#0056b3]" />
-                    {program.scholarship_details ? "Scholarship" : "Self-funded"}
+                    {program.scholarships?.name || (program.scholarship_details ? "Scholarship" : "Self-funded")}
                   </div>
                 </div>
               </div>

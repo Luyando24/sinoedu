@@ -13,13 +13,15 @@ interface HeroSearchFormProps {
   enableAnimation?: boolean
   variant?: "hero" | "plain"
   initialIntakes?: { id: string, name: string }[]
+  initialScholarships?: { id: string, name: string }[]
 }
 
 export function HeroSearchForm({
   className,
   enableAnimation = true,
   variant = "hero",
-  initialIntakes = []
+  initialIntakes = [],
+  initialScholarships = []
 }: HeroSearchFormProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -34,6 +36,7 @@ export function HeroSearchForm({
     intake: ""
   })
   const [activeIntakes, setActiveIntakes] = useState<{ id: string, name: string }[]>(initialIntakes)
+  const [activeScholarships, setActiveScholarships] = useState<{ id: string, name: string }[]>(initialScholarships)
 
   useEffect(() => {
     if (searchParams) {
@@ -51,23 +54,39 @@ export function HeroSearchForm({
 
   useEffect(() => {
     // Only fetch if initialIntakes were not provided
-    if (initialIntakes.length > 0) return
+    if (initialIntakes.length === 0) {
+      const fetchIntakes = async () => {
+        const supabase = createClient()
+        const { data } = await supabase
+          .from('intake_periods')
+          .select('name')
+          .eq('is_active', true)
+          .order('name')
 
-    const fetchIntakes = async () => {
-      const supabase = createClient()
-      const { data } = await supabase
-        .from('intake_periods')
-        .select('name')
-        .eq('is_active', true)
-        .order('name')
-
-      if (data) {
-        // Deduplicate and set
-        setActiveIntakes(data.map((i: { name: string }) => ({ id: i.name, name: i.name })))
+        if (data) {
+          setActiveIntakes(data.map((i: { name: string }) => ({ id: i.name, name: i.name })))
+        }
       }
+      fetchIntakes()
     }
-    fetchIntakes()
-  }, [initialIntakes])
+    
+    // Only fetch if initialScholarships were not provided
+    if (initialScholarships.length === 0) {
+      const fetchScholarships = async () => {
+        const supabase = createClient()
+        const { data } = await supabase
+          .from('scholarships')
+          .select('id, name')
+          .eq('is_active', true)
+          .order('name')
+
+        if (data) {
+          setActiveScholarships(data)
+        }
+      }
+      fetchScholarships()
+    }
+  }, [initialIntakes, initialScholarships])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -217,9 +236,11 @@ export function HeroSearchForm({
           onChange={handleChange}
         >
           <option value="" disabled>Select Scholarship</option>
-          <option value="full">Full Scholarship</option>
-          <option value="partial">Partial Scholarship</option>
-          <option value="self-funded">Self-Funded</option>
+          <option value="any">Any Scholarship</option>
+          {activeScholarships.map((s) => (
+            <option key={s.id} value={s.id}>{s.name}</option>
+          ))}
+          <option value="none">Self-Funded</option>
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
           <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
