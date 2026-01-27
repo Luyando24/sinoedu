@@ -10,7 +10,6 @@ import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 
 type Scholarship = {
   id: string
@@ -43,8 +42,8 @@ export function ScholarshipForm({ initialData }: ScholarshipFormProps) {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleToggleActive = (checked: boolean) => {
-    setFormData(prev => ({ ...prev, is_active: checked }))
+  const handleToggleActive = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, is_active: e.target.checked }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -138,10 +137,12 @@ export function ScholarshipForm({ initialData }: ScholarshipFormProps) {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Switch
+            <input
+              type="checkbox"
               id="is_active"
               checked={formData.is_active}
-              onCheckedChange={handleToggleActive}
+              onChange={handleToggleActive}
+              className="h-4 w-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue"
             />
             <Label htmlFor="is_active">Active (Visible in selection)</Label>
           </div>
