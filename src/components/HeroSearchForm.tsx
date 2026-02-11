@@ -294,7 +294,9 @@ export function HeroSearchForm({
           <option value="2">2 Years</option>
           <option value="3">3 Years</option>
           <option value="4">4 Years</option>
-          <option value="5">5+ Years</option>
+          <option value="5">5 Years</option>
+          <option value="6">6 Years</option>
+          <option value="5+">5+ Years</option>
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
           <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">

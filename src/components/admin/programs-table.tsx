@@ -64,7 +64,8 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
   const filteredPrograms = programs.filter(program =>
     program.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     getUniversityName(program).toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (program.program_id_code && program.program_id_code.toLowerCase().includes(searchQuery.toLowerCase()))
+    (program.program_id_code && program.program_id_code.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (program.duration && program.duration.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   const deleteProgram = async (id: string) => {
@@ -139,6 +140,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
               <TableHead>Title</TableHead>
               <TableHead>University</TableHead>
               <TableHead>Level</TableHead>
+              <TableHead>Duration</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-[70px]"></TableHead>
@@ -152,6 +154,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
                   <TableCell className="font-medium">{program.title}</TableCell>
                   <TableCell>{getUniversityName(program) || "-"}</TableCell>
                   <TableCell>{program.level || "-"}</TableCell>
+                  <TableCell>{program.duration || "-"}</TableCell>
                   <TableCell>{program.location || "-"}</TableCell>
                   <TableCell>
                     {program.is_active ? (
@@ -207,7 +210,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   No programs found.
                 </TableCell>
               </TableRow>
