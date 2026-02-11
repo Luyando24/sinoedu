@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
+import { Loader2, Trash2 } from "lucide-react"
 import { Label } from "@/components/ui/label"
 
 type Scholarship = {
@@ -84,6 +84,36 @@ export function ScholarshipForm({ initialData }: ScholarshipFormProps) {
     }
   }
 
+  const handleDelete = async () => {
+    if (!initialData?.id || !confirm("Are you sure you want to delete this scholarship? This might affect programs using it.")) return
+
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('scholarships')
+        .delete()
+        .eq('id', initialData.id)
+
+      if (error) {
+        if (error.code === '23503') {
+          toast.error("Cannot delete scholarship because it is being used by programs. Please remove it from programs first.")
+        } else {
+          throw error
+        }
+        return
+      }
+
+      toast.success("Scholarship deleted successfully")
+      router.push("/admin/scholarships")
+      router.refresh()
+    } catch (error) {
+      console.error("Delete error:", error)
+      toast.error("Failed to delete scholarship")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
       <Card>
@@ -102,22 +132,21 @@ export function ScholarshipForm({ initialData }: ScholarshipFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="coverage">Coverage Type</Label>
+              <Label htmlFor="coverage">Coverage</Label>
               <Input
                 id="coverage"
                 name="coverage"
-                placeholder="e.g. Full Tuition, Partial"
+                placeholder="e.g. Full Tuition"
                 value={formData.coverage}
                 onChange={handleChange}
               />
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount / Benefits</Label>
+              <Label htmlFor="amount">Amount (Optional)</Label>
               <Input
                 id="amount"
                 name="amount"
-                placeholder="e.g. 30,000 RMB/year"
+                placeholder="e.g. 2500 RMB/month"
                 value={formData.amount}
                 onChange={handleChange}
               />
@@ -129,14 +158,14 @@ export function ScholarshipForm({ initialData }: ScholarshipFormProps) {
             <Textarea
               id="description"
               name="description"
-              placeholder="Detailed information about the scholarship..."
-              className="min-h-[150px]"
+              placeholder="Details about requirements, benefits, etc."
+              rows={4}
               value={formData.description}
               onChange={handleChange}
             />
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 pt-2">
             <input
               type="checkbox"
               id="is_active"
@@ -144,24 +173,40 @@ export function ScholarshipForm({ initialData }: ScholarshipFormProps) {
               onChange={handleToggleActive}
               className="h-4 w-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue"
             />
-            <Label htmlFor="is_active">Active (Visible in selection)</Label>
+            <Label htmlFor="is_active" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Active (Visible in search filters)
+            </Label>
           </div>
         </CardContent>
       </Card>
 
-      <div className="flex gap-4">
-        <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {initialData ? "Update Scholarship" : "Create Scholarship"}
-        </Button>
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={() => router.back()}
-          disabled={loading}
-        >
-          Cancel
-        </Button>
+      <div className="flex justify-between">
+        <div className="flex gap-4">
+          <Button type="submit" disabled={loading}>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {initialData ? "Update Scholarship" : "Create Scholarship"}
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={() => router.push("/admin/scholarships")}
+            disabled={loading}
+          >
+            Cancel
+          </Button>
+        </div>
+
+        {initialData && (
+          <Button 
+            type="button" 
+            variant="destructive" 
+            onClick={handleDelete}
+            disabled={loading}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete Scholarship
+          </Button>
+        )}
       </div>
     </form>
   )
