@@ -40,20 +40,32 @@ export function HeroSearchForm({
   const [cities, setCities] = useState<string[]>([])
   const [citySearch, setCitySearch] = useState("")
   const [isCityOpen, setIsCityOpen] = useState(false)
+  const [isCitiesLoading, setIsCitiesLoading] = useState(false)
 
   useEffect(() => {
     const fetchCities = async () => {
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('programs')
-        .select('location')
-        .not('location', 'is', null)
-        .order('location')
+      setIsCitiesLoading(true)
+      try {
+        const supabase = createClient()
+        // Use a more efficient query if possible, or at least handle it safely
+        const { data, error } = await supabase
+          .from('programs')
+          .select('location')
+          .not('location', 'is', null)
+        
+        if (error) throw error
 
-      if (data) {
-        // Safe data loading: unique cities and limit processing if needed
-        const uniqueCities = Array.from(new Set(data.map(p => p.location))).filter(Boolean) as string[]
-        setCities(uniqueCities)
+        if (data) {
+          // Safe data loading: unique cities and filter out duplicates efficiently
+          const uniqueCities = Array.from(new Set(data.map(p => p.location)))
+            .filter(Boolean)
+            .sort() as string[]
+          setCities(uniqueCities)
+        }
+      } catch (err) {
+        console.error("Error fetching cities:", err)
+      } finally {
+        setIsCitiesLoading(false)
       }
     }
     fetchCities()
@@ -186,30 +198,36 @@ export function HeroSearchForm({
 
         {isCityOpen && (
           <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-            {cities
-              .filter(city => city.toLowerCase().includes(citySearch.toLowerCase()))
-              .length > 0 ? (
-                cities
-                  .filter(city => city.toLowerCase().includes(citySearch.toLowerCase()))
-                  .map((city, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      className="w-full text-left px-4 py-2 hover:bg-slate-50 transition-colors text-gray-700 font-medium border-b border-gray-50 last:border-0"
-                      onClick={() => {
-                        setCitySearch(city)
-                        setFormData(prev => ({ ...prev, city: city }))
-                        setIsCityOpen(false)
-                      }}
-                    >
-                      {city}
-                    </button>
-                  ))
-              ) : (
+            {isCitiesLoading ? (
+              <div className="px-4 py-3 text-sm text-gray-500">Loading cities...</div>
+            ) : (() => {
+              const filteredCities = cities.filter(city => 
+                city.toLowerCase().includes(citySearch.toLowerCase())
+              );
+              
+              if (filteredCities.length > 0) {
+                return filteredCities.map((city, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className="w-full text-left px-4 py-2 hover:bg-slate-50 transition-colors text-gray-700 font-medium border-b border-gray-50 last:border-0"
+                    onClick={() => {
+                      setCitySearch(city)
+                      setFormData(prev => ({ ...prev, city: city }))
+                      setIsCityOpen(false)
+                    }}
+                  >
+                    {city}
+                  </button>
+                ));
+              }
+              
+              return (
                 <div className="px-4 py-3 text-sm text-gray-500 italic">
                   No cities found
                 </div>
-              )}
+              );
+            })()}
           </div>
         )}
       </div>
