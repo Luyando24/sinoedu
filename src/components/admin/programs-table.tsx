@@ -35,6 +35,7 @@ type Program = {
     name: string
   } | { name: string }[] | null
   level: string | null
+  duration: string | null
   location: string | null
   is_active: boolean
 }
