@@ -27,6 +27,12 @@ import { toast } from "sonner"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 
+type ReplyHistory = {
+  text: string
+  sent_at: string
+  sent_by: string
+}
+
 type Message = {
   id: string
   first_name: string
@@ -37,6 +43,7 @@ type Message = {
   status: string
   created_at: string
   whatsapp_number?: string
+  replies?: ReplyHistory[]
 }
 
 export function MessagesTable({ initialMessages }: { initialMessages: Message[] }) {
@@ -74,18 +81,35 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
       }
 
       toast.success("Reply sent successfully")
+      
+      const newReply: ReplyHistory = {
+        text: replyText,
+        sent_at: new Date().toISOString(),
+        sent_by: "Admin" // Simplified for UI update, the API uses the actual email
+      }
+
       setReplyText("")
       setShowReplyForm(false)
       
       // Update local state
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === selectedMessage.id ? { ...msg, status: "replied" } : msg
+          msg.id === selectedMessage.id 
+            ? { 
+                ...msg, 
+                status: "replied", 
+                replies: [...(msg.replies || []), newReply] 
+              } 
+            : msg
         )
       )
       
-      // Update selected message status
-      setSelectedMessage(prev => prev ? { ...prev, status: "replied" } : null)
+      // Update selected message status and replies
+      setSelectedMessage(prev => prev ? { 
+        ...prev, 
+        status: "replied",
+        replies: [...(prev.replies || []), newReply]
+      } : null)
       
     } catch (error) {
       console.error("Error sending reply:", error)
@@ -300,6 +324,29 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
                   {selectedMessage.message}
                 </div>
               </div>
+
+              {selectedMessage.replies && selectedMessage.replies.length > 0 && (
+                <div className="grid grid-cols-4 items-start gap-4">
+                  <span className="font-bold text-right mt-1">History:</span>
+                  <div className="col-span-3 space-y-3 max-h-[200px] overflow-y-auto pr-2">
+                    {selectedMessage.replies.map((reply, index) => (
+                      <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-md text-sm">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="font-semibold text-blue-700 dark:text-blue-300 text-xs">
+                            {reply.sent_by}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">
+                            {format(new Date(reply.sent_at), "MMM d, h:mm a")}
+                          </span>
+                        </div>
+                        <div className="whitespace-pre-wrap">
+                          {reply.text}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-4 items-center gap-4">
                 <span className="font-bold text-right">Status:</span>
                 <div className="flex items-center justify-between col-span-3">

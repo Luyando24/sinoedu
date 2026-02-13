@@ -35,15 +35,36 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: sendError.message }, { status: 500 })
     }
 
-    // Update message status in Supabase
+    // Update message status and history in Supabase
     if (messageId) {
-      const { error: updateError } = await supabase
+      // First, get existing replies
+      const { data: messageData, error: fetchError } = await supabase
         .from("contact_submissions")
-        .update({ status: "replied" })
+        .select("replies")
         .eq("id", messageId)
+        .single()
 
-      if (updateError) {
-        console.error("Supabase Update Error:", updateError)
+      if (fetchError) {
+        console.error("Supabase Fetch Error:", fetchError)
+      } else {
+        const existingReplies = Array.isArray(messageData?.replies) ? messageData.replies : []
+        const newReply = {
+          text: replyMessage,
+          sent_at: new Date().toISOString(),
+          sent_by: user.email
+        }
+        
+        const { error: updateError } = await supabase
+          .from("contact_submissions")
+          .update({ 
+            status: "replied",
+            replies: [...existingReplies, newReply]
+          })
+          .eq("id", messageId)
+
+        if (updateError) {
+          console.error("Supabase Update Error:", updateError)
+        }
       }
     }
 
