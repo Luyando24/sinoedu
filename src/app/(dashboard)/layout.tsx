@@ -60,6 +60,7 @@ export default async function DashboardLayout({
         // Administration
         { name: "Users", href: "/admin/users", icon: "Users", group: "Administration" },
         { name: "Agents", href: "/admin/agents", icon: "UserCog", group: "Administration" },
+        { name: "Home Contact", href: "/admin/home-contact", icon: "Contact", group: "Administration" },
         { name: "Content", href: "/admin/content", icon: "FileEdit", group: "Administration" },
       ]
     }

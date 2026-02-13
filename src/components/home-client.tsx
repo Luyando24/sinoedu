@@ -93,41 +93,52 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
 
       {/* Sinoway Education Section */}
       <section className="container">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">{t('sections.sinowayEducation')}</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">
+          {getContent(content, 'home.contact.title', t('sections.sinowayEducation'))}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Headquarters */}
           <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
             {/* Background Image Overlay */}
              <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
-               <Image src="/images/gallery-1.jpg" alt="Beijing" fill className="object-cover object-bottom" />
+               <Image 
+                 src={getContent(content, 'home.contact.card1.image', '/images/gallery-1.jpg')} 
+                 alt="Beijing" 
+                 fill 
+                 className="object-cover object-bottom" 
+               />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">{t('sinoway.headquarters')}</h3>
+              <h3 className="text-2xl font-semibold mb-4">
+                {getContent(content, 'home.contact.card1.title', t('sinoway.headquarters'))}
+              </h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China</p>
+                <p>{getContent(content, 'home.contact.card1.address', 'Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China')}</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+8613601965441</p>
+                <p>{getContent(content, 'home.contact.card1.phone', '+8613601965441')}</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>info@sinowayedu.com</p>
+                <p>{getContent(content, 'home.contact.card1.email', 'info@sinowayedu.com')}</p>
               </div>
               <div className="flex gap-4 mt-6">
-                <Link href="https://www.facebook.com/share/1DPPMYfmyZ/" target="_blank" rel="noopener noreferrer">
+                <Link href={getContent(content, 'home.contact.card1.fb', 'https://www.facebook.com/share/1DPPMYfmyZ/')} target="_blank" rel="noopener noreferrer">
                   <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
                 </Link>
-                <div className="h-6 w-6 border rounded flex items-center justify-center cursor-pointer hover:bg-white/10">VK</div>
-                <Link href="https://www.instagram.com/sinowayedu/?utm_source=qr&igsh=MXR4cGs5emdxNGxweg%3D%3D" target="_blank" rel="noopener noreferrer">
+                <div className="h-6 w-6 border rounded flex items-center justify-center cursor-pointer hover:bg-white/10">
+                  {getContent(content, 'home.contact.card1.vk', 'VK')}
+                </div>
+                <Link href={getContent(content, 'home.contact.card1.ig', 'https://www.instagram.com/sinowayedu/?utm_source=qr&igsh=MXR4cGs5emdxNGxweg%3D%3D')} target="_blank" rel="noopener noreferrer">
                   <Instagram className="h-6 w-6 cursor-pointer hover:text-white/80" />
                 </Link>
                 <MessageCircle className="h-6 w-6 cursor-pointer hover:text-white/80" />
-                <Link href="https://youtube.com/@sinowayedu?si=HB8B_8LLfJs1OO26" target="_blank" rel="noopener noreferrer">
+                <Link href={getContent(content, 'home.contact.card1.yt', 'https://youtube.com/@sinowayedu?si=HB8B_8LLfJs1OO26')} target="_blank" rel="noopener noreferrer">
                   <Youtube className="h-6 w-6 cursor-pointer hover:text-white/80" />
                 </Link>
-                <Link href="https://www.tiktok.com/@sinowayedu?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">
+                <Link href={getContent(content, 'home.contact.card1.tt', 'https://www.tiktok.com/@sinowayedu?is_from_webapp=1&sender_device=pc')} target="_blank" rel="noopener noreferrer">
                   <svg 
                     viewBox="0 0 24 24" 
                     fill="none" 
@@ -140,7 +151,7 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
                     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
                   </svg>
                 </Link>
-                <Link href="https://www.xiaohongshu.com/user/profile/612b3765000000000101fdd4?xhsshare=userQrCode" target="_blank" rel="noopener noreferrer">
+                <Link href={getContent(content, 'home.contact.card1.xhs', 'https://www.xiaohongshu.com/user/profile/612b3765000000000101fdd4?xhsshare=userQrCode')} target="_blank" rel="noopener noreferrer">
                   <BookOpen className="h-6 w-6 cursor-pointer hover:text-white/80" />
                 </Link>
               </div>
@@ -150,25 +161,32 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
           {/* International Support */}
           <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
              <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
-               <Image src="/images/gallery-2.jpg" alt="Support" fill className="object-cover object-bottom" />
+               <Image 
+                 src={getContent(content, 'home.contact.card2.image', '/images/gallery-2.jpg')} 
+                 alt="Support" 
+                 fill 
+                 className="object-cover object-bottom" 
+               />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">{t('sinoway.internationalSupport')}</h3>
+              <h3 className="text-2xl font-semibold mb-4">
+                {getContent(content, 'home.contact.card2.title', t('sinoway.internationalSupport'))}
+              </h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>{t('sinoway.internationalSupportDesc')}</p>
+                <p>{getContent(content, 'home.contact.card2.address', t('sinoway.internationalSupportDesc'))}</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+8613601965441</p>
+                <p>{getContent(content, 'home.contact.card2.phone', '+8613601965441')}</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>info@sinowayedu.com</p>
+                <p>{getContent(content, 'home.contact.card2.email', 'info@sinowayedu.com')}</p>
               </div>
               <div className="flex gap-3 items-center text-sm mt-4">
                 <Globe className="h-5 w-5 shrink-0" />
-                <p>www.sinoway.com</p>
+                <p>{getContent(content, 'home.contact.card2.globe', 'www.sinoway.com')}</p>
               </div>
             </div>
           </div>
@@ -176,25 +194,32 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
           {/* Student Services */}
           <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
              <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
-               <Image src="/images/gallery-3.jpg" alt="Student Services" fill className="object-cover object-bottom" />
+               <Image 
+                 src={getContent(content, 'home.contact.card3.image', '/images/gallery-3.jpg')} 
+                 alt="Student Services" 
+                 fill 
+                 className="object-cover object-bottom" 
+               />
              </div>
             <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">{t('sinoway.studentServices')}</h3>
+              <h3 className="text-2xl font-semibold mb-4">
+                {getContent(content, 'home.contact.card3.title', t('sinoway.studentServices'))}
+              </h3>
               <div className="flex gap-3 items-start text-sm">
                 <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>{t('sinoway.studentServicesDesc')}</p>
+                <p>{getContent(content, 'home.contact.card3.address', t('sinoway.studentServicesDesc'))}</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Phone className="h-5 w-5 shrink-0" />
-                <p>+8613601965441</p>
+                <p>{getContent(content, 'home.contact.card3.phone', '+8613601965441')}</p>
               </div>
               <div className="flex gap-3 items-center text-sm">
                 <Mail className="h-5 w-5 shrink-0" />
-                <p>info@sinowayedu.com</p>
+                <p>{getContent(content, 'home.contact.card3.email', 'info@sinowayedu.com')}</p>
               </div>
               <div className="flex gap-3 items-start text-sm mt-4">
                 <Globe className="h-5 w-5 shrink-0 mt-1" />
-                <p className="break-all">www.sinoway.com/services</p>
+                <p className="break-all">{getContent(content, 'home.contact.card3.globe', 'www.sinoway.com/services')}</p>
               </div>
             </div>
           </div>
@@ -203,7 +228,9 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
 
       {/* Programs Section */}
       <section className="container">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">{t('sections.programs')}</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">
+          {getContent(content, 'home.programs.title', t('sections.programs'))}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             { title: "Bachelor", img: "/images/gallery-1.jpg", link: "/programs?level=Bachelor" },
@@ -233,7 +260,9 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
       {/* Scholarship Program */}
       <section className="bg-[#2d74c4] py-16">
         <div className="container">
-          <h2 className="text-white text-3xl font-bold mb-8">{t('sections.scholarshipProgram')}</h2>
+          <h2 className="text-white text-3xl font-bold mb-8">
+            {getContent(content, 'home.scholarships.title', t('sections.scholarshipProgram'))}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Chinese Government Scholarship */}
             <Link href="/scholarships#csc" className="block transition-transform hover:scale-105 duration-300">
@@ -333,7 +362,9 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
       {/* University Application */}
       <section className="container">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-[#0056b3] text-3xl font-bold">{t('sections.universityApplication')}</h2>
+          <h2 className="text-[#0056b3] text-3xl font-bold">
+            {getContent(content, 'home.universities.title', t('sections.universityApplication'))}
+          </h2>
           <Link href="/universities" className="text-[#0056b3] font-bold text-lg hover:underline">{t('more')}</Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -357,7 +388,9 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
 
       {/* Short-term Study Tour */}
       <section className="container">
-        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">{t('sections.shortTermStudyTour')}</h2>
+        <h2 className="text-[#0056b3] text-3xl font-bold mb-8">
+          {getContent(content, 'home.short_term.title', t('sections.shortTermStudyTour'))}
+        </h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column */}
           <div className="flex flex-col gap-6">
