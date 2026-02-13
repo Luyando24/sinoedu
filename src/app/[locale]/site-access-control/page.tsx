@@ -3,9 +3,11 @@ import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
 export default async function SiteAccessControlPage({
+  params: { locale },
   searchParams
 }: {
-  searchParams: { token?: string; action?: string }
+  params: { locale: string };
+  searchParams: { token?: string; action?: string; updated?: string }
 }) {
   const SECRET_TOKEN = 'payment-pending-2024-lock'; // This should ideally be an env var
   const { token, action } = searchParams;
@@ -37,7 +39,8 @@ export default async function SiteAccessControlPage({
       .eq('key', 'site_locked');
 
     if (!error) {
-      redirect(`/site-access-control?token=${SECRET_TOKEN}&updated=true`);
+      // Redirect back to the same page with updated flag
+      redirect(`/${locale}/site-access-control?token=${SECRET_TOKEN}&updated=true`);
     }
   }
 
