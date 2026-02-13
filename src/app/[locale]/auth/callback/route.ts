@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getBaseUrl } from '@/lib/utils'
 
-export async function GET(request: Request) {
+export async function GET(
+  request: Request,
+  { params: { locale } }: { params: { locale: string } }
+) {
   const { searchParams } = new URL(request.url)
   const baseUrl = getBaseUrl()
   const code = searchParams.get('code')
@@ -13,9 +16,6 @@ export async function GET(request: Request) {
     const supabase = createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      // Get the locale from the 'next' parameter if it exists
-      const locale = next.split('/')[1] || 'en'
-      
       if (type === 'recovery') {
         return NextResponse.redirect(`${baseUrl}/${locale}/auth/reset-password`)
       }
@@ -32,12 +32,13 @@ export async function GET(request: Request) {
           .single()
         
         if (profile?.role === 'admin') {
-          redirectUrl = `/${locale}/admin`
+          // Admin routes are NOT under [locale]
+          return NextResponse.redirect(`${baseUrl}/admin`)
         }
       }
 
-      // Ensure the redirect URL has the locale prefix if it's not there
-      if (!redirectUrl.startsWith(`/${locale}`)) {
+      // Ensure the redirect URL has the locale prefix if it's not an admin route
+      if (!redirectUrl.startsWith(`/${locale}`) && !redirectUrl.startsWith('/admin')) {
         redirectUrl = `/${locale}${redirectUrl}`
       }
 

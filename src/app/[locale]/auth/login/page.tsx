@@ -59,7 +59,7 @@ export default function LoginPage({
         console.log("Login Role Check:", userRole)
 
         if (userRole === 'admin') {
-          redirectUrl = `/${locale}/admin`
+          redirectUrl = '/admin'
         }
       }
 
@@ -85,7 +85,7 @@ export default function LoginPage({
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${baseUrl}/auth/callback?next=/${locale}`,
+          emailRedirectTo: `${baseUrl}/${locale}/auth/callback?next=/${locale}`,
         },
       })
       if (error) throw error

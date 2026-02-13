@@ -9,7 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
 
-export default function ForgotPasswordPage() {
+export default function ForgotPasswordPage({
+  params: { locale }
+}: {
+  params: { locale: string }
+}) {
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -22,7 +26,7 @@ export default function ForgotPasswordPage() {
     try {
       const baseUrl = getBaseUrl()
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${baseUrl}/auth/callback?next=/auth/reset-password`,
+        redirectTo: `${baseUrl}/${locale}/auth/callback?next=/${locale}/auth/reset-password`,
       })
 
       if (error) {

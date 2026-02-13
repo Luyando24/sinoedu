@@ -12,7 +12,11 @@ import { toast } from "sonner"
 
 export const dynamic = 'force-dynamic'
 
-export default function RegisterPage() {
+export default function RegisterPage({
+  params: { locale }
+}: {
+  params: { locale: string }
+}) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
@@ -43,7 +47,7 @@ export default function RegisterPage() {
             whatsapp_number: whatsappNumber,
             role, // Pass role to metadata
           },
-          emailRedirectTo: `${baseUrl}/auth/callback`,
+          emailRedirectTo: `${baseUrl}/${locale}/auth/callback`,
         },
       })
 
