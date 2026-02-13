@@ -16,9 +16,16 @@ export function cn(...inputs: ClassValue[]) {
  * set NEXT_PUBLIC_SITE_URL in your .env file.
  */
 export function getBaseUrl() {
-  const url = process.env.NEXT_PUBLIC_SITE_URL || 
+  let url = process.env.NEXT_PUBLIC_SITE_URL || 
+            process.env.NEXT_PUBLIC_URL ||
+            (process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : "") ||
             (typeof window !== "undefined" ? window.location.origin : "https://www.sinowayedu.com");
   
+  // Ensure protocol is present
+  if (url && !url.startsWith('http')) {
+    url = `https://${url}`;
+  }
+
   // Remove trailing slash if present
   return url.replace(/\/$/, "");
 }
