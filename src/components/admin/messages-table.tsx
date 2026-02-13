@@ -21,9 +21,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Mail, Eye, Phone } from "lucide-react"
+import { Search, Mail, Eye, Phone, Reply, Send, Loader2 } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 
 type Message = {
   id: string
@@ -42,7 +44,56 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null)
+  const [replyText, setReplyText] = useState("")
+  const [isReplying, setIsReplying] = useState(false)
+  const [showReplyForm, setShowReplyForm] = useState(false)
   const supabase = createClient()
+
+  const handleSendReply = async () => {
+    if (!selectedMessage || !replyText.trim()) return
+
+    setIsReplying(true)
+    try {
+      const response = await fetch("/api/admin/reply", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messageId: selectedMessage.id,
+          to: selectedMessage.email,
+          subject: selectedMessage.subject,
+          replyMessage: replyText,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send reply")
+      }
+
+      toast.success("Reply sent successfully")
+      setReplyText("")
+      setShowReplyForm(false)
+      
+      // Update local state
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === selectedMessage.id ? { ...msg, status: "replied" } : msg
+        )
+      )
+      
+      // Update selected message status
+      setSelectedMessage(prev => prev ? { ...prev, status: "replied" } : null)
+      
+    } catch (error: any) {
+      console.error("Error sending reply:", error)
+      toast.error(error.message || "Failed to send reply")
+    } finally {
+      setIsReplying(false)
+    }
+  }
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
@@ -204,7 +255,13 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
         </Table>
       </CardContent>
 
-      <Dialog open={!!selectedMessage} onOpenChange={(open) => !open && setSelectedMessage(null)}>
+      <Dialog open={!!selectedMessage} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedMessage(null)
+          setShowReplyForm(false)
+          setReplyText("")
+        }
+      }}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Message Details</DialogTitle>
@@ -245,12 +302,53 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <span className="font-bold text-right">Status:</span>
-                <div className="col-span-3">
+                <div className="flex items-center justify-between col-span-3">
                   <Badge variant={getStatusBadgeVariant(selectedMessage.status)}>
                     {selectedMessage.status}
                   </Badge>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setShowReplyForm(!showReplyForm)}
+                  >
+                    <Reply className="h-4 w-4 mr-2" />
+                    {showReplyForm ? "Cancel Reply" : "Reply Email"}
+                  </Button>
                 </div>
               </div>
+
+              {showReplyForm && (
+                <div className="space-y-4 border-t pt-4 mt-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="reply-text">Your Reply</Label>
+                    <Textarea
+                      id="reply-text"
+                      placeholder="Write your reply here..."
+                      className="min-h-[150px]"
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex justify-end">
+                    <Button 
+                      onClick={handleSendReply} 
+                      disabled={isReplying || !replyText.trim()}
+                    >
+                      {isReplying ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-4 w-4 mr-2" />
+                          Send Reply
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
