@@ -16,11 +16,11 @@ export function cn(...inputs: ClassValue[]) {
  * set NEXT_PUBLIC_SITE_URL in your .env file.
  */
 export function getBaseUrl() {
-  if (typeof window !== "undefined") {
-    return window.location.origin;
-  }
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+  if (typeof window !== "undefined") {
+    return window.location.origin;
   }
   return "https://sinovisa.org"; // Default fallback
 }
