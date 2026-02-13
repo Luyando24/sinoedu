@@ -16,11 +16,9 @@ export function cn(...inputs: ClassValue[]) {
  * set NEXT_PUBLIC_SITE_URL in your .env file.
  */
 export function getBaseUrl() {
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL;
-  }
-  if (typeof window !== "undefined") {
-    return window.location.origin;
-  }
-  return "https://sinovisa.org"; // Default fallback
+  let url = process.env.NEXT_PUBLIC_SITE_URL || 
+            (typeof window !== "undefined" ? window.location.origin : "https://www.sinowayedu.com");
+  
+  // Remove trailing slash if present
+  return url.replace(/\/$/, "");
 }
