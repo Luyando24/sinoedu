@@ -87,9 +87,9 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
       // Update selected message status
       setSelectedMessage(prev => prev ? { ...prev, status: "replied" } : null)
       
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending reply:", error)
-      toast.error(error.message || "Failed to send reply")
+      toast.error(error instanceof Error ? error.message : "Failed to send reply")
     } finally {
       setIsReplying(false)
     }

@@ -44,12 +44,12 @@ export default function ForgotPasswordPage() {
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
-            We've sent a password reset link to <strong>{email}</strong>.
+            We&apos;ve sent a password reset link to <strong>{email}</strong>.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground mb-4">
-            If you don't see the email, check your spam folder.
+            If you don&apos;t see the email, check your spam folder.
           </p>
           <Link href="/auth/login">
             <Button className="w-full">Back to Login</Button>
