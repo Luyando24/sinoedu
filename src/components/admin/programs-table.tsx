@@ -46,13 +46,10 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
   const [programs, setPrograms] = useState(initialPrograms)
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const router = useRouter()
   const supabase = createClient()
-
-  if (loading) {
-    // prevent unused variable warning
-  }
 
   const getUniversityName = (program: Program) => {
     if (!program.universities) return ""
@@ -68,6 +65,46 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
     (program.program_id_code && program.program_id_code.toLowerCase().includes(searchQuery.toLowerCase())) ||
     (program.duration && program.duration.toLowerCase().includes(searchQuery.toLowerCase()))
   )
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(filteredPrograms.map(p => p.id))
+    } else {
+      setSelectedIds([])
+    }
+  }
+
+  const handleSelectOne = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedIds(prev => [...prev, id])
+    } else {
+      setSelectedIds(prev => prev.filter(item => item !== id))
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return
+    if (!confirm(`Are you sure you want to delete ${selectedIds.length} programs?`)) return
+
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('programs')
+        .delete()
+        .in('id', selectedIds)
+
+      if (error) throw error
+
+      setPrograms(programs.filter(p => !selectedIds.includes(p.id)))
+      setSelectedIds([])
+      toast.success(`${selectedIds.length} programs deleted successfully`)
+      router.refresh()
+    } catch {
+      toast.error("Failed to delete programs")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const deleteProgram = async (id: string) => {
     if (!confirm("Are you sure you want to delete this program?")) return
@@ -124,6 +161,15 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
           />
         </div>
         <div className="flex gap-2">
+          {selectedIds.length > 0 && (
+            <Button 
+              variant="destructive" 
+              onClick={handleBulkDelete}
+              disabled={loading}
+            >
+              <Trash className="mr-2 h-4 w-4" /> Delete ({selectedIds.length})
+            </Button>
+          )}
           <ProgramImporter />
           <Link href="/admin/programs/new">
             <Button>
@@ -137,6 +183,14 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[40px]">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  checked={filteredPrograms.length > 0 && selectedIds.length === filteredPrograms.length}
+                  onChange={(e) => handleSelectAll(e.target.checked)}
+                />
+              </TableHead>
               <TableHead>ID Code</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>University</TableHead>
@@ -151,6 +205,14 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
             {filteredPrograms.length > 0 ? (
               filteredPrograms.map((program) => (
                 <TableRow key={program.id}>
+                  <TableCell>
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      checked={selectedIds.includes(program.id)}
+                      onChange={(e) => handleSelectOne(program.id, e.target.checked)}
+                    />
+                  </TableCell>
                   <TableCell className="font-mono text-xs">{program.program_id_code || "-"}</TableCell>
                   <TableCell className="font-medium">{program.title}</TableCell>
                   <TableCell>{getUniversityName(program) || "-"}</TableCell>

@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Mail, Eye } from "lucide-react"
+import { Search, Mail, Eye, Trash2 } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
 import Link from "next/link"
@@ -42,6 +42,8 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [isDeleting, setIsDeleting] = useState(false)
   const supabase = createClient()
 
   const handleStatusChange = async (id: string, newStatus: string) => {
@@ -62,6 +64,46 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
     } catch (error) {
       console.error("Error updating status:", error)
       toast.error("Failed to update status")
+    }
+  }
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds(filteredMessages.map((msg) => msg.id))
+    } else {
+      setSelectedIds([])
+    }
+  }
+
+  const handleSelectOne = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedIds((prev) => [...prev, id])
+    } else {
+      setSelectedIds((prev) => prev.filter((item) => item !== id))
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return
+    if (!confirm(`Are you sure you want to delete ${selectedIds.length} messages?`)) return
+
+    setIsDeleting(true)
+    try {
+      const { error } = await supabase
+        .from("contact_submissions")
+        .delete()
+        .in("id", selectedIds)
+
+      if (error) throw error
+
+      setMessages((prev) => prev.filter((msg) => !selectedIds.includes(msg.id)))
+      setSelectedIds([])
+      toast.success(`${selectedIds.length} messages deleted`)
+    } catch (error) {
+      console.error("Error deleting messages:", error)
+      toast.error("Failed to delete messages")
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -123,6 +165,18 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
               <option value="replied">Replied</option>
               <option value="archived">Archived</option>
             </select>
+            {selectedIds.length > 0 && (
+              <Button 
+                variant="destructive" 
+                size="sm"
+                onClick={handleBulkDelete}
+                disabled={isDeleting}
+                className="flex items-center gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete Selected ({selectedIds.length})
+              </Button>
+            )}
           </div>
         </div>
       </CardHeader>
@@ -130,6 +184,14 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[40px]">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  checked={filteredMessages.length > 0 && selectedIds.length === filteredMessages.length}
+                  onChange={(e) => handleSelectAll(e.target.checked)}
+                />
+              </TableHead>
               <TableHead>Sender</TableHead>
               <TableHead>Subject</TableHead>
               <TableHead>Date</TableHead>
@@ -140,13 +202,21 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
           <TableBody>
             {filteredMessages.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No messages found
                 </TableCell>
               </TableRow>
             ) : (
               filteredMessages.map((msg) => (
                 <TableRow key={msg.id}>
+                  <TableCell>
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      checked={selectedIds.includes(msg.id)}
+                      onChange={(e) => handleSelectOne(msg.id, e.target.checked)}
+                    />
+                  </TableCell>
                   <TableCell>
                     <div className="flex flex-col">
                       <span className="font-medium">
