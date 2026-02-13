@@ -1,4 +1,3 @@
-import { getTranslations } from 'next-intl/server';
 import { Lock } from 'lucide-react';
 
 export default async function MaintenancePage() {

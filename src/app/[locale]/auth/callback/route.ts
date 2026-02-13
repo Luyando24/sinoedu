@@ -11,8 +11,11 @@ export async function GET(request: Request) {
     const supabase = createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
+      // Get the locale from the 'next' parameter if it exists
+      const locale = next.split('/')[1] || 'en'
+      
       if (type === 'recovery') {
-        return NextResponse.redirect(`${origin}/auth/reset-password`)
+        return NextResponse.redirect(`${origin}/${locale}/auth/reset-password`)
       }
 
       // Check user role for redirection
@@ -27,8 +30,13 @@ export async function GET(request: Request) {
           .single()
         
         if (profile?.role === 'admin') {
-          redirectUrl = '/admin'
+          redirectUrl = `/${locale}/admin`
         }
+      }
+
+      // Ensure the redirect URL has the locale prefix if it's not there
+      if (!redirectUrl.startsWith(`/${locale}`)) {
+        redirectUrl = `/${locale}${redirectUrl}`
       }
 
       return NextResponse.redirect(`${origin}${redirectUrl}`)

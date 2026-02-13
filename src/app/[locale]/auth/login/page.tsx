@@ -11,7 +11,11 @@ import { toast } from "sonner"
 
 export const dynamic = 'force-dynamic'
 
-export default function LoginPage() {
+export default function LoginPage({
+  params: { locale }
+}: {
+  params: { locale: string }
+}) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -35,7 +39,7 @@ export default function LoginPage() {
 
       const { data: { user } } = await supabase.auth.getUser()
       
-      let redirectUrl = "/"
+      let redirectUrl = `/${locale}`
       if (user) {
         // Try RPC first (bypasses RLS)
         const { data: roleData, error: rpcError } = await supabase.rpc('get_my_role')
@@ -54,7 +58,7 @@ export default function LoginPage() {
         console.log("Login Role Check:", userRole)
 
         if (userRole === 'admin') {
-          redirectUrl = "/admin"
+          redirectUrl = `/${locale}/admin`
         }
       }
 
@@ -79,7 +83,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/${locale}`,
         },
       })
       if (error) throw error
