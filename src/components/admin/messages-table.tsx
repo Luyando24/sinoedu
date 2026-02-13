@@ -10,22 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Search, Mail, Eye, Phone, Reply, Send, Loader2 } from "lucide-react"
+import { Search, Mail, Eye } from "lucide-react"
 import { format } from "date-fns"
 import { toast } from "sonner"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+import Link from "next/link"
 
 type ReplyHistory = {
   text: string
@@ -50,74 +42,7 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
-  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null)
-  const [replyText, setReplyText] = useState("")
-  const [isReplying, setIsReplying] = useState(false)
-  const [showReplyForm, setShowReplyForm] = useState(false)
   const supabase = createClient()
-
-  const handleSendReply = async () => {
-    if (!selectedMessage || !replyText.trim()) return
-
-    setIsReplying(true)
-    try {
-      const response = await fetch("/api/admin/reply", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messageId: selectedMessage.id,
-          to: selectedMessage.email,
-          subject: selectedMessage.subject,
-          replyMessage: replyText,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to send reply")
-      }
-
-      toast.success("Reply sent successfully")
-      
-      const newReply: ReplyHistory = {
-        text: replyText,
-        sent_at: new Date().toISOString(),
-        sent_by: "Admin" // Simplified for UI update, the API uses the actual email
-      }
-
-      setReplyText("")
-      setShowReplyForm(false)
-      
-      // Update local state
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === selectedMessage.id 
-            ? { 
-                ...msg, 
-                status: "replied", 
-                replies: [...(msg.replies || []), newReply] 
-              } 
-            : msg
-        )
-      )
-      
-      // Update selected message status and replies
-      setSelectedMessage(prev => prev ? { 
-        ...prev, 
-        status: "replied",
-        replies: [...(prev.replies || []), newReply]
-      } : null)
-      
-    } catch (error) {
-      console.error("Error sending reply:", error)
-      toast.error(error instanceof Error ? error.message : "Failed to send reply")
-    } finally {
-      setIsReplying(false)
-    }
-  }
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
@@ -252,14 +177,15 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="View Message"
-                        onClick={() => setSelectedMessage(msg)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                      <Link href={`/admin/messages/${msg.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="View & Reply"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
                       <select
                         className="flex h-8 w-[110px] items-center justify-between rounded-md border border-input bg-background px-2 py-1 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         value={msg.status}
@@ -278,128 +204,6 @@ export function MessagesTable({ initialMessages }: { initialMessages: Message[] 
           </TableBody>
         </Table>
       </CardContent>
-
-      <Dialog open={!!selectedMessage} onOpenChange={(open) => {
-        if (!open) {
-          setSelectedMessage(null)
-          setShowReplyForm(false)
-          setReplyText("")
-        }
-      }}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Message Details</DialogTitle>
-            <DialogDescription>
-              From {selectedMessage?.first_name} {selectedMessage?.last_name}
-            </DialogDescription>
-          </DialogHeader>
-          {selectedMessage && (
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="font-bold text-right">Date:</span>
-                <span className="col-span-3">
-                  {format(new Date(selectedMessage.created_at), "PPP p")}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="font-bold text-right">Email:</span>
-                <span className="col-span-3">{selectedMessage.email}</span>
-              </div>
-              {selectedMessage.whatsapp_number && (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <span className="font-bold text-right flex items-center justify-end gap-2">
-                    <Phone className="h-4 w-4" />
-                    WhatsApp:
-                  </span>
-                  <span className="col-span-3">{selectedMessage.whatsapp_number}</span>
-                </div>
-              )}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="font-bold text-right">Subject:</span>
-                <span className="col-span-3">{selectedMessage.subject}</span>
-              </div>
-              <div className="grid grid-cols-4 items-start gap-4">
-                <span className="font-bold text-right mt-1">Message:</span>
-                <div className="col-span-3 p-3 bg-muted rounded-md text-sm whitespace-pre-wrap max-h-[300px] overflow-y-auto">
-                  {selectedMessage.message}
-                </div>
-              </div>
-
-              {selectedMessage.replies && selectedMessage.replies.length > 0 && (
-                <div className="grid grid-cols-4 items-start gap-4">
-                  <span className="font-bold text-right mt-1">History:</span>
-                  <div className="col-span-3 space-y-3 max-h-[200px] overflow-y-auto pr-2">
-                    {selectedMessage.replies.map((reply, index) => (
-                      <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-md text-sm">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="font-semibold text-blue-700 dark:text-blue-300 text-xs">
-                            {reply.sent_by}
-                          </span>
-                          <span className="text-[10px] text-muted-foreground">
-                            {format(new Date(reply.sent_at), "MMM d, h:mm a")}
-                          </span>
-                        </div>
-                        <div className="whitespace-pre-wrap">
-                          {reply.text}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <span className="font-bold text-right">Status:</span>
-                <div className="flex items-center justify-between col-span-3">
-                  <Badge variant={getStatusBadgeVariant(selectedMessage.status)}>
-                    {selectedMessage.status}
-                  </Badge>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => setShowReplyForm(!showReplyForm)}
-                  >
-                    <Reply className="h-4 w-4 mr-2" />
-                    {showReplyForm ? "Cancel Reply" : "Reply Email"}
-                  </Button>
-                </div>
-              </div>
-
-              {showReplyForm && (
-                <div className="space-y-4 border-t pt-4 mt-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="reply-text">Your Reply</Label>
-                    <Textarea
-                      id="reply-text"
-                      placeholder="Write your reply here..."
-                      className="min-h-[150px]"
-                      value={replyText}
-                      onChange={(e) => setReplyText(e.target.value)}
-                    />
-                  </div>
-                  <div className="flex justify-end">
-                    <Button 
-                      onClick={handleSendReply} 
-                      disabled={isReplying || !replyText.trim()}
-                    >
-                      {isReplying ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="h-4 w-4 mr-2" />
-                          Send Reply
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </Card>
   )
 }

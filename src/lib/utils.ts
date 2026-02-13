@@ -16,7 +16,7 @@ export function cn(...inputs: ClassValue[]) {
  * set NEXT_PUBLIC_SITE_URL in your .env file.
  */
 export function getBaseUrl() {
-  let url = process.env.NEXT_PUBLIC_SITE_URL || 
+  const url = process.env.NEXT_PUBLIC_SITE_URL || 
             (typeof window !== "undefined" ? window.location.origin : "https://www.sinowayedu.com");
   
   // Remove trailing slash if present
