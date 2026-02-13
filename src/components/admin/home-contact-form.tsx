@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner"
 import { Loader2, Save, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react"
 
@@ -148,7 +147,7 @@ export function HomeContactForm() {
     setBlocks(prev => ({ ...prev, [key]: value }))
   }
 
-  const handleLocationChange = (index: number, field: keyof Location, value: any) => {
+  const handleLocationChange = (index: number, field: keyof Location, value: string) => {
     const newLocations = [...locations]
     newLocations[index] = { ...newLocations[index], [field]: value }
     setLocations(newLocations)
@@ -438,7 +437,7 @@ export function HomeContactForm() {
 
         {locations.length === 0 && (
           <div className="text-center p-12 border-2 border-dashed rounded-lg text-muted-foreground">
-            No locations added yet. Click "Add Location" to start.
+            No locations added yet. Click &quot;Add Location&quot; to start.
           </div>
         )}
       </div>
