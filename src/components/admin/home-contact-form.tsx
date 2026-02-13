@@ -8,12 +8,32 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner"
-import { Loader2, Save } from "lucide-react"
+import { Loader2, Save, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react"
+
+interface Location {
+  id: string
+  title: string
+  address: string
+  phone: string
+  email: string
+  image: string
+  globe?: string
+  socials?: {
+    fb?: string
+    ig?: string
+    vk?: string
+    yt?: string
+    tt?: string
+    xhs?: string
+  }
+}
 
 export function HomeContactForm() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [blocks, setBlocks] = useState<Record<string, string>>({})
+  const [locations, setLocations] = useState<Location[]>([])
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
   const supabase = createClient()
 
   const keys = useMemo(() => [
@@ -22,6 +42,8 @@ export function HomeContactForm() {
     'home.scholarships.title',
     'home.universities.title',
     'home.short_term.title',
+    'home.contact.locations', // New key for dynamic locations
+    // Keep old keys for initial migration/fallback
     'home.contact.card1.title',
     'home.contact.card1.address',
     'home.contact.card1.phone',
@@ -61,6 +83,55 @@ export function HomeContactForm() {
         blockMap[b.key] = b.content
       })
       setBlocks(blockMap)
+
+      // Parse locations if they exist
+      if (blockMap['home.contact.locations']) {
+        try {
+          setLocations(JSON.parse(blockMap['home.contact.locations']))
+        } catch (e) {
+          console.error("Error parsing locations JSON:", e)
+          setLocations([])
+        }
+      } else if (blockMap['home.contact.card1.title']) {
+        // Initial migration from old keys
+        const initialLocations: Location[] = [
+          {
+            id: '1',
+            title: blockMap['home.contact.card1.title'] || 'Headquarters',
+            address: blockMap['home.contact.card1.address'] || '',
+            phone: blockMap['home.contact.card1.phone'] || '',
+            email: blockMap['home.contact.card1.email'] || '',
+            image: blockMap['home.contact.card1.image'] || '/images/gallery-1.jpg',
+            socials: {
+              fb: blockMap['home.contact.card1.fb'] || '',
+              vk: blockMap['home.contact.card1.vk'] || '',
+              ig: blockMap['home.contact.card1.ig'] || '',
+              yt: blockMap['home.contact.card1.yt'] || '',
+              tt: blockMap['home.contact.card1.tt'] || '',
+              xhs: blockMap['home.contact.card1.xhs'] || '',
+            }
+          },
+          {
+            id: '2',
+            title: blockMap['home.contact.card2.title'] || 'International Support',
+            address: blockMap['home.contact.card2.address'] || '',
+            phone: blockMap['home.contact.card2.phone'] || '',
+            email: blockMap['home.contact.card2.email'] || '',
+            image: blockMap['home.contact.card2.image'] || '/images/gallery-2.jpg',
+            globe: blockMap['home.contact.card2.globe'] || ''
+          },
+          {
+            id: '3',
+            title: blockMap['home.contact.card3.title'] || 'Student Services',
+            address: blockMap['home.contact.card3.address'] || '',
+            phone: blockMap['home.contact.card3.phone'] || '',
+            email: blockMap['home.contact.card3.email'] || '',
+            image: blockMap['home.contact.card3.image'] || '/images/gallery-3.jpg',
+            globe: blockMap['home.contact.card3.globe'] || ''
+          }
+        ]
+        setLocations(initialLocations)
+      }
     } catch (error) {
       console.error("Error fetching content:", error)
       toast.error("Failed to load content")
@@ -77,14 +148,65 @@ export function HomeContactForm() {
     setBlocks(prev => ({ ...prev, [key]: value }))
   }
 
+  const handleLocationChange = (index: number, field: keyof Location, value: any) => {
+    const newLocations = [...locations]
+    newLocations[index] = { ...newLocations[index], [field]: value }
+    setLocations(newLocations)
+  }
+
+  const handleSocialChange = (index: number, socialField: string, value: string) => {
+    const newLocations = [...locations]
+    const currentSocials = newLocations[index].socials || {}
+    newLocations[index] = { 
+      ...newLocations[index], 
+      socials: { ...currentSocials, [socialField]: value } 
+    }
+    setLocations(newLocations)
+  }
+
+  const addLocation = () => {
+    const newLocation: Location = {
+      id: crypto.randomUUID(),
+      title: 'New Location',
+      address: '',
+      phone: '',
+      email: '',
+      image: '/images/gallery-1.jpg'
+    }
+    setLocations([...locations, newLocation])
+    setExpandedIndex(locations.length)
+  }
+
+  const removeLocation = (index: number) => {
+    const newLocations = locations.filter((_, i) => i !== index)
+    setLocations(newLocations)
+    if (expandedIndex === index) setExpandedIndex(null)
+  }
+
   const handleSave = async () => {
     setSaving(true)
     try {
-      const updates = Object.entries(blocks).map(([key, content]) => ({
+      // 1. Prepare general settings updates
+      const generalKeys = [
+        'home.contact.title',
+        'home.programs.title',
+        'home.scholarships.title',
+        'home.universities.title',
+        'home.short_term.title',
+      ]
+      
+      const updates = generalKeys.map(key => ({
         key,
-        content,
-        description: `Homepage contact section: ${key}`
+        content: blocks[key] || '',
+        description: `Homepage section title: ${key}`
       }))
+
+      // 2. Add locations JSON update
+      updates.push({
+        key: 'home.contact.locations',
+        content: JSON.stringify(locations),
+        description: 'Homepage contact locations (JSON array)'
+      })
 
       const { error } = await supabase
         .from('content_blocks')
@@ -113,7 +235,7 @@ export function HomeContactForm() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Home Contact Section</h1>
-          <p className="text-muted-foreground">Manage the contact cards on the landing page.</p>
+          <p className="text-muted-foreground">Manage office locations and section titles.</p>
         </div>
         <Button onClick={handleSave} disabled={saving}>
           {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
@@ -123,8 +245,8 @@ export function HomeContactForm() {
 
       <Card>
         <CardHeader>
-          <CardTitle>General Settings</CardTitle>
-          <CardDescription>Main title for the section</CardDescription>
+          <CardTitle>Section Titles</CardTitle>
+          <CardDescription>Main titles for homepage sections</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -172,228 +294,154 @@ export function HomeContactForm() {
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="card1" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="card1">Headquarters</TabsTrigger>
-          <TabsTrigger value="card2">International Support</TabsTrigger>
-          <TabsTrigger value="card3">Student Services</TabsTrigger>
-        </TabsList>
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-bold">Office Locations</h2>
+          <Button variant="outline" size="sm" onClick={addLocation}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Location
+          </Button>
+        </div>
 
-        {/* Card 1: Headquarters */}
-        <TabsContent value="card1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Card 1: Headquarters</CardTitle>
-              <CardDescription>Manage details for the first contact card.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Card Title</label>
-                  <Input 
-                    value={blocks['home.contact.card1.title'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card1.title', e.target.value)}
-                  />
+        {locations.map((location, index) => (
+          <Card key={location.id} className="overflow-hidden">
+            <div 
+              className="p-4 flex items-center justify-between cursor-pointer bg-muted/30 hover:bg-muted/50 transition-colors"
+              onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+            >
+              <div className="flex items-center gap-3">
+                <div className="bg-primary/10 text-primary w-8 h-8 rounded-full flex items-center justify-center font-bold">
+                  {index + 1}
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Background Image URL</label>
-                  <Input 
-                    value={blocks['home.contact.card1.image'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card1.image', e.target.value)}
-                  />
-                </div>
+                <span className="font-medium">{location.title || 'Untitled Location'}</span>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Address</label>
-                <Textarea 
-                  value={blocks['home.contact.card1.address'] || ''} 
-                  onChange={(e) => handleChange('home.contact.card1.address', e.target.value)}
-                />
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    removeLocation(index)
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+                {expandedIndex === index ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Phone</label>
-                  <Input 
-                    value={blocks['home.contact.card1.phone'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card1.phone', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Email</label>
-                  <Input 
-                    value={blocks['home.contact.card1.email'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card1.email', e.target.value)}
-                  />
-                </div>
-              </div>
+            </div>
 
-              <div className="pt-4 border-t">
-                <h4 className="text-sm font-bold mb-4">Social Media Links</h4>
+            {expandedIndex === index && (
+              <CardContent className="p-6 space-y-4 border-t">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Facebook</label>
+                    <label className="text-sm font-medium">Location Name</label>
                     <Input 
-                      value={blocks['home.contact.card1.fb'] || ''} 
-                      onChange={(e) => handleChange('home.contact.card1.fb', e.target.value)}
+                      value={location.title} 
+                      onChange={(e) => handleLocationChange(index, 'title', e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Instagram</label>
+                    <label className="text-sm font-medium">Background Image URL</label>
                     <Input 
-                      value={blocks['home.contact.card1.ig'] || ''} 
-                      onChange={(e) => handleChange('home.contact.card1.ig', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">VK</label>
-                    <Input 
-                      value={blocks['home.contact.card1.vk'] || ''} 
-                      onChange={(e) => handleChange('home.contact.card1.vk', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Youtube</label>
-                    <Input 
-                      value={blocks['home.contact.card1.yt'] || ''} 
-                      onChange={(e) => handleChange('home.contact.card1.yt', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">TikTok</label>
-                    <Input 
-                      value={blocks['home.contact.card1.tt'] || ''} 
-                      onChange={(e) => handleChange('home.contact.card1.tt', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Xiaohongshu</label>
-                    <Input 
-                      value={blocks['home.contact.card1.xhs'] || ''} 
-                      onChange={(e) => handleChange('home.contact.card1.xhs', e.target.value)}
+                      value={location.image} 
+                      onChange={(e) => handleLocationChange(index, 'image', e.target.value)}
                     />
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Address / Description</label>
+                  <Textarea 
+                    value={location.address} 
+                    onChange={(e) => handleLocationChange(index, 'address', e.target.value)}
+                  />
+                </div>
 
-        {/* Card 2: International Support */}
-        <TabsContent value="card2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Card 2: International Support</CardTitle>
-              <CardDescription>Manage details for the second contact card.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Card Title</label>
-                  <Input 
-                    value={blocks['home.contact.card2.title'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card2.title', e.target.value)}
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Phone</label>
+                    <Input 
+                      value={location.phone} 
+                      onChange={(e) => handleLocationChange(index, 'phone', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Email</label>
+                    <Input 
+                      value={location.email} 
+                      onChange={(e) => handleLocationChange(index, 'email', e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Background Image URL</label>
-                  <Input 
-                    value={blocks['home.contact.card2.image'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card2.image', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Description / Address</label>
-                <Textarea 
-                  value={blocks['home.contact.card2.address'] || ''} 
-                  onChange={(e) => handleChange('home.contact.card2.address', e.target.value)}
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Phone</label>
-                  <Input 
-                    value={blocks['home.contact.card2.phone'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card2.phone', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Email</label>
-                  <Input 
-                    value={blocks['home.contact.card2.email'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card2.email', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Website URL</label>
-                <Input 
-                  value={blocks['home.contact.card2.globe'] || ''} 
-                  onChange={(e) => handleChange('home.contact.card2.globe', e.target.value)}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
-        {/* Card 3: Student Services */}
-        <TabsContent value="card3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Card 3: Student Services</CardTitle>
-              <CardDescription>Manage details for the third contact card.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Card Title</label>
+                  <label className="text-sm font-medium">Website URL (Optional)</label>
                   <Input 
-                    value={blocks['home.contact.card3.title'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card3.title', e.target.value)}
+                    value={location.globe || ''} 
+                    onChange={(e) => handleLocationChange(index, 'globe', e.target.value)}
+                    placeholder="https://..."
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Background Image URL</label>
-                  <Input 
-                    value={blocks['home.contact.card3.image'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card3.image', e.target.value)}
-                  />
+
+                <div className="pt-4 border-t">
+                  <h4 className="text-sm font-bold mb-4">Social Media Links (Optional)</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Facebook</label>
+                      <Input 
+                        value={location.socials?.fb || ''} 
+                        onChange={(e) => handleSocialChange(index, 'fb', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Instagram</label>
+                      <Input 
+                        value={location.socials?.ig || ''} 
+                        onChange={(e) => handleSocialChange(index, 'ig', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">VK</label>
+                      <Input 
+                        value={location.socials?.vk || ''} 
+                        onChange={(e) => handleSocialChange(index, 'vk', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Youtube</label>
+                      <Input 
+                        value={location.socials?.yt || ''} 
+                        onChange={(e) => handleSocialChange(index, 'yt', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">TikTok</label>
+                      <Input 
+                        value={location.socials?.tt || ''} 
+                        onChange={(e) => handleSocialChange(index, 'tt', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Xiaohongshu</label>
+                      <Input 
+                        value={location.socials?.xhs || ''} 
+                        onChange={(e) => handleSocialChange(index, 'xhs', e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Description / Address</label>
-                <Textarea 
-                  value={blocks['home.contact.card3.address'] || ''} 
-                  onChange={(e) => handleChange('home.contact.card3.address', e.target.value)}
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Phone</label>
-                  <Input 
-                    value={blocks['home.contact.card3.phone'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card3.phone', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Email</label>
-                  <Input 
-                    value={blocks['home.contact.card3.email'] || ''} 
-                    onChange={(e) => handleChange('home.contact.card3.email', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Website URL</label>
-                <Input 
-                  value={blocks['home.contact.card3.globe'] || ''} 
-                  onChange={(e) => handleChange('home.contact.card3.globe', e.target.value)}
-                />
-              </div>
-            </CardContent>
+              </CardContent>
+            )}
           </Card>
-        </TabsContent>
-      </Tabs>
+        ))}
+
+        {locations.length === 0 && (
+          <div className="text-center p-12 border-2 border-dashed rounded-lg text-muted-foreground">
+            No locations added yet. Click "Add Location" to start.
+          </div>
+        )}
+      </div>
     </div>
   )
 }

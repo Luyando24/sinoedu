@@ -24,6 +24,35 @@ const getContent = (blocks: ContentBlock[], key: string, fallback: string) => {
   return blocks?.find(b => b.key === key)?.content || fallback
 }
 
+const getJsonContent = <T,>(blocks: ContentBlock[], key: string, fallback: T): T => {
+  const content = blocks?.find(b => b.key === key)?.content
+  if (!content) return fallback
+  try {
+    return JSON.parse(content) as T
+  } catch (e) {
+    console.error(`Error parsing JSON for key ${key}:`, e)
+    return fallback
+  }
+}
+
+interface Location {
+  id: string
+  title: string
+  address: string
+  phone: string
+  email: string
+  image: string
+  globe?: string
+  socials?: {
+    fb?: string
+    ig?: string
+    vk?: string
+    yt?: string
+    tt?: string
+    xhs?: string
+  }
+}
+
 export function HomeClient({ content }: { content: ContentBlock[] }) {
   const t = useTranslations('Home')
   const tCommon = useTranslations('Common')
@@ -39,6 +68,8 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  const dynamicLocations = getJsonContent<Location[] | null>(content, 'home.contact.locations', null)
 
   return (
     <div className="flex flex-col gap-12 md:gap-20 pb-20 bg-slate-50">
@@ -97,132 +128,211 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
           {getContent(content, 'home.contact.title', t('sections.sinowayEducation'))}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Headquarters */}
-          <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
-            {/* Background Image Overlay */}
-             <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
-               <Image 
-                 src={getContent(content, 'home.contact.card1.image', '/images/gallery-1.jpg')} 
-                 alt="Beijing" 
-                 fill 
-                 className="object-cover object-bottom" 
-               />
-             </div>
-            <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">
-                {getContent(content, 'home.contact.card1.title', t('sinoway.headquarters'))}
-              </h3>
-              <div className="flex gap-3 items-start text-sm">
-                <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>{getContent(content, 'home.contact.card1.address', 'Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China')}</p>
-              </div>
-              <div className="flex gap-3 items-center text-sm">
-                <Phone className="h-5 w-5 shrink-0" />
-                <p>{getContent(content, 'home.contact.card1.phone', '+8613601965441')}</p>
-              </div>
-              <div className="flex gap-3 items-center text-sm">
-                <Mail className="h-5 w-5 shrink-0" />
-                <p>{getContent(content, 'home.contact.card1.email', 'info@sinowayedu.com')}</p>
-              </div>
-              <div className="flex gap-4 mt-6">
-                <Link href={getContent(content, 'home.contact.card1.fb', 'https://www.facebook.com/share/1DPPMYfmyZ/')} target="_blank" rel="noopener noreferrer">
-                  <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
-                </Link>
-                <div className="h-6 w-6 border rounded flex items-center justify-center cursor-pointer hover:bg-white/10">
-                  {getContent(content, 'home.contact.card1.vk', 'VK')}
+          {dynamicLocations ? (
+            dynamicLocations.map((loc, idx) => (
+              <div key={loc.id || idx} className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
+                <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
+                  <Image 
+                    src={loc.image || '/images/gallery-1.jpg'} 
+                    alt={loc.title} 
+                    fill 
+                    className="object-cover object-bottom" 
+                  />
                 </div>
-                <Link href={getContent(content, 'home.contact.card1.ig', 'https://www.instagram.com/sinowayedu/?utm_source=qr&igsh=MXR4cGs5emdxNGxweg%3D%3D')} target="_blank" rel="noopener noreferrer">
-                  <Instagram className="h-6 w-6 cursor-pointer hover:text-white/80" />
-                </Link>
-                <MessageCircle className="h-6 w-6 cursor-pointer hover:text-white/80" />
-                <Link href={getContent(content, 'home.contact.card1.yt', 'https://youtube.com/@sinowayedu?si=HB8B_8LLfJs1OO26')} target="_blank" rel="noopener noreferrer">
-                  <Youtube className="h-6 w-6 cursor-pointer hover:text-white/80" />
-                </Link>
-                <Link href={getContent(content, 'home.contact.card1.tt', 'https://www.tiktok.com/@sinowayedu?is_from_webapp=1&sender_device=pc')} target="_blank" rel="noopener noreferrer">
-                  <svg 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    className="h-6 w-6 cursor-pointer hover:text-white/80"
-                  >
-                    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-                  </svg>
-                </Link>
-                <Link href={getContent(content, 'home.contact.card1.xhs', 'https://www.xiaohongshu.com/user/profile/612b3765000000000101fdd4?xhsshare=userQrCode')} target="_blank" rel="noopener noreferrer">
-                  <BookOpen className="h-6 w-6 cursor-pointer hover:text-white/80" />
-                </Link>
+                <div className="relative z-10 space-y-4">
+                  <h3 className="text-2xl font-semibold mb-4">{loc.title}</h3>
+                  <div className="flex gap-3 items-start text-sm">
+                    <MapPin className="h-5 w-5 shrink-0 mt-1" />
+                    <p>{loc.address}</p>
+                  </div>
+                  {loc.phone && (
+                    <div className="flex gap-3 items-center text-sm">
+                      <Phone className="h-5 w-5 shrink-0" />
+                      <p>{loc.phone}</p>
+                    </div>
+                  )}
+                  {loc.email && (
+                    <div className="flex gap-3 items-center text-sm">
+                      <Mail className="h-5 w-5 shrink-0" />
+                      <p>{loc.email}</p>
+                    </div>
+                  )}
+                  {loc.globe && (
+                    <div className="flex gap-3 items-start text-sm mt-4">
+                      <Globe className="h-5 w-5 shrink-0 mt-1" />
+                      <p className="break-all">{loc.globe}</p>
+                    </div>
+                  )}
+                  {loc.socials && Object.values(loc.socials).some(v => !!v) && (
+                    <div className="flex flex-wrap gap-4 mt-6">
+                      {loc.socials.fb && (
+                        <Link href={loc.socials.fb} target="_blank" rel="noopener noreferrer">
+                          <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                        </Link>
+                      )}
+                      {loc.socials.vk && (
+                        <div className="h-6 w-6 border rounded flex items-center justify-center cursor-pointer hover:bg-white/10 text-[10px] font-bold">
+                          VK
+                        </div>
+                      )}
+                      {loc.socials.ig && (
+                        <Link href={loc.socials.ig} target="_blank" rel="noopener noreferrer">
+                          <Instagram className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                        </Link>
+                      )}
+                      {loc.socials.yt && (
+                        <Link href={loc.socials.yt} target="_blank" rel="noopener noreferrer">
+                          <Youtube className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                        </Link>
+                      )}
+                      {loc.socials.tt && (
+                        <Link href={loc.socials.tt} target="_blank" rel="noopener noreferrer">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 cursor-pointer hover:text-white/80">
+                            <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                          </svg>
+                        </Link>
+                      )}
+                      {loc.socials.xhs && (
+                        <Link href={loc.socials.xhs} target="_blank" rel="noopener noreferrer">
+                          <BookOpen className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </div>
+            ))
+          ) : (
+            <>
+              {/* Fallback to old layout if no dynamic locations yet */}
+              {/* Headquarters */}
+              <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
+                {/* Background Image Overlay */}
+                 <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
+                   <Image 
+                     src={getContent(content, 'home.contact.card1.image', '/images/gallery-1.jpg')} 
+                     alt="Beijing" 
+                     fill 
+                     className="object-cover object-bottom" 
+                   />
+                 </div>
+                <div className="relative z-10 space-y-4">
+                  <h3 className="text-2xl font-semibold mb-4">
+                    {getContent(content, 'home.contact.card1.title', t('sinoway.headquarters'))}
+                  </h3>
+                  <div className="flex gap-3 items-start text-sm">
+                    <MapPin className="h-5 w-5 shrink-0 mt-1" />
+                    <p>{getContent(content, 'home.contact.card1.address', 'Room 1201, Building D, Guicheng Garden, Beijing Road, Haicheng District, Beihai City, Guangxi Province, China')}</p>
+                  </div>
+                  <div className="flex gap-3 items-center text-sm">
+                    <Phone className="h-5 w-5 shrink-0" />
+                    <p>{getContent(content, 'home.contact.card1.phone', '+8613601965441')}</p>
+                  </div>
+                  <div className="flex gap-3 items-center text-sm">
+                    <Mail className="h-5 w-5 shrink-0" />
+                    <p>{getContent(content, 'home.contact.card1.email', 'info@sinowayedu.com')}</p>
+                  </div>
+                  <div className="flex gap-4 mt-6">
+                    <Link href={getContent(content, 'home.contact.card1.fb', 'https://www.facebook.com/share/1DPPMYfmyZ/')} target="_blank" rel="noopener noreferrer">
+                      <Facebook className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                    </Link>
+                    <div className="h-6 w-6 border rounded flex items-center justify-center cursor-pointer hover:bg-white/10">
+                      {getContent(content, 'home.contact.card1.vk', 'VK')}
+                    </div>
+                    <Link href={getContent(content, 'home.contact.card1.ig', 'https://www.instagram.com/sinowayedu/?utm_source=qr&igsh=MXR4cGs5emdxNGxweg%3D%3D')} target="_blank" rel="noopener noreferrer">
+                      <Instagram className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                    </Link>
+                    <MessageCircle className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                    <Link href={getContent(content, 'home.contact.card1.yt', 'https://youtube.com/@sinowayedu?si=HB8B_8LLfJs1OO26')} target="_blank" rel="noopener noreferrer">
+                      <Youtube className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                    </Link>
+                    <Link href={getContent(content, 'home.contact.card1.tt', 'https://www.tiktok.com/@sinowayedu?is_from_webapp=1&sender_device=pc')} target="_blank" rel="noopener noreferrer">
+                      <svg 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        className="h-6 w-6 cursor-pointer hover:text-white/80"
+                      >
+                        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                      </svg>
+                    </Link>
+                    <Link href={getContent(content, 'home.contact.card1.xhs', 'https://www.xiaohongshu.com/user/profile/612b3765000000000101fdd4?xhsshare=userQrCode')} target="_blank" rel="noopener noreferrer">
+                      <BookOpen className="h-6 w-6 cursor-pointer hover:text-white/80" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
 
-          {/* International Support */}
-          <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
-             <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
-               <Image 
-                 src={getContent(content, 'home.contact.card2.image', '/images/gallery-2.jpg')} 
-                 alt="Support" 
-                 fill 
-                 className="object-cover object-bottom" 
-               />
-             </div>
-            <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">
-                {getContent(content, 'home.contact.card2.title', t('sinoway.internationalSupport'))}
-              </h3>
-              <div className="flex gap-3 items-start text-sm">
-                <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>{getContent(content, 'home.contact.card2.address', t('sinoway.internationalSupportDesc'))}</p>
+              {/* International Support */}
+              <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
+                 <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
+                   <Image 
+                     src={getContent(content, 'home.contact.card2.image', '/images/gallery-2.jpg')} 
+                     alt="Support" 
+                     fill 
+                     className="object-cover object-bottom" 
+                   />
+                 </div>
+                <div className="relative z-10 space-y-4">
+                  <h3 className="text-2xl font-semibold mb-4">
+                    {getContent(content, 'home.contact.card2.title', t('sinoway.internationalSupport'))}
+                  </h3>
+                  <div className="flex gap-3 items-start text-sm">
+                    <MapPin className="h-5 w-5 shrink-0 mt-1" />
+                    <p>{getContent(content, 'home.contact.card2.address', t('sinoway.internationalSupportDesc'))}</p>
+                  </div>
+                  <div className="flex gap-3 items-center text-sm">
+                    <Phone className="h-5 w-5 shrink-0" />
+                    <p>{getContent(content, 'home.contact.card2.phone', '+8613601965441')}</p>
+                  </div>
+                  <div className="flex gap-3 items-center text-sm">
+                    <Mail className="h-5 w-5 shrink-0" />
+                    <p>{getContent(content, 'home.contact.card2.email', 'info@sinowayedu.com')}</p>
+                  </div>
+                  <div className="flex gap-3 items-center text-sm mt-4">
+                    <Globe className="h-5 w-5 shrink-0" />
+                    <p>{getContent(content, 'home.contact.card2.globe', 'www.sinoway.com')}</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-3 items-center text-sm">
-                <Phone className="h-5 w-5 shrink-0" />
-                <p>{getContent(content, 'home.contact.card2.phone', '+8613601965441')}</p>
-              </div>
-              <div className="flex gap-3 items-center text-sm">
-                <Mail className="h-5 w-5 shrink-0" />
-                <p>{getContent(content, 'home.contact.card2.email', 'info@sinowayedu.com')}</p>
-              </div>
-              <div className="flex gap-3 items-center text-sm mt-4">
-                <Globe className="h-5 w-5 shrink-0" />
-                <p>{getContent(content, 'home.contact.card2.globe', 'www.sinoway.com')}</p>
-              </div>
-            </div>
-          </div>
 
-          {/* Student Services */}
-          <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
-             <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
-               <Image 
-                 src={getContent(content, 'home.contact.card3.image', '/images/gallery-3.jpg')} 
-                 alt="Student Services" 
-                 fill 
-                 className="object-cover object-bottom" 
-               />
-             </div>
-            <div className="relative z-10 space-y-4">
-              <h3 className="text-2xl font-semibold mb-4">
-                {getContent(content, 'home.contact.card3.title', t('sinoway.studentServices'))}
-              </h3>
-              <div className="flex gap-3 items-start text-sm">
-                <MapPin className="h-5 w-5 shrink-0 mt-1" />
-                <p>{getContent(content, 'home.contact.card3.address', t('sinoway.studentServicesDesc'))}</p>
+              {/* Student Services */}
+              <div className="bg-[#0056b3] text-white p-8 rounded-lg shadow-md relative overflow-hidden min-h-[300px]">
+                 <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20 pointer-events-none">
+                   <Image 
+                     src={getContent(content, 'home.contact.card3.image', '/images/gallery-3.jpg')} 
+                     alt="Student Services" 
+                     fill 
+                     className="object-cover object-bottom" 
+                   />
+                 </div>
+                <div className="relative z-10 space-y-4">
+                  <h3 className="text-2xl font-semibold mb-4">
+                    {getContent(content, 'home.contact.card3.title', t('sinoway.studentServices'))}
+                  </h3>
+                  <div className="flex gap-3 items-start text-sm">
+                    <MapPin className="h-5 w-5 shrink-0 mt-1" />
+                    <p>{getContent(content, 'home.contact.card3.address', t('sinoway.studentServicesDesc'))}</p>
+                  </div>
+                  <div className="flex gap-3 items-center text-sm">
+                    <Phone className="h-5 w-5 shrink-0" />
+                    <p>{getContent(content, 'home.contact.card3.phone', '+8613601965441')}</p>
+                  </div>
+                  <div className="flex gap-3 items-center text-sm">
+                    <Mail className="h-5 w-5 shrink-0" />
+                    <p>{getContent(content, 'home.contact.card3.email', 'info@sinowayedu.com')}</p>
+                  </div>
+                  <div className="flex gap-3 items-start text-sm mt-4">
+                    <Globe className="h-5 w-5 shrink-0 mt-1" />
+                    <p className="break-all">{getContent(content, 'home.contact.card3.globe', 'www.sinoway.com/services')}</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-3 items-center text-sm">
-                <Phone className="h-5 w-5 shrink-0" />
-                <p>{getContent(content, 'home.contact.card3.phone', '+8613601965441')}</p>
-              </div>
-              <div className="flex gap-3 items-center text-sm">
-                <Mail className="h-5 w-5 shrink-0" />
-                <p>{getContent(content, 'home.contact.card3.email', 'info@sinowayedu.com')}</p>
-              </div>
-              <div className="flex gap-3 items-start text-sm mt-4">
-                <Globe className="h-5 w-5 shrink-0 mt-1" />
-                <p className="break-all">{getContent(content, 'home.contact.card3.globe', 'www.sinoway.com/services')}</p>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </section>
 
