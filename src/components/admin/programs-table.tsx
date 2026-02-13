@@ -273,7 +273,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
+                <TableCell colSpan={9} className="h-24 text-center">
                   No programs found.
                 </TableCell>
               </TableRow>
