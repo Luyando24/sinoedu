@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { getBaseUrl } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -80,10 +81,11 @@ export default function LoginPage({
     }
     setLoading(true)
     try {
+      const baseUrl = getBaseUrl()
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/${locale}`,
+          emailRedirectTo: `${baseUrl}/auth/callback?next=/${locale}`,
         },
       })
       if (error) throw error

@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
+import { getBaseUrl } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -30,6 +31,7 @@ export default function RegisterPage() {
     try {
       console.log("Attempting registration for:", email, "Role:", role)
       
+      const baseUrl = getBaseUrl()
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -41,7 +43,7 @@ export default function RegisterPage() {
             whatsapp_number: whatsappNumber,
             role, // Pass role to metadata
           },
-          emailRedirectTo: `${location.origin}/auth/callback`,
+          emailRedirectTo: `${baseUrl}/auth/callback`,
         },
       })
 

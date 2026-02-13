@@ -24,11 +24,10 @@ export async function POST(request: Request) {
     // Note: If you're using a free tier, you might only be able to send to your own email 
     // or verified domains unless you've added a custom domain to Resend.
     const { data, error: sendError } = await resend.emails.send({
-      from: 'Sino Study <onboarding@resend.dev>', // You should change this to your verified domain
+      from: 'Sino Study <info@sinowayedu.com>',
       to: [to],
       subject: `Re: ${subject}`,
       text: replyMessage,
-      // You can also use html: `<p>${replyMessage}</p>`
     });
 
     if (sendError) {
