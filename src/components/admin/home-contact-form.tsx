@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,19 +10,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner"
 import { Loader2, Save } from "lucide-react"
 
-type ContentBlock = {
-  key: string
-  content: string
-  description: string
-}
-
 export function HomeContactForm() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [blocks, setBlocks] = useState<Record<string, string>>({})
   const supabase = createClient()
 
-  const keys = [
+  const keys = useMemo(() => [
     'home.contact.title',
     'home.programs.title',
     'home.scholarships.title',
@@ -51,13 +45,9 @@ export function HomeContactForm() {
     'home.contact.card3.email',
     'home.contact.card3.globe',
     'home.contact.card3.image',
-  ]
+  ], [])
 
-  useEffect(() => {
-    fetchContent()
-  }, [])
-
-  const fetchContent = async () => {
+  const fetchContent = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('content_blocks')
@@ -77,7 +67,11 @@ export function HomeContactForm() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase, keys])
+
+  useEffect(() => {
+    fetchContent()
+  }, [fetchContent])
 
   const handleChange = (key: string, value: string) => {
     setBlocks(prev => ({ ...prev, [key]: value }))
