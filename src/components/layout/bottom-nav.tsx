@@ -12,7 +12,7 @@ export function BottomNav() {
   const navItems = [
     { name: t('home'), href: "/", icon: Home },
     { name: t('programs'), href: "/programs", icon: GraduationCap },
-    { name: t('services'), href: "/services", icon: BookOpen },
+    { name: t('universities'), href: "/universities", icon: GraduationCap },
     { name: t('account'), href: "/dashboard", icon: User },
   ]
 
