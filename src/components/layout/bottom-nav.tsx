@@ -1,7 +1,7 @@
 "use client"
 
 import { Link, usePathname } from "@/navigation"
-import { Home, BookOpen, GraduationCap, User } from "lucide-react"
+import { Home, GraduationCap, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTranslations } from "next-intl"
 
