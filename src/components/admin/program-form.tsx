@@ -12,6 +12,19 @@ import { FileUpload } from "@/components/ui/file-upload"
 import { Loader2, Plus, X } from "lucide-react"
 import Image from "next/image"
 
+function parseGroupedText(text: string) {
+  if (!text) return {}
+  const lines = text.split('\n')
+  const obj: Record<string, string> = {}
+  lines.forEach(line => {
+    const [key, ...valueParts] = line.split(':')
+    if (key && valueParts.length > 0) {
+      obj[key.trim()] = valueParts.join(':').trim()
+    }
+  })
+  return obj
+}
+
 type Program = {
   id: string
   program_id_code: string | null
@@ -43,6 +56,8 @@ type Program = {
   processing_speed: string | null
   required_documents: string[] | null
   is_active: boolean;
+  general_info: Record<string, string> | null
+  fee_structure: Record<string, string> | null
 }
 
 interface ProgramFormProps {
@@ -111,7 +126,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
     processing_speed: initialData?.processing_speed || "",
     required_documents: initialData?.required_documents || [""],
-    is_active: initialData?.is_active ?? true
+    is_active: initialData?.is_active ?? true,
+    general_info_text: initialData?.general_info ? Object.entries(initialData.general_info).map(([k, v]) => `${k}: ${v}`).join('\n') : "",
+    fee_structure_text: initialData?.fee_structure ? Object.entries(initialData.fee_structure).map(([k, v]) => `${k}: ${v}`).join('\n') : ""
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -193,8 +210,10 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           double: accommodation_double,
           triple: accommodation_triple,
           quad: accommodation_quad
-        }
-      }
+        },
+      general_info: parseGroupedText(formData.general_info_text),
+      fee_structure: parseGroupedText(formData.fee_structure_text)
+    }
 
       // Look up school_name if needed for backward compatibility or display, 
       // but we are relying on university_id now. 
@@ -333,19 +352,50 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
         </CardContent>
       </Card>
 
-      {/* Description & Requirements */}
+      {/* Details */}
       <Card>
         <CardHeader>
-          <CardTitle>Details</CardTitle>
+          <CardTitle>Program Details</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium">Program Description</label>
-            <Textarea name="description" value={formData.description} onChange={handleChange} className="min-h-[100px]" />
+            <Textarea name="description" value={formData.description} onChange={handleChange} className="min-h-[100px]" placeholder="Detailed description of the program..." />
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">General Requirements</label>
-            <Textarea name="requirements" value={formData.requirements} onChange={handleChange} className="min-h-[100px]" />
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center justify-between">
+                General Info (Key: Value)
+                <span className="text-[10px] text-muted-foreground font-normal italic">Rank, Age, Deadline, etc. One per line.</span>
+              </label>
+              <Textarea 
+                name="general_info_text" 
+                value={formData.general_info_text} 
+                onChange={handleChange} 
+                className="min-h-[200px] font-mono text-sm" 
+                placeholder="School rank: 50&#10;Age limit: 18-35&#10;Deadline: Nov 30&#10;Language requirements: HSK 4&#10;Grade requirements: >70%&#10;Nationality restrictions: None&#10;Admission process: Interview"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium flex items-center justify-between">
+                Fee Structure (Key: Value)
+                <span className="text-[10px] text-muted-foreground font-normal italic">Tuition, Accom., etc. One per line.</span>
+              </label>
+              <Textarea 
+                name="fee_structure_text" 
+                value={formData.fee_structure_text} 
+                onChange={handleChange} 
+                className="min-h-[200px] font-mono text-sm" 
+                placeholder="Tuition: ¥20,000/year&#10;Registration: ¥600&#10;Accommodation: ¥5000/year&#10;Insurance: ¥800/year"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2 pt-4 border-t">
+            <label className="text-sm font-medium">Legacy Requirements Field (Optional)</label>
+            <Textarea name="requirements" value={formData.requirements} onChange={handleChange} className="min-h-[80px]" placeholder="Additional requirements if not in General Info..." />
           </div>
         </CardContent>
       </Card>

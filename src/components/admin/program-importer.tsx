@@ -61,29 +61,13 @@ export function ProgramImporter() {
         is_active: "TRUE", // or FALSE
         
         description: "Comprehensive CS program taught in English.",
-        requirements: "High School Diploma, IELTS 6.0",
         
-        // Eligibility
-        age_requirements: "18-25",
-        nationality_restrictions: "None",
-        language_requirements: "IELTS 6.0 or TOEFL 80",
-        applicants_inside_china: "Accepted",
-        academic_requirements: "High School Diploma\nTranscripts", // Array items separated by newline
+        // Grouped Info
+        general_info: "School rank: Top 50 in China\nAge limit: 18-25\nDeadline: June 30, 2025\nLanguage requirements: IELTS 6.0\nGrade requirements: Over 75%\nNationality restrictions: None\nAdmission process: Document review + Interview",
+        fee_structure: "Tuition: 20000 RMB/Year\nRegistration: 400 RMB\nAccommodation Single: 12000 RMB/Year\nAccommodation Double: 6000 RMB/Year",
         
-        // Financial
-        tuition_fee: "20,000 RMB/Year",
-        registration_fee: "400 RMB",
-        application_fee_status: "Non-refundable",
         scholarship_type: "CSC Scholarship", // Must match existing scholarship name
         scholarship_details: "Full scholarship available for top students",
-        
-        // Accommodation
-        accommodation_single: "12000 RMB/Year",
-        accommodation_double: "6000 RMB/Year",
-        accommodation_triple: "4000 RMB/Year",
-        accommodation_quad: "3000 RMB/Year",
-        accommodation_details: "Private bathroom, AC, Internet",
-        off_campus_living: "Allowed",
         
         // Other
         processing_speed: "Fast",
@@ -102,26 +86,12 @@ export function ProgramImporter() {
         is_active: "TRUE",
 
         description: "Focus on international business management.",
-        requirements: "Bachelor Degree, 2 years work experience",
 
-        age_requirements: "22-40",
-        nationality_restrictions: "None",
-        language_requirements: "IELTS 6.5",
-        applicants_inside_china: "Accepted",
-        academic_requirements: "Bachelor Degree\nTranscripts",
+        general_info: "School rank: Famous for Language\nAge limit: 22-40\nDeadline: May 15, 2025\nLanguage requirements: IELTS 6.5\nGrade requirements: Over 80%\nNationality restrictions: None\nAdmission process: Document review",
+        fee_structure: "Tuition: 30000 RMB/Year\nRegistration: 800 RMB\nAccommodation Single: 15000 RMB/Year\nAccommodation Double: 8000 RMB/Year",
 
-        tuition_fee: "30,000 RMB/Year",
-        registration_fee: "800 RMB",
-        application_fee_status: "Non-refundable",
         scholarship_type: "Provincial Scholarship",
         scholarship_details: "Partial scholarship available",
-
-        accommodation_single: "15000 RMB/Year",
-        accommodation_double: "8000 RMB/Year",
-        accommodation_triple: "",
-        accommodation_quad: "",
-        accommodation_details: "Shared kitchen",
-        off_campus_living: "Not Allowed",
 
         processing_speed: "Normal",
         required_documents: "Passport\nPhoto\nDegree Certificate\nTranscripts\nRecommendation Letters"
@@ -144,23 +114,10 @@ export function ProgramImporter() {
       { wch: 15 }, // application_deadline
       { wch: 10 }, // is_active
       { wch: 40 }, // description
-      { wch: 30 }, // requirements
-      { wch: 15 }, // age_requirements
-      { wch: 20 }, // nationality_restrictions
-      { wch: 20 }, // language_requirements
-      { wch: 20 }, // applicants_inside_china
-      { wch: 30 }, // academic_requirements
-      { wch: 15 }, // tuition_fee
-      { wch: 15 }, // registration_fee
-      { wch: 20 }, // application_fee_status
+      { wch: 50 }, // general_info
+      { wch: 50 }, // fee_structure
       { wch: 20 }, // scholarship_type
       { wch: 30 }, // scholarship_details
-      { wch: 15 }, // accommodation_single
-      { wch: 15 }, // accommodation_double
-      { wch: 15 }, // accommodation_triple
-      { wch: 15 }, // accommodation_quad
-      { wch: 30 }, // accommodation_details
-      { wch: 15 }, // off_campus_living
       { wch: 15 }, // processing_speed
       { wch: 30 }, // required_documents
     ]
@@ -193,7 +150,7 @@ export function ProgramImporter() {
     XLSX.utils.book_append_sheet(wb, ws, "Template")
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" })
     const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8" })
-    saveAs(data, "program_import_template.xlsx")
+    saveAs(data, "program_import_template_v2.xlsx")
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -250,6 +207,19 @@ export function ProgramImporter() {
       return match ? match.id : null
   }
 
+  const parseGroupedText = (text: string | null | undefined): Record<string, string> => {
+    if (!text) return {}
+    const lines = text.split('\n')
+    const obj: Record<string, string> = {}
+    lines.forEach(line => {
+      const [key, ...valueParts] = line.split(':')
+      if (key && valueParts.length > 0) {
+        obj[key.trim()] = valueParts.join(':').trim()
+      }
+    })
+    return obj
+  }
+
   const handleImport = async () => {
     if (previewData.length === 0) return
 
@@ -280,7 +250,11 @@ export function ProgramImporter() {
             application_deadline: (r.application_deadline || r.Deadline || null) as string | null,
             is_active: r.is_active === 'TRUE' || r.is_active === true || r.is_active === 'true',
 
-            // Eligibility
+            // New grouped columns
+            general_info: parseGroupedText(r.general_info as string),
+            fee_structure: parseGroupedText(r.fee_structure as string),
+
+            // Preserve old columns for now if present in Excel
             age_requirements: (r.age_requirements || null) as string | null,
             nationality_restrictions: (r.nationality_restrictions || null) as string | null,
             language_requirements: (r.language_requirements || null) as string | null,
@@ -295,7 +269,6 @@ export function ProgramImporter() {
             accommodation_details: (r.accommodation_details || null) as string | null,
             off_campus_living: (r.off_campus_living || null) as string | null,
             
-            // Accommodation Costs (Store as JSON)
             accommodation_costs: {
                 single: (r.accommodation_single || null) as string | null,
                 double: (r.accommodation_double || null) as string | null,
@@ -306,7 +279,6 @@ export function ProgramImporter() {
             // Other
             processing_speed: (r.processing_speed || null) as string | null,
             
-            // Default arrays/json for complex fields if missing
             academic_requirements: r.academic_requirements ? (r.academic_requirements as string).split('\n').filter(Boolean) : [],
             required_documents: r.required_documents ? (r.required_documents as string).split('\n').filter(Boolean) : [],
           }

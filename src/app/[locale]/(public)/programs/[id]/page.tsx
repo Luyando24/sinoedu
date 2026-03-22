@@ -195,6 +195,19 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                       <p className="font-semibold">{program.application_deadline || "Open"}</p>
                     </div>
                   </div>
+                  
+                  {/* Dynamic General Info from grouped column */}
+                  {program.general_info && typeof program.general_info === 'object' && Object.entries(program.general_info).map(([key, value]) => (
+                    <div key={key} className="flex items-start gap-3">
+                      <div className="p-2 bg-slate-50 text-slate-600 rounded-lg">
+                        <CheckCircle2 className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">{key}</p>
+                        <p className="font-semibold">{value as string}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -369,9 +382,18 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                     <span className="font-medium">{program.registration_fee}</span>
                   </div>
                 )}
+                
+                {/* Dynamic Fee Structure from grouped column */}
+                {program.fee_structure && typeof program.fee_structure === 'object' && Object.entries(program.fee_structure).map(([key, value]) => (
+                  <div key={key} className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">{key}</span>
+                    <span className="font-medium">{value as string}</span>
+                  </div>
+                ))}
+
                 {accommodationCosts && (
                   <div className="space-y-2 pt-2">
-                    <span className="text-muted-foreground block">Accommodation</span>
+                    <span className="text-muted-foreground block text-xs uppercase font-bold tracking-wider opacity-60">Legacy Accommodation Details</span>
                     {accommodationCosts.single && (
                       <div className="flex justify-between pl-2">
                         <span>Single Room</span>
