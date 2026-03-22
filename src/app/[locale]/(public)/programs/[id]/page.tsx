@@ -130,6 +130,12 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                     <MapPin className="h-5 w-5" />
                     <span>{universityLocation}</span>
                   </div>
+                  {program.program_id_code && (
+                    <div className="flex items-center gap-2 text-[#0056b3]/70">
+                      <FileText className="h-5 w-5" />
+                      <span className="font-mono text-sm uppercase tracking-wider">ID: {program.program_id_code}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
