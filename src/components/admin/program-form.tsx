@@ -197,7 +197,15 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
     try {
       // Destructure to remove flat fields that aren't in schema
-      const { accommodation_single, accommodation_double, accommodation_triple, accommodation_quad, ...rest } = formData
+      const {
+        accommodation_single,
+        accommodation_double,
+        accommodation_triple,
+        accommodation_quad,
+        general_info_text,
+        fee_structure_text,
+        ...rest
+      } = formData
 
       const payload = {
         ...rest,
@@ -211,9 +219,9 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           triple: accommodation_triple,
           quad: accommodation_quad
         },
-      general_info: parseGroupedText(formData.general_info_text),
-      fee_structure: parseGroupedText(formData.fee_structure_text)
-    }
+        general_info: parseGroupedText(general_info_text),
+        fee_structure: parseGroupedText(fee_structure_text)
+      }
 
       // Look up school_name if needed for backward compatibility or display, 
       // but we are relying on university_id now. 
