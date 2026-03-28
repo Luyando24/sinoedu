@@ -2,10 +2,17 @@ import { Resend } from 'resend';
 import { createClient } from "@/lib/supabase/server"
 import { NextResponse } from "next/server"
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    throw new Error("Missing RESEND_API_KEY")
+  }
+  return new Resend(apiKey)
+}
 
 export async function POST(request: Request) {
   try {
+    const resend = getResend()
     const supabase = createClient()
     
     // Check authentication
