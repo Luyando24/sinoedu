@@ -69,7 +69,16 @@ export default async function ProgramsPage({
     .eq('is_active', true)
 
   if (query) {
-    queryBuilder = queryBuilder.ilike('title', `%${query}%`)
+    const trimmed = query.trim()
+    const escaped = trimmed.replaceAll(",", "\\,")
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(trimmed)
+
+    queryBuilder = queryBuilder.or(
+      isUuid
+        ? `id.eq.${escaped},title.ilike.%${escaped}%,program_id_code.ilike.%${escaped}%`
+        : `title.ilike.%${escaped}%,program_id_code.ilike.%${escaped}%`
+    )
   }
   if (city) {
     queryBuilder = queryBuilder.ilike('location', `%${city}%`)
