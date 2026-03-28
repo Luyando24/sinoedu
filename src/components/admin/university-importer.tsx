@@ -31,6 +31,30 @@ export function UniversityImporter() {
   const router = useRouter()
   const supabase = createClient()
 
+  const normalizeHeader = (value: unknown) => {
+    return String(value ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "_")
+  }
+
+  const getValueByHeader = (row: Record<string, unknown>, headers: string[]) => {
+    const keyMap = new Map<string, string>()
+    for (const key of Object.keys(row)) {
+      keyMap.set(normalizeHeader(key), key)
+    }
+    for (const header of headers) {
+      const actualKey = keyMap.get(normalizeHeader(header))
+      if (actualKey) {
+        const value = row[actualKey]
+        if (value !== undefined && value !== null && String(value).trim() !== "") {
+          return value
+        }
+      }
+    }
+    return undefined
+  }
+
   const handleDownloadTemplate = () => {
     const templateData = [
       {
@@ -96,7 +120,27 @@ export function UniversityImporter() {
         const workbook = XLSX.read(data, { type: "binary" })
         const sheetName = workbook.SheetNames[0]
         const sheet = workbook.Sheets[sheetName]
-        const jsonData = XLSX.utils.sheet_to_json(sheet)
+        const nameHeaders = [
+          "name",
+          "university_name",
+          "university",
+          "school_name",
+          "school",
+          "institution",
+          "college_name",
+          "college",
+          "学校名称",
+          "大学名称",
+          "院校名称",
+        ]
+
+        const hasNameColumn = (rows: Record<string, unknown>[]) => {
+          const firstRow = rows[0] as Record<string, unknown>
+          const keyMap = new Set(Object.keys(firstRow).map((k) => normalizeHeader(k)))
+          return nameHeaders.some((h) => keyMap.has(normalizeHeader(h)))
+        }
+
+        let jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "" }) as Record<string, unknown>[]
         
         if (jsonData.length === 0) {
           setError("The file appears to be empty.")
@@ -104,10 +148,23 @@ export function UniversityImporter() {
         }
 
         // Validate headers (basic check)
-        const firstRow = jsonData[0] as object
-        if (!("name" in firstRow || "Name" in firstRow)) {
+        if (!hasNameColumn(jsonData)) {
+          const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: "" }) as unknown[][]
+          const headerIndex = rows.findIndex((row) =>
+            row.some((cell) => nameHeaders.includes(normalizeHeader(cell)))
+          )
+
+          if (headerIndex >= 0) {
+            jsonData = XLSX.utils.sheet_to_json(sheet, { range: headerIndex, defval: "" }) as Record<
+              string,
+              unknown
+            >[]
+          }
+
+          if (jsonData.length === 0 || !hasNameColumn(jsonData)) {
             setError("Could not find a 'name' column. Please check the file format.")
             return
+          }
         }
 
         setPreviewData(jsonData as Record<string, unknown>[])
@@ -129,16 +186,31 @@ export function UniversityImporter() {
       // Map data to database schema
       const formattedData = previewData.map((row) => {
         const r = row as Record<string, unknown>
+        const name = getValueByHeader(r, [
+          "name",
+          "university_name",
+          "university",
+          "school_name",
+          "school",
+          "institution",
+          "college_name",
+          "college",
+          "学校名称",
+          "大学名称",
+          "院校名称",
+        ])
         return {
-          name: (r.name || r.Name) as string,
-          location: (r.location || r.Location || null) as string | null,
-          description: (r.description || r.Description || null) as string | null,
-          ranking: r.ranking ? String(r.ranking) : (r.Ranking ? String(r.Ranking) : null),
-          website_url: (r.website_url || r.Website || null) as string | null,
-          established_year: r.established_year ? String(r.established_year) : (r.Established ? String(r.Established) : null),
+          name: name ? String(name) : "",
+          location: (getValueByHeader(r, ["location", "city", "所在地", "城市", "Location"]) || null) as string | null,
+          description: (getValueByHeader(r, ["description", "简介", "Description"]) || null) as string | null,
+          ranking: getValueByHeader(r, ["ranking", "Ranking", "排名"]) ? String(getValueByHeader(r, ["ranking", "Ranking", "排名"])) : null,
+          website_url: (getValueByHeader(r, ["website_url", "website", "Website", "官网", "网址"]) || null) as string | null,
+          established_year: getValueByHeader(r, ["established_year", "Established", "成立年份", "建校年份"])
+            ? String(getValueByHeader(r, ["established_year", "Established", "成立年份", "建校年份"]))
+            : null,
           // logo_url and image_url are harder to bulk import from excel unless they are URLs
-          logo_url: (r.logo_url || r.Logo || null) as string | null,
-          image_url: (r.image_url || r.Image || null) as string | null,
+          logo_url: (getValueByHeader(r, ["logo_url", "logo", "Logo"]) || null) as string | null,
+          image_url: (getValueByHeader(r, ["image_url", "image", "Image"]) || null) as string | null,
         }
       }).filter(item => item.name) // Ensure name exists
 
