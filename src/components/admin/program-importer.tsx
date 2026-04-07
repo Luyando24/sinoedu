@@ -220,6 +220,37 @@ export function ProgramImporter() {
     return obj
   }
 
+  const mapLevel = (level: string): string => {
+    const validLevels = [
+      'Bachelor', 
+      'Master', 
+      'Doctor', 
+      'PhD', 
+      'Masters', 
+      'High School', 
+      'Top-up program',
+      'Language', 
+      'Camp',
+      'Long-term Language', 
+      'College', 
+      'Secondary Vocational Education'
+    ];
+    
+    // Case-insensitive exact match
+    const exactMatch = validLevels.find(l => l.toLowerCase() === level.toLowerCase());
+    if (exactMatch) return exactMatch;
+    
+    // Mapping legacy or common variations
+    const lowerLevel = level.toLowerCase();
+    if (lowerLevel.includes('senior high')) return 'Top-up program';
+    if (lowerLevel.includes('short-term') || lowerLevel.includes('short term')) return 'Camp';
+    if (lowerLevel.includes('long-term') || lowerLevel.includes('long term')) return 'Long-term Language';
+    if (lowerLevel.includes('ph.d')) return 'PhD';
+    if (lowerLevel.includes('vocational')) return 'Secondary Vocational Education';
+    
+    return 'Bachelor'; // Fallback
+  }
+
   const handleImport = async () => {
     if (previewData.length === 0) return
 
@@ -239,7 +270,7 @@ export function ProgramImporter() {
             program_id_code: (r.program_id_code || r.Code || null) as string | null,
             university_id: uniId,
             scholarship_id: scholarshipId,
-            level: (r.level || r.Level || 'Bachelor') as string,
+            level: mapLevel((r.level || r.Level || 'Bachelor') as string),
             location: (r.location || r.Location || null) as string | null,
             duration: (r.duration || r.Duration || null) as string | null,
             tuition_fee: (r.tuition_fee || r.Tuition || null) as string | null,
