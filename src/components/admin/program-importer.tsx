@@ -220,7 +220,15 @@ export function ProgramImporter() {
     return obj
   }
 
-  const mapLevel = (level: string): string => {
+  const safeString = (val: unknown): string | null => {
+    if (typeof val === 'string') return val.trim()
+    if (val !== null && val !== undefined) return String(val).trim()
+    return null
+  }
+
+  const mapLevel = (level: string | null): string => {
+    if (!level) return 'Bachelor'
+    
     const validLevels = [
       'Bachelor', 
       'Master', 
@@ -260,58 +268,58 @@ export function ProgramImporter() {
     try {
       const formattedData = previewData.map((row) => {
           const r = row as Record<string, unknown>
-          const uniName = (r.university || r.University || r.school || r.School) as string
-          const uniId = findUniversityId(uniName)
-          const scholarshipName = (r.scholarship_type || r.ScholarshipType || r.scholarship || r.Scholarship) as string
-          const scholarshipId = findScholarshipId(scholarshipName)
+          const uniName = safeString(r.university || r.University || r.school || r.School)
+          const uniId = uniName ? findUniversityId(uniName) : null
+          const scholarshipName = safeString(r.scholarship_type || r.ScholarshipType || r.scholarship || r.Scholarship)
+          const scholarshipId = scholarshipName ? findScholarshipId(scholarshipName) : null
 
           return {
-            title: (r.title || r.Title || r.Program) as string,
-            program_id_code: (r.program_id_code || r.Code || null) as string | null,
+            title: safeString(r.title || r.Title || r.Program),
+            program_id_code: safeString(r.program_id_code || r.Code),
             university_id: uniId,
             scholarship_id: scholarshipId,
-            level: mapLevel((r.level || r.Level || 'Bachelor') as string),
-            location: (r.location || r.Location || null) as string | null,
-            duration: (r.duration || r.Duration || null) as string | null,
-            tuition_fee: (r.tuition_fee || r.Tuition || null) as string | null,
-            description: (r.description || r.Description || null) as string | null,
-            requirements: (r.requirements || r.Requirements || null) as string | null,
-            language: (r.language || r.Language || 'English') as string,
-            intake: (r.intake || r.Intake || null) as string | null,
-            application_deadline: (r.application_deadline || r.Deadline || null) as string | null,
+            level: mapLevel(safeString(r.level || r.Level)),
+            location: safeString(r.location || r.Location),
+            duration: safeString(r.duration || r.Duration),
+            tuition_fee: safeString(r.tuition_fee || r.Tuition),
+            description: safeString(r.description || r.Description),
+            requirements: safeString(r.requirements || r.Requirements),
+            language: safeString(r.language || r.Language) || 'English',
+            intake: safeString(r.intake || r.Intake),
+            application_deadline: safeString(r.application_deadline || r.Deadline),
             is_active: r.is_active === 'TRUE' || r.is_active === true || r.is_active === 'true',
 
             // New grouped columns
-            general_info: parseGroupedText(r.general_info as string),
-            fee_structure: parseGroupedText(r.fee_structure as string),
+            general_info: parseGroupedText(safeString(r.general_info)),
+            fee_structure: parseGroupedText(safeString(r.fee_structure)),
 
             // Preserve old columns for now if present in Excel
-            age_requirements: (r.age_requirements || null) as string | null,
-            nationality_restrictions: (r.nationality_restrictions || null) as string | null,
-            language_requirements: (r.language_requirements || null) as string | null,
-            applicants_inside_china: (r.applicants_inside_china || null) as string | null,
+            age_requirements: safeString(r.age_requirements),
+            nationality_restrictions: safeString(r.nationality_restrictions),
+            language_requirements: safeString(r.language_requirements),
+            applicants_inside_china: safeString(r.applicants_inside_china),
 
             // Financial
-            registration_fee: (r.registration_fee || null) as string | null,
-            application_fee_status: (r.application_fee_status || null) as string | null,
-            scholarship_details: (r.scholarship_details || null) as string | null,
+            registration_fee: safeString(r.registration_fee),
+            application_fee_status: safeString(r.application_fee_status),
+            scholarship_details: safeString(r.scholarship_details),
 
             // Accommodation
-            accommodation_details: (r.accommodation_details || null) as string | null,
-            off_campus_living: (r.off_campus_living || null) as string | null,
+            accommodation_details: safeString(r.accommodation_details),
+            off_campus_living: safeString(r.off_campus_living),
             
             accommodation_costs: {
-                single: (r.accommodation_single || null) as string | null,
-                double: (r.accommodation_double || null) as string | null,
-                triple: (r.accommodation_triple || null) as string | null,
-                quad: (r.accommodation_quad || null) as string | null,
+                single: safeString(r.accommodation_single),
+                double: safeString(r.accommodation_double),
+                triple: safeString(r.accommodation_triple),
+                quad: safeString(r.accommodation_quad),
             },
 
             // Other
-            processing_speed: (r.processing_speed || null) as string | null,
+            processing_speed: safeString(r.processing_speed),
             
-            academic_requirements: r.academic_requirements ? (r.academic_requirements as string).split('\n').filter(Boolean) : [],
-            required_documents: r.required_documents ? (r.required_documents as string).split('\n').filter(Boolean) : [],
+            academic_requirements: r.academic_requirements ? safeString(r.academic_requirements)?.split('\n').filter(Boolean) || [] : [],
+            required_documents: r.required_documents ? safeString(r.required_documents)?.split('\n').filter(Boolean) || [] : [],
           }
       }).filter(item => item.title) // Ensure title exists
 

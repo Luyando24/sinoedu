@@ -176,6 +176,12 @@ export function UniversityImporter() {
     reader.readAsBinaryString(file)
   }
 
+  const safeString = (val: unknown): string | null => {
+    if (typeof val === 'string') return val.trim()
+    if (val !== null && val !== undefined) return String(val).trim()
+    return null
+  }
+
   const handleImport = async () => {
     if (previewData.length === 0) return
 
@@ -200,17 +206,15 @@ export function UniversityImporter() {
           "院校名称",
         ])
         return {
-          name: name ? String(name) : "",
-          location: (getValueByHeader(r, ["location", "city", "所在地", "城市", "Location"]) || null) as string | null,
-          description: (getValueByHeader(r, ["description", "简介", "Description"]) || null) as string | null,
-          ranking: getValueByHeader(r, ["ranking", "Ranking", "排名"]) ? String(getValueByHeader(r, ["ranking", "Ranking", "排名"])) : null,
-          website_url: (getValueByHeader(r, ["website_url", "website", "Website", "官网", "网址"]) || null) as string | null,
-          established_year: getValueByHeader(r, ["established_year", "Established", "成立年份", "建校年份"])
-            ? String(getValueByHeader(r, ["established_year", "Established", "成立年份", "建校年份"]))
-            : null,
+          name: name ? safeString(name) || "" : "",
+          location: safeString(getValueByHeader(r, ["location", "city", "所在地", "城市", "Location"])),
+          description: safeString(getValueByHeader(r, ["description", "简介", "Description"])),
+          ranking: safeString(getValueByHeader(r, ["ranking", "Ranking", "排名"])),
+          website_url: safeString(getValueByHeader(r, ["website_url", "website", "Website", "官网", "网址"])),
+          established_year: safeString(getValueByHeader(r, ["established_year", "Established", "成立年份", "建校年份"])),
           // logo_url and image_url are harder to bulk import from excel unless they are URLs
-          logo_url: (getValueByHeader(r, ["logo_url", "logo", "Logo"]) || null) as string | null,
-          image_url: (getValueByHeader(r, ["image_url", "image", "Image"]) || null) as string | null,
+          logo_url: safeString(getValueByHeader(r, ["logo_url", "logo", "Logo"])),
+          image_url: safeString(getValueByHeader(r, ["image_url", "image", "Image"])),
         }
       }).filter(item => item.name) // Ensure name exists
 
