@@ -230,7 +230,14 @@ export function ProgramImporter() {
   }
 
   const processRows = (rows: Record<string, unknown>[]) => {
-    const processed: ProgramRow[] = rows.map((row, index) => {
+    // Filter out truly empty rows (where most common fields are missing)
+    const validRows = rows.filter(row => {
+      const hasTitle = row['Program Name'] || row['title'] || row['Program Title']
+      const hasUni = row['University'] || row['university_id']
+      return !!(hasTitle || hasUni)
+    })
+
+    const processed: ProgramRow[] = validRows.map((row, index) => {
       const mappedRow: Record<string, unknown> = {}
       
       // 1. Smart Header Mapping
