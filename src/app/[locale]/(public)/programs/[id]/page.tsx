@@ -389,20 +389,20 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                 <CardTitle>Fees & Costs</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
-                <div className="flex justify-between py-2 border-b">
+                <div className="flex flex-col gap-1 py-2 border-b">
                   <span className="text-muted-foreground">Tuition Fee</span>
                   <span className="font-medium">{program.tuition_fee || "N/A"}</span>
                 </div>
                 {program.registration_fee && (
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">Registration Fee</span>
-                    <span className="font-medium">{program.registration_fee}</span>
+                  <div className="flex justify-between items-center py-2 border-b gap-4">
+                    <span className="text-muted-foreground whitespace-nowrap">Registration Fee</span>
+                    <span className="font-medium text-right">{program.registration_fee}</span>
                   </div>
                 )}
                 
                 {/* Dynamic Fee Structure from grouped column */}
                 {program.fee_structure && typeof program.fee_structure === 'object' && Object.entries(program.fee_structure).map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-2 border-b">
+                  <div key={key} className="flex flex-col gap-1 py-2 border-b">
                     <span className="text-muted-foreground">{key}</span>
                     <span className="font-medium">{value as string}</span>
                   </div>
@@ -412,26 +412,26 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   <div className="space-y-2 pt-2">
                     <span className="text-muted-foreground block text-xs uppercase font-bold tracking-wider opacity-60">Legacy Accommodation Details</span>
                     {accommodationCosts.single && (
-                      <div className="flex justify-between pl-2">
-                        <span>Single Room</span>
+                      <div className="flex flex-col gap-0.5 pl-2 py-1">
+                        <span className="text-xs text-muted-foreground">Single Room</span>
                         <span className="font-medium">{accommodationCosts.single}</span>
                       </div>
                     )}
                     {accommodationCosts.double && (
-                      <div className="flex justify-between pl-2">
-                        <span>Double Room</span>
+                      <div className="flex flex-col gap-0.5 pl-2 py-1">
+                        <span className="text-xs text-muted-foreground">Double Room</span>
                         <span className="font-medium">{accommodationCosts.double}</span>
                       </div>
                     )}
                     {accommodationCosts.triple && (
-                      <div className="flex justify-between pl-2">
-                        <span>3-Person Room</span>
+                      <div className="flex flex-col gap-0.5 pl-2 py-1">
+                        <span className="text-xs text-muted-foreground">3-Person Room</span>
                         <span className="font-medium">{accommodationCosts.triple}</span>
                       </div>
                     )}
                     {accommodationCosts.quad && (
-                      <div className="flex justify-between pl-2">
-                        <span>4-Person Room</span>
+                      <div className="flex flex-col gap-0.5 pl-2 py-1">
+                        <span className="text-xs text-muted-foreground">4-Person Room</span>
                         <span className="font-medium">{accommodationCosts.quad}</span>
                       </div>
                     )}
