@@ -68,7 +68,7 @@ export default async function ProgramsPage({
 
   let queryBuilder = supabase
     .from('programs')
-    .select('*, universities(name), scholarships(name)')
+    .select('*, universities(name), scholarships(name)', { count: 'exact' })
     .eq('is_active', true)
 
   if (query) {
@@ -118,7 +118,6 @@ export default async function ProgramsPage({
   const { data: programs, count } = await queryBuilder
     .order('created_at', { ascending: false })
     .range(from, to)
-    .select('*, universities(name), scholarships(name)', { count: 'exact' })
 
   const totalPages = Math.ceil((count || 0) / limit)
 
