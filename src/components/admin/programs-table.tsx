@@ -23,6 +23,7 @@ import {
 import { MoreHorizontal, Plus, Search, Pencil, Trash, CheckCircle2, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { normalizeSearchQuery } from "@/lib/string-utils"
+import { DataTablePagination } from "./data-table-pagination"
 
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
@@ -48,6 +49,8 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
   const router = useRouter()
   const supabase = createClient()
@@ -68,6 +71,17 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
     (program.program_id_code && program.program_id_code.toLowerCase().includes(normalizedQuery)) ||
     (program.duration && program.duration.toLowerCase().includes(normalizedQuery))
   )
+
+  const totalPages = Math.ceil(filteredPrograms.length / itemsPerPage)
+  const paginatedPrograms = filteredPrograms.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val)
+    setCurrentPage(1)
+  }
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -160,7 +174,7 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
             placeholder="Search programs..."
             className="pl-8"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
         <div className="flex gap-2">
@@ -205,8 +219,8 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredPrograms.length > 0 ? (
-              filteredPrograms.map((program) => (
+            {paginatedPrograms.length > 0 ? (
+              paginatedPrograms.map((program) => (
                 <TableRow key={program.id}>
                   <TableCell>
                     <input
@@ -284,6 +298,13 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
           </TableBody>
         </Table>
       </div>
+      <DataTablePagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={filteredPrograms.length}
+        itemsPerPage={itemsPerPage}
+      />
     </div>
   )
 }

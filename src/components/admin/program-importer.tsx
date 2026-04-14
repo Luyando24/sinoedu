@@ -583,9 +583,17 @@ export function ProgramImporter() {
                 </table>
               </div>
               
-              <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg border text-xs text-muted-foreground">
-                <AlertCircle className="h-4 w-4 text-blue-500" />
-                <p>We&apos;ve automatically extracted fees and durations from your text where possible. Review them above.</p>
+              <div className="flex flex-col gap-2 p-3 bg-slate-50 rounded-lg border text-xs text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 text-blue-500" />
+                  <p>We&apos;ve automatically extracted fees and durations from your text where possible. Review them above.</p>
+                </div>
+                {previewData.some(r => !r.university_id) && (
+                  <div className="flex items-center gap-2 text-amber-600 font-medium">
+                    <AlertCircle className="h-4 w-4" />
+                    <p>Some programs are missing a university match. Please select a university for each row to enable syncing.</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -627,10 +635,13 @@ export function ProgramImporter() {
               </Button>
               <Button 
                 onClick={handleImport} 
-                disabled={isUploading || previewData.some(r => !r.title)}
+                disabled={isUploading || previewData.some(r => !r.title || !r.university_id)}
                 className="bg-[#0056b3] hover:bg-[#0056b3]/90"
               >
-                Sync {previewData.length} Programs <ArrowRight className="ml-2 h-4 w-4" />
+                {previewData.some(r => !r.university_id) 
+                  ? `Fix Matches to Sync` 
+                  : `Sync ${previewData.length} Programs`}
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </>
           )}

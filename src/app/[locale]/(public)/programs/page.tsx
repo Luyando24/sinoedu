@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, DollarSign, MapPin, GraduationCap } from "lucide-react"
 import { HeroSearchForm } from "@/components/HeroSearchForm"
 import { normalizeSearchQuery, safeTrim } from "@/lib/string-utils"
+import { Pagination } from "@/components/ui/pagination"
 
 const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
   if (!blocks) return fallback
@@ -108,7 +109,17 @@ export default async function ProgramsPage({
     }
   }
 
-  const { data: programs } = await queryBuilder
+  const page = parseInt(searchParams?.page || "1", 10)
+  const limit = 10
+  const from = (page - 1) * limit
+  const to = from + limit - 1
+
+  const { data: programs, count } = await queryBuilder
+    .order('created_at', { ascending: false })
+    .range(from, to)
+    .select('*, universities(name), scholarships(name)', { count: 'exact' })
+
+  const totalPages = Math.ceil((count || 0) / limit)
 
   return (
     <div className="container py-16 space-y-12 bg-slate-50 min-h-screen">
@@ -188,6 +199,13 @@ export default async function ProgramsPage({
           </div>
         )}
       </div>
+
+      <Pagination 
+        currentPage={page} 
+        totalPages={totalPages} 
+        baseUrl="/programs"
+        searchParams={searchParams}
+      />
     </div>
   )
 }

@@ -24,6 +24,7 @@ import { MoreHorizontal, Plus, Search, Pencil, Trash } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { normalizeSearchQuery } from "@/lib/string-utils"
+import { DataTablePagination } from "./data-table-pagination"
 
 type University = {
   id: string
@@ -38,6 +39,8 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
   const [universities, setUniversities] = useState(initialUniversities)
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
   
   const router = useRouter()
   const supabase = createClient()
@@ -52,6 +55,17 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
     uni.name.toLowerCase().includes(normalizedQuery) ||
     (uni.location && uni.location.toLowerCase().includes(normalizedQuery))
   )
+
+  const totalPages = Math.ceil(filteredUniversities.length / itemsPerPage)
+  const paginatedUniversities = filteredUniversities.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val)
+    setCurrentPage(1)
+  }
 
   const deleteUniversity = async (id: string) => {
     if (!confirm("Are you sure you want to delete this university? All associated programs will also be deleted.")) return
@@ -84,7 +98,7 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
             placeholder="Search universities..."
             className="pl-8"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
         <div className="flex gap-2">
@@ -108,8 +122,8 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredUniversities.length > 0 ? (
-              filteredUniversities.map((uni) => (
+            {paginatedUniversities.length > 0 ? (
+              paginatedUniversities.map((uni) => (
                 <TableRow key={uni.id}>
                   <TableCell className="font-medium">{uni.name}</TableCell>
                   <TableCell>{uni.location || "-"}</TableCell>
@@ -151,6 +165,13 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
           </TableBody>
         </Table>
       </div>
+      <DataTablePagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={filteredUniversities.length}
+        itemsPerPage={itemsPerPage}
+      />
     </div>
   )
 }
