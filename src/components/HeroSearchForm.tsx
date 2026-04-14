@@ -42,6 +42,7 @@ export function HeroSearchForm({
   const [citySearch, setCitySearch] = useState("")
   const [isCityOpen, setIsCityOpen] = useState(false)
   const [isCitiesLoading, setIsCitiesLoading] = useState(false)
+  const [activeDegreeTypes, setActiveDegreeTypes] = useState<{ id: string, name: string }[]>([])
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -122,6 +123,21 @@ export function HeroSearchForm({
       }
       fetchScholarships()
     }
+
+    // Fetch active degree types
+    const fetchDegreeTypes = async () => {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('program_levels')
+        .select('name')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true })
+
+      if (data) {
+        setActiveDegreeTypes(data.map((d: { name: string }) => ({ id: d.name, name: d.name })))
+      }
+    }
+    fetchDegreeTypes()
   }, [initialIntakes, initialScholarships])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -251,18 +267,9 @@ export function HeroSearchForm({
           onChange={handleChange}
         >
           <option value="" disabled>Select Degree</option>
-          <option value="Bachelor">Bachelor</option>
-          <option value="Master">Master</option>
-          <option value="Doctor">Doctor</option>
-          <option value="Camp">Camp</option>
-          <option value="Long-term Language">Long-term Language</option>
-          <option value="College">College</option>
-          <option value="High School">High School</option>
-          <option value="Top-up program">Top-up program</option>
-          <option value="Secondary Vocational Education">Secondary Vocational Education</option>
-          <option value="Masters">Masters</option>
-          <option value="PhD">PhD</option>
-          <option value="Language">Language Program</option>
+          {activeDegreeTypes.map((degree) => (
+            <option key={degree.id} value={degree.id}>{degree.name}</option>
+          ))}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
           <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">

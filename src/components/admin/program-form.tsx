@@ -71,18 +71,21 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
   const [universities, setUniversities] = useState<{ id: string, name: string }[]>([])
   const [intakePeriods, setIntakePeriods] = useState<{ id: string, name: string }[]>([])
   const [scholarships, setScholarships] = useState<{ id: string, name: string }[]>([])
+  const [degreeTypes, setDegreeTypes] = useState<{ id: string, name: string }[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      const [uniRes, intakeRes, scholarshipRes] = await Promise.all([
+      const [uniRes, intakeRes, scholarshipRes, degreeRes] = await Promise.all([
         supabase.from('universities').select('id, name'),
         supabase.from('intake_periods').select('id, name').eq('is_active', true).order('name'),
-        supabase.from('scholarships').select('id, name').eq('is_active', true).order('name')
+        supabase.from('scholarships').select('id, name').eq('is_active', true).order('name'),
+        supabase.from('program_levels').select('id, name').eq('is_active', true).order('sort_order')
       ])
 
       if (uniRes.data) setUniversities(uniRes.data)
       if (intakeRes.data) setIntakePeriods(intakeRes.data)
       if (scholarshipRes.data) setScholarships(scholarshipRes.data)
+      if (degreeRes.data) setDegreeTypes(degreeRes.data)
     }
     fetchData()
   }, [supabase])
@@ -300,18 +303,14 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
               onChange={handleChange}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <option value="Bachelor">Bachelor</option>
-              <option value="Master">Master</option>
-              <option value="Doctor">Doctor</option>
-              <option value="Camp">Camp</option>
-              <option value="Long-term Language">Long-term Language</option>
-              <option value="College">College</option>
-              <option value="High School">High School</option>
-              <option value="Top-up program">Top-up program</option>
-              <option value="Secondary Vocational Education">Secondary Vocational Education</option>
-              <option value="Masters">Masters</option>
-              <option value="PhD">PhD</option>
-              <option value="Language">Language Program</option>
+              <option value="">Select Level</option>
+              {degreeTypes.map((dt) => (
+                <option key={dt.id} value={dt.name}>{dt.name}</option>
+              ))}
+              {/* Fallback for legacy data */}
+              {formData.level && !degreeTypes.some(d => d.name === formData.level) && (
+                <option value={formData.level}>{formData.level} (Current)</option>
+              )}
             </select>
           </div>
           <div className="space-y-2">
