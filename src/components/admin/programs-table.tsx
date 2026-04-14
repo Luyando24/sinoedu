@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal, Plus, Search, Pencil, Trash, CheckCircle2, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { normalizeSearchQuery } from "@/lib/string-utils"
 
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
@@ -59,11 +60,13 @@ export function ProgramsTable({ initialPrograms }: { initialPrograms: Program[] 
     return program.universities.name || ""
   }
 
+  const normalizedQuery = normalizeSearchQuery(searchQuery).toLowerCase()
+
   const filteredPrograms = programs.filter(program =>
-    program.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    getUniversityName(program).toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (program.program_id_code && program.program_id_code.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (program.duration && program.duration.toLowerCase().includes(searchQuery.toLowerCase()))
+    program.title.toLowerCase().includes(normalizedQuery) ||
+    getUniversityName(program).toLowerCase().includes(normalizedQuery) ||
+    (program.program_id_code && program.program_id_code.toLowerCase().includes(normalizedQuery)) ||
+    (program.duration && program.duration.toLowerCase().includes(normalizedQuery))
   )
 
   const handleSelectAll = (checked: boolean) => {

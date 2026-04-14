@@ -23,6 +23,7 @@ import {
 import { MoreHorizontal, Plus, Search, Pencil, Trash } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
+import { normalizeSearchQuery } from "@/lib/string-utils"
 
 type University = {
   id: string
@@ -45,9 +46,11 @@ export function UniversitiesTable({ initialUniversities }: { initialUniversities
      // prevent unused variable warning
   }
 
+  const normalizedQuery = normalizeSearchQuery(searchQuery).toLowerCase()
+
   const filteredUniversities = universities.filter(uni => 
-    uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (uni.location && uni.location.toLowerCase().includes(searchQuery.toLowerCase()))
+    uni.name.toLowerCase().includes(normalizedQuery) ||
+    (uni.location && uni.location.toLowerCase().includes(normalizedQuery))
   )
 
   const deleteUniversity = async (id: string) => {

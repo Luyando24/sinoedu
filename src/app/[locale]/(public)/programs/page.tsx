@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, DollarSign, MapPin, GraduationCap } from "lucide-react"
 import { HeroSearchForm } from "@/components/HeroSearchForm"
+import { normalizeSearchQuery, safeTrim } from "@/lib/string-utils"
 
 const getContent = (blocks: { key: string; content: string }[] | null, key: string, fallback: string) => {
   if (!blocks) return fallback
@@ -24,13 +25,13 @@ export default async function ProgramsPage({
     scholarship?: string
   }
 }) {
-  const query = searchParams?.query || ""
-  const city = searchParams?.city || ""
-  const level = searchParams?.level || ""
-  const language = searchParams?.language || ""
-  const duration = searchParams?.duration || ""
-  const intake = searchParams?.intake || ""
-  const scholarship = searchParams?.scholarship || ""
+  const query = normalizeSearchQuery(searchParams?.query)
+  const city = safeTrim(searchParams?.city)
+  const level = safeTrim(searchParams?.level)
+  const language = safeTrim(searchParams?.language)
+  const duration = safeTrim(searchParams?.duration)
+  const intake = safeTrim(searchParams?.intake)
+  const scholarship = safeTrim(searchParams?.scholarship)
 
   const supabase = createClient()
 
@@ -69,10 +70,9 @@ export default async function ProgramsPage({
     .eq('is_active', true)
 
   if (query) {
-    const trimmed = query.trim()
-    const escaped = trimmed.replaceAll(",", "\\,")
+    const escaped = query.replaceAll(",", "\\,")
     const isUuid =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(trimmed)
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(query)
 
     queryBuilder = queryBuilder.or(
       isUuid

@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase/client"
+import { normalizeSearchQuery, safeTrim } from "@/lib/string-utils"
 
 interface HeroSearchFormProps {
   className?: string
@@ -130,13 +131,22 @@ export function HeroSearchForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const params = new URLSearchParams()
-    if (formData.city) params.append("city", formData.city)
-    if (formData.degree) params.append("level", formData.degree) // mapping degree to level
-    if (formData.language) params.append("language", formData.language)
-    if (formData.duration) params.append("duration", formData.duration)
-    if (formData.scholarship) params.append("scholarship", formData.scholarship)
-    if (formData.query) params.append("query", formData.query)
-    if (formData.intake) params.append("intake", formData.intake)
+    
+    const cityClean = safeTrim(formData.city)
+    const degreeClean = safeTrim(formData.degree)
+    const languageClean = safeTrim(formData.language)
+    const durationClean = safeTrim(formData.duration)
+    const scholarshipClean = safeTrim(formData.scholarship)
+    const queryClean = normalizeSearchQuery(formData.query)
+    const intakeClean = safeTrim(formData.intake)
+
+    if (cityClean) params.append("city", cityClean)
+    if (degreeClean) params.append("level", degreeClean)
+    if (languageClean) params.append("language", languageClean)
+    if (durationClean) params.append("duration", durationClean)
+    if (scholarshipClean) params.append("scholarship", scholarshipClean)
+    if (queryClean) params.append("query", queryClean)
+    if (intakeClean) params.append("intake", intakeClean)
 
     router.push(`/programs?${params.toString()}`)
   }
