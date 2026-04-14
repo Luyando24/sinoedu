@@ -86,16 +86,17 @@ export default async function ProgramsPage({
     const { data: matchedUnis } = await supabase
       .from('universities')
       .select('id')
-      .ilike('location', `%${city}%`)
+      .ilike('location', city) // Exact case-insensitive match
     
     const uniIds = (matchedUnis || []).map(u => u.id)
     
     if (uniIds.length > 0) {
       // Search in programs.location OR university_id matching the found unis
-      queryBuilder = queryBuilder.or(`location.ilike.%${city}%,university_id.in.(${uniIds.join(',')})`)
+      // Changed to exact matching (ilike without wildcards)
+      queryBuilder = queryBuilder.or(`location.ilike.${city},university_id.in.(${uniIds.join(',')})`)
     } else {
       // Just search programs.location if no university matches
-      queryBuilder = queryBuilder.ilike('location', `%${city}%`)
+      queryBuilder = queryBuilder.ilike('location', city)
     }
   }
   if (level) {
