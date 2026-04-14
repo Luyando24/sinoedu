@@ -18,7 +18,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Pencil,
-  Trophy
+  Trophy,
+  Info
 } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
@@ -352,6 +353,21 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                 </CardContent>
               </Card>
             </div>
+
+            {/* Additional Information */}
+            {program.additional_info && (
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                  <Info className="h-6 w-6 text-[#0056b3]" />
+                  Additional Information
+                </h2>
+                <Card className="border-[#0056b3]/20 bg-blue-50/10">
+                  <CardContent className="pt-6 text-muted-foreground whitespace-pre-wrap break-words">
+                    {program.additional_info}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
 
           </div>
 

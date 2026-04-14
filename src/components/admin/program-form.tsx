@@ -58,6 +58,7 @@ type Program = {
   is_active: boolean;
   general_info: Record<string, string> | null
   fee_structure: Record<string, string> | null
+  additional_info: string | null
 }
 
 interface ProgramFormProps {
@@ -131,7 +132,8 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     required_documents: initialData?.required_documents || [""],
     is_active: initialData?.is_active ?? true,
     general_info_text: initialData?.general_info ? Object.entries(initialData.general_info).map(([k, v]) => `${k}: ${v}`).join('\n') : "",
-    fee_structure_text: initialData?.fee_structure ? Object.entries(initialData.fee_structure).map(([k, v]) => `${k}: ${v}`).join('\n') : ""
+    fee_structure_text: initialData?.fee_structure ? Object.entries(initialData.fee_structure).map(([k, v]) => `${k}: ${v}`).join('\n') : "",
+    additional_info: initialData?.additional_info || ""
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -398,6 +400,17 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
                 placeholder="Tuition: ¥20,000/year&#10;Registration: ¥600&#10;Accommodation: ¥5000/year&#10;Insurance: ¥800/year"
               />
             </div>
+          </div>
+
+          <div className="space-y-2 pt-4 border-t">
+            <label className="text-sm font-medium">Additional Information</label>
+            <Textarea 
+              name="additional_info" 
+              value={formData.additional_info} 
+              onChange={handleChange} 
+              className="min-h-[120px]" 
+              placeholder="Any other important information that doesn't fit elsewhere..." 
+            />
           </div>
 
           <div className="space-y-2 pt-4 border-t">

@@ -64,6 +64,7 @@ interface ProgramRow {
   general_info: Record<string, string>;
   fee_structure: Record<string, string>;
   scholarship_details: string | null;
+  additional_info: string | null;
   
   // UI status fields
   _rawUniName?: string;
@@ -116,7 +117,8 @@ export function ProgramImporter() {
         "Required Documents": "Passport copy\nHigh School Transcript\nGraduation Certificate\nLanguage Proficiency Certificate",
         "Fee Structure Details": "Registration: 400 RMB\nAccommodation: 12000 RMB/Year",
         "Scholarship Type": "Full Scholarship",
-        "Scholarship Details": "Covers tuition, registration, and monthly stipend."
+        "Scholarship Details": "Covers tuition, registration, and monthly stipend.",
+        "Additional Information": "This is a priority program for international students."
       },
       {
         "Program Name": "MBBS (Medicine)",
@@ -181,6 +183,7 @@ export function ProgramImporter() {
       { wch: 40 }, // fees
       { wch: 25 }, // scholarship type
       { wch: 40 }, // scholarship details
+      { wch: 40 }, // additional info
     ]
     ws['!cols'] = wscols
 
@@ -354,6 +357,7 @@ export function ProgramImporter() {
         general_info: parseGroupedText(safeString(mappedRow.general_info || mappedRow.description)),
         fee_structure: parseGroupedText(safeString(mappedRow.fee_structure)),
         scholarship_details: safeString(mappedRow.scholarship_details),
+        additional_info: safeString(mappedRow.additional_info),
         
         _rawUniName: rawUniName,
         _matchStatus: matchStatus,
@@ -430,7 +434,8 @@ export function ProgramImporter() {
         is_active: row.is_active,
         general_info: row.general_info,
         fee_structure: row.fee_structure,
-        scholarship_details: row.scholarship_details
+        scholarship_details: row.scholarship_details,
+        additional_info: row.additional_info
       }))
 
       // Use upsert to handle updates
