@@ -59,10 +59,10 @@ export const HEADER_ALIASES: Record<string, string[]> = {
   language: ['taught language', 'instruction language'],
   intake: ['start date', 'admission date'],
   application_deadline: ['deadline', 'closing date'],
-  description: ['about', 'details', 'summary', 'info'],
+  description: ['about', 'details', 'summary', 'info', 'about the program', 'program description'],
   requirements: ['entry requirements', 'eligibility', 'admission criteria', 'general requirements'],
-  required_documents: ['documents', 'required docs', 'application documents', 'document list'],
-  general_info: ['notes', 'extra info'],
+  required_documents: ['required documents', 'documents', 'required docs', 'application documents', 'document list'],
+  general_info: ['details (general info)', 'general info', 'notes', 'extra info'],
 };
 
 /**

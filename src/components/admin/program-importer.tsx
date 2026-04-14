@@ -552,8 +552,8 @@ export function ProgramImporter() {
                             </div>
                           </div>
                         </td>
-                        <td className="p-3">
-                          <div className="space-y-1">
+                         <td className="p-3">
+                          <div className="space-y-1.5">
                              <div className="flex items-center gap-1 text-[11px]">
                                <Badge variant="outline" className="text-[9px] font-normal py-0">Fee</Badge>
                                <span className="truncate">{row.tuition_fee || "N/A"}</span>
@@ -561,6 +561,12 @@ export function ProgramImporter() {
                              <div className="flex items-center gap-1 text-[11px]">
                                <Badge variant="outline" className="text-[9px] font-normal py-0">Time</Badge>
                                <span className="truncate">{row.duration || "N/A"}</span>
+                             </div>
+                             <div className="flex flex-wrap gap-1 mt-1">
+                                {row.description && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-blue-50/50">Details</Badge>}
+                                {row.general_info && Object.keys(row.general_info).length > 0 && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-slate-50/50">General</Badge>}
+                                {row.requirements && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-green-50/50">Reqs</Badge>}
+                                {row.required_documents && row.required_documents.length > 0 && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-purple-50/50">Docs ({row.required_documents.length})</Badge>}
                              </div>
                           </div>
                         </td>
