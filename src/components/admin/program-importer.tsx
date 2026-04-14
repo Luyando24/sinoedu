@@ -58,6 +58,8 @@ interface ProgramRow {
   language: string;
   intake: string | null;
   application_deadline: string | null;
+  requirements: string | null;
+  required_documents: string[] | null;
   is_active: boolean;
   general_info: Record<string, string>;
   fee_structure: Record<string, string>;
@@ -105,7 +107,10 @@ export function ProgramImporter() {
         "Duration": "4 Years",
         "Language": "English",
         "Deadline": "2025-06-30",
-        "Details (General Info)": "High-ranking CS program.\nAge limit: 18-25\nLanguage: IELTS 6.0",
+        "Details (General Info)": "High-ranking CS program.",
+        "About the Program": "This comprehensive Computer Science program covers AI, Software Engineering, and more.",
+        "Entry Requirements": "High school diploma with good math grades.\nIELTS 6.0 or equivalent.",
+        "Required Documents": "Passport copy\nHigh School Transcript\nGraduation Certificate\nLanguage Proficiency Certificate",
         "Fee Structure Details": "Registration: 400 RMB\nAccommodation: 12000 RMB/Year"
       },
       {
@@ -117,7 +122,10 @@ export function ProgramImporter() {
         "Duration": "", 
         "Language": "English",
         "Deadline": "2025-07-15",
-        "Details (General Info)": "Duration: 6 Years.\r\nTuition: 30,000 RMB/Year.\nNote: High demand program.",
+        "Details (General Info)": "Duration: 6 Years.\r\nTuition: 30,000 RMB/Year.",
+        "About the Program": "A leading medical program for international students.",
+        "Entry Requirements": "Strong background in Biology and Chemistry.\nAge 18-25.",
+        "Required Documents": "Passport\nTranscripts\nPersonal Statement",
         "Fee Structure Details": "Registration: 600 RMB"
       },
       {
@@ -159,8 +167,11 @@ export function ProgramImporter() {
       { wch: 15 }, // duration
       { wch: 15 }, // language
       { wch: 15 }, // deadline
-      { wch: 50 }, // description/general
-      { wch: 50 }, // fees
+      { wch: 40 }, // general
+      { wch: 40 }, // description/about
+      { wch: 40 }, // requirements
+      { wch: 40 }, // documents
+      { wch: 40 }, // fees
     ]
     ws['!cols'] = wscols
 
@@ -301,6 +312,10 @@ export function ProgramImporter() {
         language: safeString(mappedRow.language) || extracted.language || 'English',
         intake: safeString(mappedRow.intake) || 'September',
         application_deadline: safeString(mappedRow.application_deadline),
+        requirements: safeString(mappedRow.requirements),
+        required_documents: safeString(mappedRow.required_documents) 
+          ? safeString(mappedRow.required_documents)!.split('\n').map(s => s.trim()).filter(s => !!s)
+          : null,
         is_active: true,
         general_info: parseGroupedText(safeString(mappedRow.general_info || mappedRow.description)),
         fee_structure: parseGroupedText(safeString(mappedRow.fee_structure)),
@@ -373,6 +388,8 @@ export function ProgramImporter() {
         language: row.language,
         intake: row.intake,
         application_deadline: row.application_deadline,
+        requirements: row.requirements,
+        required_documents: row.required_documents,
         is_active: row.is_active,
         general_info: row.general_info,
         fee_structure: row.fee_structure
