@@ -344,7 +344,7 @@ export function ProgramImporter() {
         tuition_fee: safeString(mappedRow.tuition_fee) || extracted.tuition_fee || null,
         description: safeString(mappedRow.description),
         language: safeString(mappedRow.language) || extracted.language || 'English',
-        intake: safeString(mappedRow.intake) || 'September',
+        intake: safeString(mappedRow.intake) || extracted.intake || 'September',
         application_deadline: safeString(mappedRow.application_deadline),
         requirements: safeString(mappedRow.requirements),
         required_documents: safeString(mappedRow.required_documents) 

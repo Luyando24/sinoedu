@@ -120,6 +120,20 @@ export function extractFieldsFromText(text: string): Record<string, string> {
     }
   }
 
+  // Intake patterns
+  const intakePatterns = [
+    /(?:intake|start date|admission)\s*[:=-]?\s*([^,\n.]+)/i,
+    /(spring|autumn|september|march|april|october)\s+(?:\d{4})?\s*(?:intake)/i
+  ];
+
+  for (const pattern of intakePatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      extracted.intake = (match[1] || match[0]).trim();
+      break;
+    }
+  }
+
   return extracted;
 }
 
