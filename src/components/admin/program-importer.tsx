@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,8 +21,6 @@ import {
   Download, 
   ArrowRight, 
   ArrowLeft,
-  Search,
-  ChevronRight,
   Loader2
 } from "lucide-react"
 import * as XLSX from "xlsx"
@@ -191,7 +189,7 @@ export function ProgramImporter() {
         const workbook = XLSX.read(data, { type: "binary" })
         const sheetName = workbook.SheetNames[0]
         const sheet = workbook.Sheets[sheetName]
-        const rawData = XLSX.utils.sheet_to_json(sheet) as Record<string, any>[]
+        const rawData = XLSX.utils.sheet_to_json(sheet) as Record<string, unknown>[]
         
         if (rawData.length === 0) {
           setError("The file appears to be empty.")
@@ -207,9 +205,9 @@ export function ProgramImporter() {
     reader.readAsBinaryString(file)
   }
 
-  const processRows = (rows: Record<string, any>[]) => {
+  const processRows = (rows: Record<string, unknown>[]) => {
     const processed: ProgramRow[] = rows.map((row, index) => {
-      const mappedRow: Record<string, any> = {}
+      const mappedRow: Record<string, unknown> = {}
       
       // 1. Smart Header Mapping
       Object.entries(row).forEach(([header, value]) => {
@@ -315,7 +313,7 @@ export function ProgramImporter() {
     return 'Bachelor'
   }
 
-  const handleUpdateRow = (index: number, field: keyof ProgramRow, value: any) => {
+  const handleUpdateRow = (index: number, field: keyof ProgramRow, value: string | null | boolean | Record<string, string>) => {
     setPreviewData(prev => {
       const next = [...prev]
       next[index] = { ...next[index], [field]: value }
@@ -331,7 +329,23 @@ export function ProgramImporter() {
     setError(null)
 
     try {
-      const formattedData = previewData.map(({ _rawUniName, _matchStatus, _suggestedUniId, id_in_file, ...rest }) => rest)
+      const formattedData = previewData.map((row) => ({
+        title: row.title,
+        program_id_code: row.program_id_code,
+        university_id: row.university_id,
+        scholarship_id: row.scholarship_id,
+        level: row.level,
+        location: row.location,
+        duration: row.duration,
+        tuition_fee: row.tuition_fee,
+        description: row.description,
+        language: row.language,
+        intake: row.intake,
+        application_deadline: row.application_deadline,
+        is_active: row.is_active,
+        general_info: row.general_info,
+        fee_structure: row.fee_structure
+      }))
 
       // Use upsert to handle updates
       // We assume program_id_code OR title + university_id handles conflicts
@@ -517,7 +531,7 @@ export function ProgramImporter() {
               
               <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg border text-xs text-muted-foreground">
                 <AlertCircle className="h-4 w-4 text-blue-500" />
-                <p>We've automatically extracted fees and durations from your text where possible. Review them above.</p>
+                <p>We&apos;ve automatically extracted fees and durations from your text where possible. Review them above.</p>
               </div>
             </div>
           )}
