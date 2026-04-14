@@ -24,6 +24,7 @@ export default async function ProgramsPage({
     duration?: string
     intake?: string
     scholarship?: string
+    page?: string
   }
 }) {
   const query = normalizeSearchQuery(searchParams?.query)
