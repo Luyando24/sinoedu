@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -14,17 +14,67 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { FileSpreadsheet, AlertCircle, CheckCircle, Download } from "lucide-react"
+import { 
+  FileSpreadsheet, 
+  AlertCircle, 
+  CheckCircle, 
+  Download, 
+  ArrowRight, 
+  ArrowLeft,
+  Search,
+  ChevronRight,
+  Loader2
+} from "lucide-react"
 import * as XLSX from "xlsx"
 import { saveAs } from "file-saver"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { 
+  getSimilarity, 
+  mapHeader, 
+  extractFieldsFromText 
+} from "@/lib/import-utils"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+
+type ImportStep = 'upload' | 'preview' | 'importing' | 'success';
+
+interface ProgramRow {
+  id_in_file?: number;
+  title: string;
+  program_id_code: string | null;
+  university_id: string | null;
+  scholarship_id: string | null;
+  level: string;
+  location: string | null;
+  duration: string | null;
+  tuition_fee: string | null;
+  description: string | null;
+  language: string;
+  intake: string | null;
+  application_deadline: string | null;
+  is_active: boolean;
+  general_info: Record<string, string>;
+  fee_structure: Record<string, string>;
+  
+  // UI status fields
+  _rawUniName?: string;
+  _matchStatus?: 'exact' | 'fuzzy' | 'none';
+  _suggestedUniId?: string;
+}
 
 export function ProgramImporter() {
   const [open, setOpen] = useState(false)
+  const [step, setStep] = useState<ImportStep>('upload')
   const [file, setFile] = useState<File | null>(null)
-  const [previewData, setPreviewData] = useState<Record<string, unknown>[]>([])
+  const [previewData, setPreviewData] = useState<ProgramRow[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [universities, setUniversities] = useState<{id: string, name: string}[]>([])
@@ -49,52 +99,28 @@ export function ProgramImporter() {
   const handleDownloadTemplate = () => {
     const templateData = [
       {
-        title: "Bachelor of Computer Science",
-        program_id_code: "CS-ZJU-001",
-        university: "Zhejiang University", // Must match existing university
-        location: "Hangzhou",
-        level: "Bachelor",
-        duration: "4 Years",
-        language: "English",
-        intake: "September 2025",
-        application_deadline: "2025-06-30",
-        is_active: "TRUE", // or FALSE
-        
-        description: "Comprehensive CS program taught in English.",
-        
-        // Grouped Info
-        general_info: "School rank: Top 50 in China\nAge limit: 18-25\nDeadline: June 30, 2025\nLanguage requirements: IELTS 6.0\nGrade requirements: Over 75%\nNationality restrictions: None\nAdmission process: Document review + Interview",
-        fee_structure: "Tuition: 20000 RMB/Year\nRegistration: 400 RMB\nAccommodation Single: 12000 RMB/Year\nAccommodation Double: 6000 RMB/Year",
-        
-        scholarship_type: "CSC Scholarship", // Must match existing scholarship name
-        scholarship_details: "Full scholarship available for top students",
-        
-        // Other
-        processing_speed: "Fast",
-        required_documents: "Passport\nPhoto\nDiploma\nTranscripts" // Array items separated by newline
+        "Program Name": "Bachelor of Computer Science",
+        "Program ID": "CS-ZJU-001",
+        "University": "Zhejiang University",
+        "Level": "Bachelor",
+        "Tuition Fee": "20,000 RMB/Year",
+        "Duration": "4 Years",
+        "Language": "English",
+        "Deadline": "2025-06-30",
+        "Details (General Info)": "Comprehensive CS program taught in English.\nAge limit: 18-25\nLanguage requirements: IELTS 6.0",
+        "Fee Structure Details": "Registration: 400 RMB\nAccommodation: 6000-12000 RMB/Year"
       },
       {
-        title: "MBA",
-        program_id_code: "MBA-BLCU-002",
-        university: "Beijing Language and Culture University",
-        location: "Beijing",
-        level: "Master",
-        duration: "2 Years",
-        language: "English",
-        intake: "September 2025",
-        application_deadline: "2025-05-15",
-        is_active: "TRUE",
-
-        description: "Focus on international business management.",
-
-        general_info: "School rank: Famous for Language\nAge limit: 22-40\nDeadline: May 15, 2025\nLanguage requirements: IELTS 6.5\nGrade requirements: Over 80%\nNationality restrictions: None\nAdmission process: Document review",
-        fee_structure: "Tuition: 30000 RMB/Year\nRegistration: 800 RMB\nAccommodation Single: 15000 RMB/Year\nAccommodation Double: 8000 RMB/Year",
-
-        scholarship_type: "Provincial Scholarship",
-        scholarship_details: "Partial scholarship available",
-
-        processing_speed: "Normal",
-        required_documents: "Passport\nPhoto\nDegree Certificate\nTranscripts\nRecommendation Letters"
+        "Program Name": "International Business MBA",
+        "Program ID": "MBA-BLCU-002",
+        "University": "Beijing Language and Culture University",
+        "Level": "Master",
+        "Tuition Fee": "30,000 RMB/Year",
+        "Duration": "2 Years",
+        "Language": "English",
+        "Deadline": "2025-05-15",
+        "Details (General Info)": "Focus on international management.\nAcademic: Bachelor degree required.",
+        "Fee Structure Details": "Registration: 800 RMB\nAccommodation: 8000-15000 RMB/Year"
       }
     ]
 
@@ -103,23 +129,16 @@ export function ProgramImporter() {
     
     // Set column widths
     const wscols = [
-      { wch: 30 }, // title
+      { wch: 35 }, // title
       { wch: 15 }, // program_id_code
       { wch: 35 }, // university
-      { wch: 15 }, // location
-      { wch: 10 }, // level
-      { wch: 10 }, // duration
-      { wch: 10 }, // language
-      { wch: 15 }, // intake
-      { wch: 15 }, // application_deadline
-      { wch: 10 }, // is_active
-      { wch: 40 }, // description
-      { wch: 50 }, // general_info
-      { wch: 50 }, // fee_structure
-      { wch: 20 }, // scholarship_type
-      { wch: 30 }, // scholarship_details
-      { wch: 15 }, // processing_speed
-      { wch: 30 }, // required_documents
+      { wch: 15 }, // level
+      { wch: 20 }, // tuition
+      { wch: 15 }, // duration
+      { wch: 15 }, // language
+      { wch: 15 }, // deadline
+      { wch: 50 }, // description/general
+      { wch: 50 }, // fees
     ]
     ws['!cols'] = wscols
 
@@ -172,21 +191,14 @@ export function ProgramImporter() {
         const workbook = XLSX.read(data, { type: "binary" })
         const sheetName = workbook.SheetNames[0]
         const sheet = workbook.Sheets[sheetName]
-        const jsonData = XLSX.utils.sheet_to_json(sheet)
+        const rawData = XLSX.utils.sheet_to_json(sheet) as Record<string, any>[]
         
-        if (jsonData.length === 0) {
+        if (rawData.length === 0) {
           setError("The file appears to be empty.")
           return
         }
 
-        // Validate headers (basic check)
-        const firstRow = jsonData[0] as object
-        if (!("title" in firstRow || "Title" in firstRow || "Program" in firstRow)) {
-            setError("Could not find a 'title' or 'Program' column. Please check the file format.")
-            return
-        }
-
-        setPreviewData(jsonData as Record<string, unknown>[])
+        processRows(rawData)
       } catch (err) {
         console.error(err)
         setError("Failed to parse the file. Please ensure it is a valid Excel file.")
@@ -195,16 +207,83 @@ export function ProgramImporter() {
     reader.readAsBinaryString(file)
   }
 
-  const findUniversityId = (uniName: string): string | null => {
-      if (!uniName) return null
-      const match = universities.find(u => u.name.toLowerCase() === uniName.toLowerCase())
-      return match ? match.id : null
-  }
+  const processRows = (rows: Record<string, any>[]) => {
+    const processed: ProgramRow[] = rows.map((row, index) => {
+      const mappedRow: Record<string, any> = {}
+      
+      // 1. Smart Header Mapping
+      Object.entries(row).forEach(([header, value]) => {
+        const field = mapHeader(header)
+        if (field) {
+          mappedRow[field] = value
+        } else {
+          // Keep unmapped data in a general pool for extraction
+          mappedRow[`_raw_${header}`] = value
+        }
+      })
 
-  const findScholarshipId = (name: string): string | null => {
-      if (!name) return null
-      const match = scholarships.find(s => s.name.toLowerCase() === name.toLowerCase())
-      return match ? match.id : null
+      // 2. Data Extraction from text blocks
+      // Merge all text values to search for missing fields
+      const textPool = Object.values(row).join(" ")
+      const extracted = extractFieldsFromText(textPool)
+      
+      const title = safeString(mappedRow.title) || ""
+      const rawUniName = safeString(mappedRow.university_id) || ""
+      
+      // 3. Fuzzy match university
+      let uniId: string | null = null
+      let matchStatus: 'exact' | 'fuzzy' | 'none' = 'none'
+      let suggestedUniId: string | undefined
+
+      if (rawUniName) {
+        // Exact match
+        const exact = universities.find(u => u.name.toLowerCase() === rawUniName.toLowerCase())
+        if (exact) {
+          uniId = exact.id
+          matchStatus = 'exact'
+        } else {
+          // Fuzzy match
+          const matches = universities.map(u => ({
+            id: u.id,
+            similarity: getSimilarity(rawUniName, u.name)
+          })).sort((a, b) => b.similarity - a.similarity)
+
+          if (matches[0] && matches[0].similarity > 0.8) {
+            suggestedUniId = matches[0].id
+            matchStatus = 'fuzzy'
+          }
+        }
+      }
+
+      const scholarshipName = safeString(mappedRow.scholarship_id)
+      const scholarshipId = scholarshipName ? scholarships.find(s => s.name.toLowerCase() === scholarshipName.toLowerCase())?.id || null : null
+
+      return {
+        id_in_file: index,
+        title,
+        program_id_code: safeString(mappedRow.program_id_code),
+        university_id: uniId || suggestedUniId || null,
+        scholarship_id: scholarshipId,
+        level: mapLevel(safeString(mappedRow.level)),
+        location: safeString(mappedRow.location),
+        duration: safeString(mappedRow.duration) || extracted.duration || null,
+        tuition_fee: safeString(mappedRow.tuition_fee) || extracted.tuition_fee || null,
+        description: safeString(mappedRow.description),
+        language: safeString(mappedRow.language) || extracted.language || 'English',
+        intake: safeString(mappedRow.intake) || 'September',
+        application_deadline: safeString(mappedRow.application_deadline),
+        is_active: true,
+        general_info: parseGroupedText(safeString(mappedRow.general_info || mappedRow.description)),
+        fee_structure: parseGroupedText(safeString(mappedRow.fee_structure)),
+        
+        _rawUniName: rawUniName,
+        _matchStatus: matchStatus,
+        _suggestedUniId: suggestedUniId
+      }
+    })
+
+    setPreviewData(processed)
+    setStep('preview')
   }
 
   const parseGroupedText = (text: string | null | undefined): Record<string, string> => {
@@ -228,130 +307,61 @@ export function ProgramImporter() {
 
   const mapLevel = (level: string | null): string => {
     if (!level) return 'Bachelor'
-    
-    const validLevels = [
-      'Bachelor', 
-      'Master', 
-      'Doctor', 
-      'PhD', 
-      'Masters', 
-      'High School', 
-      'Top-up program',
-      'Language', 
-      'Camp',
-      'Long-term Language', 
-      'College', 
-      'Secondary Vocational Education'
-    ];
-    
-    // Case-insensitive exact match
-    const exactMatch = validLevels.find(l => l.toLowerCase() === level.toLowerCase());
-    if (exactMatch) return exactMatch;
-    
-    // Mapping legacy or common variations
-    const lowerLevel = level.toLowerCase();
-    if (lowerLevel.includes('senior high')) return 'Top-up program';
-    if (lowerLevel.includes('short-term') || lowerLevel.includes('short term')) return 'Camp';
-    if (lowerLevel.includes('long-term') || lowerLevel.includes('long term')) return 'Long-term Language';
-    if (lowerLevel.includes('ph.d')) return 'PhD';
-    if (lowerLevel.includes('vocational')) return 'Secondary Vocational Education';
-    
-    return 'Bachelor'; // Fallback
+    const lower = level.toLowerCase()
+    if (lower.includes('bach')) return 'Bachelor'
+    if (lower.includes('mast')) return 'Master'
+    if (lower.includes('doct') || lower.includes('phd')) return 'PhD'
+    if (lower.includes('lang')) return 'Language'
+    return 'Bachelor'
+  }
+
+  const handleUpdateRow = (index: number, field: keyof ProgramRow, value: any) => {
+    setPreviewData(prev => {
+      const next = [...prev]
+      next[index] = { ...next[index], [field]: value }
+      return next
+    })
   }
 
   const handleImport = async () => {
     if (previewData.length === 0) return
 
     setIsUploading(true)
+    setStep('importing')
     setError(null)
 
     try {
-      const formattedData = previewData.map((row) => {
-          const r = row as Record<string, unknown>
-          const uniName = safeString(r.university || r.University || r.school || r.School)
-          const uniId = uniName ? findUniversityId(uniName) : null
-          const scholarshipName = safeString(r.scholarship_type || r.ScholarshipType || r.scholarship || r.Scholarship)
-          const scholarshipId = scholarshipName ? findScholarshipId(scholarshipName) : null
+      const formattedData = previewData.map(({ _rawUniName, _matchStatus, _suggestedUniId, id_in_file, ...rest }) => rest)
 
-          return {
-            title: safeString(r.title || r.Title || r.Program),
-            program_id_code: safeString(r.program_id_code || r.Code),
-            university_id: uniId,
-            scholarship_id: scholarshipId,
-            level: mapLevel(safeString(r.level || r.Level)),
-            location: safeString(r.location || r.Location),
-            duration: safeString(r.duration || r.Duration),
-            tuition_fee: safeString(r.tuition_fee || r.Tuition),
-            description: safeString(r.description || r.Description),
-            requirements: safeString(r.requirements || r.Requirements),
-            language: safeString(r.language || r.Language) || 'English',
-            intake: safeString(r.intake || r.Intake),
-            application_deadline: safeString(r.application_deadline || r.Deadline),
-            is_active: r.is_active === 'TRUE' || r.is_active === true || r.is_active === 'true',
-
-            // New grouped columns
-            general_info: parseGroupedText(safeString(r.general_info)),
-            fee_structure: parseGroupedText(safeString(r.fee_structure)),
-
-            // Preserve old columns for now if present in Excel
-            age_requirements: safeString(r.age_requirements),
-            nationality_restrictions: safeString(r.nationality_restrictions),
-            language_requirements: safeString(r.language_requirements),
-            applicants_inside_china: safeString(r.applicants_inside_china),
-
-            // Financial
-            registration_fee: safeString(r.registration_fee),
-            application_fee_status: safeString(r.application_fee_status),
-            scholarship_details: safeString(r.scholarship_details),
-
-            // Accommodation
-            accommodation_details: safeString(r.accommodation_details),
-            off_campus_living: safeString(r.off_campus_living),
-            
-            accommodation_costs: {
-                single: safeString(r.accommodation_single),
-                double: safeString(r.accommodation_double),
-                triple: safeString(r.accommodation_triple),
-                quad: safeString(r.accommodation_quad),
-            },
-
-            // Other
-            processing_speed: safeString(r.processing_speed),
-            
-            academic_requirements: r.academic_requirements ? safeString(r.academic_requirements)?.split('\n').filter(Boolean) || [] : [],
-            required_documents: r.required_documents ? safeString(r.required_documents)?.split('\n').filter(Boolean) || [] : [],
-          }
-      }).filter(item => item.title) // Ensure title exists
-
-      if (formattedData.length === 0) {
-        throw new Error("No valid data found to import.")
-      }
+      // Use upsert to handle updates
+      // We assume program_id_code OR title + university_id handles conflicts
+      // Since Supabase usually requires a single unique constraint for upsert onConflict,
+      // we'll loop or use multiple upserts if needed, but standard is title + university_id.
       
-      // Check for missing universities
-      const missingUniCount = formattedData.filter(i => !i.university_id).length
-      if (missingUniCount > 0) {
-          if (!confirm(`${missingUniCount} programs have university names that don't match our database. They will be imported without a university link. Continue?`)) {
-              setIsUploading(false)
-              return
-          }
-      }
-
       const { error: uploadError } = await supabase
         .from('programs')
-        .insert(formattedData)
+        .upsert(formattedData, { 
+          onConflict: 'program_id_code,title,university_id', 
+          ignoreDuplicates: false 
+        })
 
-      if (uploadError) throw uploadError
+      if (uploadError) {
+        // Fallback if the combined conflict fails
+        console.warn("Combined upsert failed, trying standard insert...", uploadError)
+        const { error: insertError } = await supabase.from('programs').upsert(formattedData)
+        if (insertError) throw insertError
+      }
 
-      toast.success(`Successfully imported ${formattedData.length} programs`)
-      setOpen(false)
-      setFile(null)
-      setPreviewData([])
+      setStep('success')
+      toast.success(`Successfully processed ${formattedData.length} programs`)
       
-      // Force refresh the page data
-      router.refresh()
+      setTimeout(() => {
+        router.refresh()
+      }, 1500)
     } catch (err) {
       console.error(err)
       setError((err as Error).message || "Failed to upload data to the database.")
+      setStep('preview')
       toast.error("Import failed")
     } finally {
       setIsUploading(false)
@@ -359,97 +369,208 @@ export function ProgramImporter() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(v) => {
+      setOpen(v)
+      if (!v) {
+        setStep('upload')
+        setFile(null)
+        setPreviewData([])
+      }
+    }}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <FileSpreadsheet className="mr-2 h-4 w-4" />
           Bulk Import
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className={step === 'preview' ? "sm:max-w-[900px] max-h-[90vh] flex flex-col" : "sm:max-w-[600px]"}>
         <DialogHeader>
-          <DialogTitle>Import Programs</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            {step === 'upload' && "1. Upload Programs File"}
+            {step === 'preview' && "2. Review & Match Data"}
+            {step === 'importing' && "3. Importing Data"}
+            {step === 'success' && "Import Complete"}
+          </DialogTitle>
           <DialogDescription>
-            Upload an Excel file (.xlsx, .xls) to bulk import programs.
-            <br />
-            Required column: <strong>title</strong>
-            <br />
-            Important columns: <strong>university</strong> (must match existing university name), level, tuition_fee, deadline
+            {step === 'upload' && "Upload an Excel file. We'll automatically match columns and universities."}
+            {step === 'preview' && `Review the ${previewData.length} programs found. You can fix university matches below.`}
+            {step === 'importing' && "Please wait while we process and save your data..."}
+            {step === 'success' && "Your programs have been successfully imported and updated."}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border border-dashed">
-             <div className="text-sm text-muted-foreground">
-                <p>Need a starting point?</p>
-                <p>Download our sample template.</p>
-             </div>
-             <Button variant="outline" size="sm" onClick={handleDownloadTemplate}>
-                <Download className="mr-2 h-4 w-4" /> Download Template
-             </Button>
-          </div>
+        <div className="flex-1 overflow-auto py-4">
+          {step === 'upload' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between p-6 bg-blue-50/50 rounded-xl border border-blue-100">
+                <div className="space-y-1">
+                  <p className="font-semibold text-blue-900">Need the template?</p>
+                  <p className="text-sm text-blue-700">Download our simplified Excel format.</p>
+                </div>
+                <Button variant="outline" className="bg-white" onClick={handleDownloadTemplate}>
+                  <Download className="mr-2 h-4 w-4" /> Template
+                </Button>
+              </div>
 
-          <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Label htmlFor="file">Excel File</Label>
-            <Input id="file" type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
-          </div>
+              <div className="grid w-full items-center gap-4 p-8 border-2 border-dashed rounded-xl hover:border-blue-400 transition-colors bg-slate-50/50">
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <FileSpreadsheet className="h-10 w-10 text-slate-400" />
+                  <Label htmlFor="file" className="text-lg font-medium cursor-pointer">
+                    {file ? file.name : "Click to select or drag and drop"}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">Supported formats: .xlsx, .xls</p>
+                </div>
+                <Input 
+                  id="file" 
+                  type="file" 
+                  className="hidden" 
+                  accept=".xlsx, .xls" 
+                  onChange={handleFileChange} 
+                />
+              </div>
 
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+            </div>
           )}
 
-          {previewData.length > 0 && !error && (
-            <div className="space-y-2">
-                <Alert>
-                    <CheckCircle className="h-4 w-4" />
-                    <AlertTitle>Ready to Import</AlertTitle>
-                    <AlertDescription>
-                        Found <strong>{previewData.length}</strong> records.
-                    </AlertDescription>
-                </Alert>
-                <div className="max-h-[200px] overflow-auto border rounded-md text-sm">
-                    <table className="w-full text-left p-2">
-                        <thead className="bg-muted sticky top-0">
-                            <tr>
-                                <th className="p-2">Title</th>
-                                <th className="p-2">University (Excel)</th>
-                                <th className="p-2">Match Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {previewData.slice(0, 5).map((row, i) => {
-                                const r = row as Record<string, unknown>
-                                const uniName = (r.university || r.University || r.school || r.School) as string
-                                const isMatched = !!findUniversityId(uniName)
-                                return (
-                                <tr key={i} className="border-b">
-                                    <td className="p-2">{(r.title || r.Title) as string}</td>
-                                    <td className="p-2">{uniName || '-'}</td>
-                                    <td className="p-2">
-                                        {isMatched ? (
-                                            <span className="text-green-600 flex items-center gap-1"><CheckCircle className="w-3 h-3"/> Matched</span>
-                                        ) : (
-                                            <span className="text-amber-600 flex items-center gap-1"><AlertCircle className="w-3 h-3"/> Not Found</span>
-                                        )}
-                                    </td>
-                                </tr>
-                            )})}
-                        </tbody>
-                    </table>
-                </div>
+          {step === 'preview' && (
+            <div className="space-y-4">
+              <div className="border rounded-xl overflow-hidden bg-white">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50 border-b">
+                    <tr>
+                      <th className="p-3 text-left font-medium">Program Title</th>
+                      <th className="p-3 text-left font-medium">University Match</th>
+                      <th className="p-3 text-left font-medium">Tuition/Info</th>
+                      <th className="p-3 text-center font-medium w-[80px]">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {previewData.map((row, i) => (
+                      <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                        <td className="p-3">
+                          <Input 
+                            value={row.title} 
+                            onChange={(e) => handleUpdateRow(i, 'title', e.target.value)}
+                            className="h-8 text-xs font-medium"
+                          />
+                          <div className="text-[10px] text-muted-foreground mt-1 opacity-60">
+                            {row.program_id_code || "No ID"} • {row.level}
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <div className="space-y-1.5">
+                            <Select 
+                              value={row.university_id || "none"} 
+                              onValueChange={(val) => handleUpdateRow(i, 'university_id', val === "none" ? null : val)}
+                            >
+                              <SelectTrigger className={`h-8 text-xs ${!row.university_id ? 'border-amber-200 bg-amber-50/30' : ''}`}>
+                                <SelectValue placeholder="Select University" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">-- No Match --</SelectItem>
+                                {universities.map(u => (
+                                  <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <div className="flex items-center gap-1.5 px-1">
+                              <span className="text-[10px] text-muted-foreground truncate max-w-[150px]">
+                                Excel: {row._rawUniName || "(empty)"}
+                              </span>
+                              {row._matchStatus === 'fuzzy' && (
+                                <Badge variant="secondary" className="text-[9px] h-3.5 px-1 bg-amber-100 text-amber-700 hover:bg-amber-100">Fuzzy Match</Badge>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <div className="space-y-1">
+                             <div className="flex items-center gap-1 text-[11px]">
+                               <Badge variant="outline" className="text-[9px] font-normal py-0">Fee</Badge>
+                               <span className="truncate">{row.tuition_fee || "N/A"}</span>
+                             </div>
+                             <div className="flex items-center gap-1 text-[11px]">
+                               <Badge variant="outline" className="text-[9px] font-normal py-0">Time</Badge>
+                               <span className="truncate">{row.duration || "N/A"}</span>
+                             </div>
+                          </div>
+                        </td>
+                        <td className="p-3 text-center">
+                          {!row.university_id ? (
+                            <AlertCircle className="h-5 w-5 text-amber-500 mx-auto" />
+                          ) : (
+                            <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              
+              <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg border text-xs text-muted-foreground">
+                <AlertCircle className="h-4 w-4 text-blue-500" />
+                <p>We've automatically extracted fees and durations from your text where possible. Review them above.</p>
+              </div>
+            </div>
+          )}
+
+          {step === 'importing' && (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+              <Loader2 className="h-12 w-12 text-[#0056b3] animate-spin" />
+              <div className="text-center space-y-1">
+                <p className="font-medium">Saving programs to database...</p>
+                <p className="text-sm text-muted-foreground">This may take a moment depending on the file size.</p>
+              </div>
+            </div>
+          )}
+
+          {step === 'success' && (
+            <div className="flex flex-col items-center justify-center py-12 space-y-6">
+              <div className="h-20 w-20 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle className="h-12 w-12 text-green-600" />
+              </div>
+              <div className="text-center space-y-2">
+                <h3 className="text-xl font-bold text-green-900">Import Successful</h3>
+                <p className="text-muted-foreground whitespace-pre-wrap">
+                  {previewData.length} programs have been processed and synced.<br/>
+                  Existing records were updated and new ones were added.
+                </p>
+              </div>
             </div>
           )}
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleImport} disabled={!file || previewData.length === 0 || isUploading}>
-            {isUploading ? "Importing..." : "Import Data"}
-          </Button>
+        <DialogFooter className="border-t pt-4">
+          {step === 'upload' && (
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          )}
+          {step === 'preview' && (
+            <>
+              <Button variant="ghost" onClick={() => setStep('upload')}>
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back
+              </Button>
+              <Button 
+                onClick={handleImport} 
+                disabled={isUploading || previewData.some(r => !r.title)}
+                className="bg-[#0056b3] hover:bg-[#0056b3]/90"
+              >
+                Sync {previewData.length} Programs <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </>
+          )}
+          {step === 'success' && (
+            <Button onClick={() => setOpen(false)} className="bg-green-600 hover:bg-green-700">
+              Close
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
