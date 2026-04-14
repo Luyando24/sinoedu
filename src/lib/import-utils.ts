@@ -75,7 +75,7 @@ export function extractFieldsFromText(text: string): Record<string, string> {
 
   // Tuition patterns
   const tuitionPatterns = [
-    /(?:tuition|cost|fee)\s*[:=-]?\s*([^,\n.]+)/i,
+    /(?:tuition|cost|fee)\s*[:=-]?\s*([\d,.]+\s*(?:rmb|usd|yuan|\$|€))/i,
     /([\d,.]+\s*(?:rmb|usd|yuan|\$|€))\s*(?:per year|annually|\/year)/i,
     /(?:rmb|usd|\$)\s*([\d,.]+)/i
   ];
