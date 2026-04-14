@@ -105,20 +105,44 @@ export function ProgramImporter() {
         "Duration": "4 Years",
         "Language": "English",
         "Deadline": "2025-06-30",
-        "Details (General Info)": "Comprehensive CS program taught in English.\nAge limit: 18-25\nLanguage requirements: IELTS 6.0",
-        "Fee Structure Details": "Registration: 400 RMB\nAccommodation: 6000-12000 RMB/Year"
+        "Details (General Info)": "High-ranking CS program.\nAge limit: 18-25\nLanguage: IELTS 6.0",
+        "Fee Structure Details": "Registration: 400 RMB\nAccommodation: 12000 RMB/Year"
       },
       {
-        "Program Name": "International Business MBA",
-        "Program ID": "MBA-BLCU-002",
-        "University": "Beijing Language and Culture University",
+        "Program Name": "MBBS (Medicine)",
+        "Program ID": "MED-SOU-003",
+        "University": "Southeast University",
+        "Level": "Bachelor",
+        "Tuition Fee": "", 
+        "Duration": "", 
+        "Language": "English",
+        "Deadline": "2025-07-15",
+        "Details (General Info)": "Duration: 6 Years.\r\nTuition: 30,000 RMB/Year.\nNote: High demand program.",
+        "Fee Structure Details": "Registration: 600 RMB"
+      },
+      {
+        "Program Name": "Chinese Language Program",
+        "Program ID": "LANG-BLCU-004",
+        "University": "Beijing Language Uni", 
+        "Level": "Language",
+        "Tuition Fee": "15,000 RMB/Year",
+        "Duration": "1 Year",
+        "Language": "Chinese+",
+        "Deadline": "2025-08-01",
+        "Details (General Info)": "Intensive Chinese language for international students.",
+        "Fee Structure Details": "Registration: 800 RMB"
+      },
+      {
+        "Program Name": "Artificial Intelligence MBA",
+        "Program ID": "MBA-THU-005",
+        "University": "Tsinghua University",
         "Level": "Master",
-        "Tuition Fee": "30,000 RMB/Year",
+        "Tuition Fee": "45,000 RMB/Year",
         "Duration": "2 Years",
         "Language": "English",
-        "Deadline": "2025-05-15",
-        "Details (General Info)": "Focus on international management.\nAcademic: Bachelor degree required.",
-        "Fee Structure Details": "Registration: 800 RMB\nAccommodation: 8000-15000 RMB/Year"
+        "Deadline": "2025-04-30",
+        "Details (General Info)": "Focus on AI business applications.\nDegree required.",
+        "Fee Structure Details": "Accommodation: 20000 RMB/Year"
       }
     ]
 
