@@ -63,6 +63,7 @@ interface ProgramRow {
   is_active: boolean;
   general_info: Record<string, string>;
   fee_structure: Record<string, string>;
+  scholarship_details: string | null;
   
   // UI status fields
   _rawUniName?: string;
@@ -111,7 +112,9 @@ export function ProgramImporter() {
         "About the Program": "This comprehensive Computer Science program covers AI, Software Engineering, and more.",
         "Entry Requirements": "High school diploma with good math grades.\nIELTS 6.0 or equivalent.",
         "Required Documents": "Passport copy\nHigh School Transcript\nGraduation Certificate\nLanguage Proficiency Certificate",
-        "Fee Structure Details": "Registration: 400 RMB\nAccommodation: 12000 RMB/Year"
+        "Fee Structure Details": "Registration: 400 RMB\nAccommodation: 12000 RMB/Year",
+        "Scholarship Type": "Full Scholarship",
+        "Scholarship Details": "Covers tuition, registration, and monthly stipend."
       },
       {
         "Program Name": "MBBS (Medicine)",
@@ -126,7 +129,9 @@ export function ProgramImporter() {
         "About the Program": "A leading medical program for international students.",
         "Entry Requirements": "Strong background in Biology and Chemistry.\nAge 18-25.",
         "Required Documents": "Passport\nTranscripts\nPersonal Statement",
-        "Fee Structure Details": "Registration: 600 RMB"
+        "Fee Structure Details": "Registration: 600 RMB",
+        "Scholarship Type": "None",
+        "Scholarship Details": "Self-funded program."
       },
       {
         "Program Name": "Chinese Language Program",
@@ -172,6 +177,8 @@ export function ProgramImporter() {
       { wch: 40 }, // requirements
       { wch: 40 }, // documents
       { wch: 40 }, // fees
+      { wch: 25 }, // scholarship type
+      { wch: 40 }, // scholarship details
     ]
     ws['!cols'] = wscols
 
@@ -319,6 +326,7 @@ export function ProgramImporter() {
         is_active: true,
         general_info: parseGroupedText(safeString(mappedRow.general_info || mappedRow.description)),
         fee_structure: parseGroupedText(safeString(mappedRow.fee_structure)),
+        scholarship_details: safeString(mappedRow.scholarship_details),
         
         _rawUniName: rawUniName,
         _matchStatus: matchStatus,
@@ -392,7 +400,8 @@ export function ProgramImporter() {
         required_documents: row.required_documents,
         is_active: row.is_active,
         general_info: row.general_info,
-        fee_structure: row.fee_structure
+        fee_structure: row.fee_structure,
+        scholarship_details: row.scholarship_details
       }))
 
       // Use upsert to handle updates
@@ -567,6 +576,7 @@ export function ProgramImporter() {
                                 {row.general_info && Object.keys(row.general_info).length > 0 && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-slate-50/50">General</Badge>}
                                 {row.requirements && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-green-50/50">Reqs</Badge>}
                                 {row.required_documents && row.required_documents.length > 0 && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-purple-50/50">Docs ({row.required_documents.length})</Badge>}
+                                {row.scholarship_details && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-amber-50/50">Scholarship</Badge>}
                              </div>
                           </div>
                         </td>

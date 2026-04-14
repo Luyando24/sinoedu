@@ -359,15 +359,26 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
           <div className="space-y-6">
             {/* Scholarship Info */}
             {(program.scholarship_id || program.scholarship_details) && (
-              <Card className="bg-gradient-to-br from-brand-gold/10 to-transparent border-brand-gold/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-brand-gold-dark">
-                    <Trophy className="h-5 w-5" />
-                    {program.scholarships?.name || "Scholarship Available"}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm">
-                  <p className="whitespace-pre-wrap break-words">{program.scholarship_details || "Contact us for more details about this scholarship."}</p>
+              <Card className="bg-gradient-to-br from-amber-50 to-white border-amber-200 overflow-hidden">
+                <div className="bg-amber-100/50 px-6 py-3 border-b border-amber-200 flex items-center gap-2 text-amber-900 font-bold">
+                  <Trophy className="h-5 w-5 text-amber-600" />
+                  {program.scholarships?.name || "Funding Opportunity"}
+                </div>
+                <CardContent className="p-6 space-y-4">
+                  {program.scholarship_details ? (
+                    <div className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap break-words italic">
+                      {program.scholarship_details}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-slate-500 italic">
+                      Contact our counseling team for specific details and eligibility criteria for this scholarship.
+                    </p>
+                  )}
+                  <div className="pt-2">
+                    <Badge variant="outline" className="bg-white text-amber-700 border-amber-200">
+                      Scholarship Support Available
+                    </Badge>
+                  </div>
                 </CardContent>
               </Card>
             )}

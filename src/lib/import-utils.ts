@@ -63,6 +63,8 @@ export const HEADER_ALIASES: Record<string, string[]> = {
   requirements: ['entry requirements', 'eligibility', 'admission criteria', 'general requirements'],
   required_documents: ['required documents', 'documents', 'required docs', 'application documents', 'document list'],
   general_info: ['details (general info)', 'general info', 'notes', 'extra info'],
+  scholarship_id: ['scholarship type', 'scholarship name', 'scholarship'],
+  scholarship_details: ['scholarship details', 'scholarship info', 'scholarship description', 'scholarship text'],
 };
 
 /**

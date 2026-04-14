@@ -180,7 +180,9 @@ export default async function ProgramsPage({
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <GraduationCap className="h-4 w-4 text-[#0056b3]" />
-                    {program.scholarships?.name || (program.scholarship_details ? "Scholarship" : "Self-funded")}
+                    <span className={program.scholarships?.name ? "text-[#0056b3] font-medium" : ""}>
+                      {program.scholarships?.name || (program.scholarship_details ? "Scholarship Available" : "Self-funded")}
+                    </span>
                   </div>
                 </div>
               </div>
