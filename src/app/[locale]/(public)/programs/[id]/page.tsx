@@ -358,7 +358,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Scholarship Info */}
-            {(program.scholarship_id || program.scholarship_details) && (
+            {program.scholarship_id && (
               <Card className="bg-gradient-to-br from-amber-50 to-white border-amber-200 overflow-hidden">
                 <div className="bg-amber-100/50 px-6 py-3 border-b border-amber-200 flex items-center gap-2 text-amber-900 font-bold">
                   <Trophy className="h-5 w-5 text-amber-600" />
