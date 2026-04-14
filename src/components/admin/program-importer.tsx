@@ -69,6 +69,8 @@ interface ProgramRow {
   _rawUniName?: string;
   _matchStatus?: 'exact' | 'fuzzy' | 'none';
   _suggestedUniId?: string;
+  _rawScholarshipName?: string;
+  _scholarshipMatchStatus?: 'exact' | 'fuzzy' | 'none';
 }
 
 export function ProgramImporter() {
@@ -303,7 +305,28 @@ export function ProgramImporter() {
       }
 
       const scholarshipName = safeString(mappedRow.scholarship_id)
-      const scholarshipId = scholarshipName ? scholarships.find(s => s.name.toLowerCase() === scholarshipName.toLowerCase())?.id || null : null
+      let scholarshipId: string | null = null
+      let scholarshipMatchStatus: 'exact' | 'fuzzy' | 'none' = 'none'
+
+      if (scholarshipName) {
+        // Exact match
+        const exact = scholarships.find(s => s.name.toLowerCase() === scholarshipName.toLowerCase())
+        if (exact) {
+          scholarshipId = exact.id
+          scholarshipMatchStatus = 'exact'
+        } else {
+          // Fuzzy match
+          const matches = scholarships.map(s => ({
+            id: s.id,
+            similarity: getSimilarity(scholarshipName, s.name)
+          })).sort((a, b) => b.similarity - a.similarity)
+
+          if (matches[0] && matches[0].similarity > 0.8) {
+            scholarshipId = matches[0].id
+            scholarshipMatchStatus = 'fuzzy'
+          }
+        }
+      }
 
       return {
         id_in_file: index,
@@ -330,7 +353,9 @@ export function ProgramImporter() {
         
         _rawUniName: rawUniName,
         _matchStatus: matchStatus,
-        _suggestedUniId: suggestedUniId
+        _suggestedUniId: suggestedUniId,
+        _rawScholarshipName: scholarshipName || undefined,
+        _scholarshipMatchStatus: scholarshipMatchStatus
       }
     })
 
@@ -518,6 +543,7 @@ export function ProgramImporter() {
                     <tr>
                       <th className="p-3 text-left font-medium">Program Title</th>
                       <th className="p-3 text-left font-medium">University Match</th>
+                      <th className="p-3 text-left font-medium">Scholarship</th>
                       <th className="p-3 text-left font-medium">Tuition/Info</th>
                       <th className="p-3 text-center font-medium w-[80px]">Status</th>
                     </tr>
@@ -556,6 +582,32 @@ export function ProgramImporter() {
                                 Excel: {row._rawUniName || "(empty)"}
                               </span>
                               {row._matchStatus === 'fuzzy' && (
+                                <Badge variant="secondary" className="text-[9px] h-3.5 px-1 bg-amber-100 text-amber-700 hover:bg-amber-100">Fuzzy Match</Badge>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <div className="space-y-1.5">
+                            <Select 
+                              value={row.scholarship_id || "none"} 
+                              onValueChange={(val) => handleUpdateRow(i, 'scholarship_id', val === "none" ? null : val)}
+                            >
+                              <SelectTrigger className={`h-8 text-xs ${!row.scholarship_id && row._rawScholarshipName ? 'border-amber-200 bg-amber-50/30' : ''}`}>
+                                <SelectValue placeholder="Select Scholarship" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">-- None / Self-funded --</SelectItem>
+                                {scholarships.map(s => (
+                                  <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <div className="flex items-center gap-1.5 px-1">
+                              <span className="text-[10px] text-muted-foreground truncate max-w-[150px]">
+                                Excel: {row._rawScholarshipName || "(empty)"}
+                              </span>
+                              {row._scholarshipMatchStatus === 'fuzzy' && (
                                 <Badge variant="secondary" className="text-[9px] h-3.5 px-1 bg-amber-100 text-amber-700 hover:bg-amber-100">Fuzzy Match</Badge>
                               )}
                             </div>
