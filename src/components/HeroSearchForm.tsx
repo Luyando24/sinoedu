@@ -49,21 +49,24 @@ export function HeroSearchForm({
       setIsCitiesLoading(true)
       try {
         const supabase = createClient()
-        // Use a more efficient query if possible, or at least handle it safely
-        const { data, error } = await supabase
-          .from('programs')
-          .select('location')
-          .not('location', 'is', null)
         
-        if (error) throw error
+        // Fetch locations from both tables
+        const [progRes, uniRes] = await Promise.all([
+          supabase.from('programs').select('location').not('location', 'is', null),
+          supabase.from('universities').select('location').not('location', 'is', null)
+        ])
+        
+        const allLocations = [
+          ...(progRes.data || []).map(p => p.location),
+          ...(uniRes.data || []).map(u => u.location)
+        ]
 
-        if (data) {
-          // Safe data loading: unique cities and filter out duplicates efficiently
-          const uniqueCities = Array.from(new Set(data.map(p => p.location)))
-            .filter(Boolean)
-            .sort() as string[]
-          setCities(uniqueCities)
-        }
+        // Unique cities and filter out duplicates efficiently
+        const uniqueCities = Array.from(new Set(allLocations))
+          .filter(Boolean)
+          .sort() as string[]
+        
+        setCities(uniqueCities)
       } catch (err) {
         console.error("Error fetching cities:", err)
       } finally {

@@ -68,7 +68,7 @@ export default async function ProgramsPage({
 
   let queryBuilder = supabase
     .from('programs')
-    .select('*, universities(name), scholarships(name)', { count: 'exact' })
+    .select('*, universities(name, location), scholarships(name)', { count: 'exact' })
     .eq('is_active', true)
 
   if (query) {
@@ -83,7 +83,7 @@ export default async function ProgramsPage({
     )
   }
   if (city) {
-    queryBuilder = queryBuilder.ilike('location', `%${city}%`)
+    queryBuilder = queryBuilder.or(`location.ilike.%${city}%,universities.location.ilike.%${city}%`)
   }
   if (level) {
     queryBuilder = queryBuilder.eq('level', level)

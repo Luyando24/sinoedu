@@ -80,7 +80,7 @@ export function ProgramImporter() {
   const [previewData, setPreviewData] = useState<ProgramRow[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [universities, setUniversities] = useState<{id: string, name: string}[]>([])
+  const [universities, setUniversities] = useState<{id: string, name: string, location: string | null}[]>([])
   const [scholarships, setScholarships] = useState<{id: string, name: string}[]>([])
   
   const router = useRouter()
@@ -90,7 +90,7 @@ export function ProgramImporter() {
   useEffect(() => {
     const fetchData = async () => {
         const [uniRes, scholarshipRes] = await Promise.all([
-          supabase.from('universities').select('id, name'),
+          supabase.from('universities').select('id, name, location'),
           supabase.from('scholarships').select('id, name')
         ])
         if (uniRes.data) setUniversities(uniRes.data)
@@ -298,11 +298,15 @@ export function ProgramImporter() {
           })).sort((a, b) => b.similarity - a.similarity)
 
           if (matches[0] && matches[0].similarity > 0.8) {
+            const match = universities.find(u => u.id === matches[0].id)
             suggestedUniId = matches[0].id
             matchStatus = 'fuzzy'
+            if (match) uniId = match.id // Set uniId for fuzzy matches too to enable location lookup below
           }
         }
       }
+
+      const matchedUni = universities.find(u => u.id === (uniId || suggestedUniId))
 
       const scholarshipName = safeString(mappedRow.scholarship_id)
       let scholarshipId: string | null = null
@@ -335,7 +339,7 @@ export function ProgramImporter() {
         university_id: uniId || suggestedUniId || null,
         scholarship_id: scholarshipId,
         level: mapLevel(safeString(mappedRow.level)),
-        location: safeString(mappedRow.location),
+        location: safeString(mappedRow.location) || extracted.location || matchedUni?.location || null,
         duration: safeString(mappedRow.duration) || extracted.duration || null,
         tuition_fee: safeString(mappedRow.tuition_fee) || extracted.tuition_fee || null,
         description: safeString(mappedRow.description),

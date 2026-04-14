@@ -106,6 +106,20 @@ export function extractFieldsFromText(text: string): Record<string, string> {
   if (/english[- ]taught|taught in english/i.test(text)) extracted.language = 'English';
   else if (/chinese[- ]taught|taught in chinese/i.test(text)) extracted.language = 'Chinese';
 
+  // Location patterns
+  const locationPatterns = [
+    /(?:location|city|study in)\s*[:=-]?\s*([^,\n.]+)/i,
+    /located in\s+([^,\n.]+)/i
+  ];
+
+  for (const pattern of locationPatterns) {
+    const match = text.match(pattern);
+    if (match && match[1]) {
+      extracted.location = match[1].trim();
+      break;
+    }
+  }
+
   return extracted;
 }
 
