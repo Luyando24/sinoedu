@@ -19,7 +19,10 @@ import {
   AlertCircle,
   Pencil,
   Trophy,
-  Info
+  Info,
+  Wallet,
+  CreditCard,
+  Receipt
 } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
@@ -400,73 +403,114 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
             )}
 
             {/* Cost Breakdown */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Fees & Costs</CardTitle>
+            <Card className="border-none shadow-lg overflow-hidden bg-white/80 backdrop-blur-sm">
+              <CardHeader className="bg-slate-900 text-white pb-6">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Wallet className="h-5 w-5 text-brand-gold" />
+                  Financial Breakdown
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 text-sm">
-                <div className="flex justify-between py-2 border-b">
-                  <span className="text-muted-foreground">Tuition Fee</span>
-                  <span className="font-medium">{program.tuition_fee || "N/A"}</span>
+              <CardContent className="p-0">
+                <div className="divide-y divide-slate-100">
+                  {/* Tuition Fee - Highlighted */}
+                  <div className="p-4 bg-blue-50/30">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600">Primary Cost</span>
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none h-5 text-[10px] px-2">Annual</Badge>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <span className="text-slate-600 font-medium">Tuition Fee</span>
+                      <span className="text-xl font-bold text-slate-900">{program.tuition_fee || "N/A"}</span>
+                    </div>
+                  </div>
+
+                  {/* Other Mandatory Fees */}
+                  <div className="p-4 space-y-4">
+                    {program.registration_fee && (
+                      <div className="flex justify-between items-center group">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-slate-200 transition-colors">
+                            <Receipt className="h-4 w-4 text-slate-600" />
+                          </div>
+                          <span className="text-slate-600">Registration Fee</span>
+                        </div>
+                        <span className="font-semibold text-slate-900">{program.registration_fee}</span>
+                      </div>
+                    )}
+
+                    {program.application_fee_status && (
+                      <div className="flex justify-between items-center group">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-slate-200 transition-colors">
+                            <CreditCard className="h-4 w-4 text-slate-600" />
+                          </div>
+                          <span className="text-slate-600">Application Status</span>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-1 bg-slate-100 rounded-full uppercase tracking-tight">{program.application_fee_status}</span>
+                      </div>
+                    )}
+
+                    {program.accommodation_details && (
+                      <div className="flex justify-between items-center group">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-slate-200 transition-colors">
+                            <Building2 className="h-4 w-4 text-slate-600" />
+                          </div>
+                          <span className="text-slate-600">Accommodation</span>
+                        </div>
+                        <span className="font-semibold text-slate-900">{program.accommodation_details}</span>
+                      </div>
+                    )}
+
+                    {/* Dynamic Fee Structure */}
+                    {program.fee_structure && typeof program.fee_structure === 'object' && Object.entries(program.fee_structure).map(([key, value]) => (
+                      <div key={key} className="flex justify-between items-center group">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-slate-200 transition-colors">
+                            <div className="h-4 w-4 flex items-center justify-center text-[10px] font-bold text-slate-500 italic">
+                              {key[0].toUpperCase()}
+                            </div>
+                          </div>
+                          <span className="text-slate-600">{key}</span>
+                        </div>
+                        <span className="font-semibold text-slate-900">{value as string}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Specific Room Costs Section */}
+                  {accommodationCosts && Object.values(accommodationCosts).some(v => !!v) && (
+                    <div className="p-4 bg-slate-50/80">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Accommodation Options</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {accommodationCosts.single && (
+                          <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
+                            <p className="text-[9px] text-slate-400 font-bold uppercase">Single</p>
+                            <p className="text-[11px] font-bold truncate text-slate-700">{accommodationCosts.single}</p>
+                          </div>
+                        )}
+                        {accommodationCosts.double && (
+                          <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
+                            <p className="text-[9px] text-slate-400 font-bold uppercase">Double</p>
+                            <p className="text-[11px] font-bold truncate text-slate-700">{accommodationCosts.double}</p>
+                          </div>
+                        )}
+                        {accommodationCosts.triple && (
+                          <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
+                            <p className="text-[9px] text-slate-400 font-bold uppercase">3-Person</p>
+                            <p className="text-[11px] font-bold truncate text-slate-700">{accommodationCosts.triple}</p>
+                          </div>
+                        )}
+                        {accommodationCosts.quad && (
+                          <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
+                            <p className="text-[9px] text-slate-400 font-bold uppercase">4-Person</p>
+                            <p className="text-[11px] font-bold truncate text-slate-700">{accommodationCosts.quad}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {program.registration_fee && (
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">Registration Fee</span>
-                    <span className="font-medium">{program.registration_fee}</span>
-                  </div>
-                )}
-                
-                {/* Dynamic Fee Structure from grouped column */}
-                {program.fee_structure && typeof program.fee_structure === 'object' && Object.entries(program.fee_structure).map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">{key}</span>
-                    <span className="font-medium">{value as string}</span>
-                  </div>
-                ))}
-
-                {program.application_fee_status && (
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">Application Fee Status</span>
-                    <span className="font-medium">{program.application_fee_status}</span>
-                  </div>
-                )}
-
-                {program.accommodation_details && (
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">Accommodation</span>
-                    <span className="font-medium">{program.accommodation_details}</span>
-                  </div>
-                )}
-
-                {accommodationCosts && Object.values(accommodationCosts).some(v => !!v) && (
-                  <div className="space-y-2 pt-2">
-                    <span className="text-muted-foreground block text-xs uppercase font-bold tracking-wider opacity-60">Specific Room Costs</span>
-                    {accommodationCosts.single && (
-                      <div className="flex justify-between pl-2">
-                        <span>Single Room</span>
-                        <span className="font-medium">{accommodationCosts.single}</span>
-                      </div>
-                    )}
-                    {accommodationCosts.double && (
-                      <div className="flex justify-between pl-2">
-                        <span>Double Room</span>
-                        <span className="font-medium">{accommodationCosts.double}</span>
-                      </div>
-                    )}
-                    {accommodationCosts.triple && (
-                      <div className="flex justify-between pl-2">
-                        <span>3-Person Room</span>
-                        <span className="font-medium">{accommodationCosts.triple}</span>
-                      </div>
-                    )}
-                    {accommodationCosts.quad && (
-                      <div className="flex justify-between pl-2">
-                        <span>4-Person Room</span>
-                        <span className="font-medium">{accommodationCosts.quad}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
               </CardContent>
             </Card>
 
