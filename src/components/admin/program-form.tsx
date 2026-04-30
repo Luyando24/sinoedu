@@ -27,7 +27,7 @@ function parseGroupedText(text: string | null | undefined): Record<string, strin
     const colonIndex = line.indexOf(':')
     if (colonIndex > 0) {
       const key = line.substring(0, colonIndex).trim()
-      let value = line.substring(colonIndex + 1).trim()
+      const value = line.substring(colonIndex + 1).trim()
       
       // Check if this "value" actually contains another key-value pair on the same line
       // e.g. "¥20,000/year Registration: ¥600"

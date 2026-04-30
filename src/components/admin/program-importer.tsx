@@ -44,6 +44,70 @@ import { Badge } from "@/components/ui/badge"
 
 type ImportStep = 'upload' | 'preview' | 'importing' | 'success';
 
+const parseGroupedText = (text: string | null | undefined): Record<string, string> => {
+  if (!text) return {}
+  // Normalize line endings and handle both \n and \r\n
+  const normalized = text.replace(/\r\n/g, '\n')
+  
+  // Split by newline first, then handle multi-pair lines
+  const lines = normalized.split('\n').map(l => l.trim()).filter(l => !!l)
+  const obj: Record<string, string> = {}
+  
+  lines.forEach(line => {
+    // Look for colon
+    const colonIndex = line.indexOf(':')
+    if (colonIndex > 0) {
+      const key = line.substring(0, colonIndex).trim()
+      const value = line.substring(colonIndex + 1).trim()
+      
+      if (key && value) {
+        // Handle multiple key-value pairs on one line (e.g. "Key1: Val1 Key2: Val2")
+        const nextKeyMatch = value.match(/\s+([A-Za-z][A-Za-z\s]+):/);
+        if (nextKeyMatch && nextKeyMatch.index !== undefined) {
+          const actualValue = value.substring(0, nextKeyMatch.index).trim();
+          const remaining = value.substring(nextKeyMatch.index).trim();
+          obj[key] = actualValue;
+          Object.assign(obj, parseGroupedText(remaining));
+        } else {
+          if (obj[key]) {
+            obj[key] = `${obj[key]} / ${value}`;
+          } else {
+            obj[key] = value;
+          }
+        }
+      }
+    } else if (line.length > 0) {
+      // Fallback for lines without colons
+      if (line.length < 30 && !obj['Info']) {
+         obj['Note'] = line
+      }
+    }
+  })
+  return obj
+}
+
+const safeString = (val: unknown): string | null => {
+  if (typeof val === 'string') return val.trim()
+  if (val !== null && val !== undefined) return String(val).trim()
+  return null
+}
+
+const mapLevel = (level: string | null): string => {
+  if (!level) return 'Bachelor'
+  const lower = level.toLowerCase()
+  if (lower.includes('bach')) return 'Bachelor'
+  if (lower.includes('mast')) return 'Master'
+  if (lower.includes('doct') || lower.includes('phd')) return 'PhD'
+  if (lower.includes('lang')) return 'Language'
+  if (lower.includes('camp')) return 'Camp'
+  if (lower.includes('high')) return 'High School'
+  if (lower.includes('vocational')) return 'Secondary Vocational Education'
+  if (lower.includes('college')) return 'College'
+  if (lower.includes('top-up')) return 'Top-up program'
+  return 'Bachelor'
+}
+
+
 interface ProgramRow {
   id_in_file?: number;
   title: string;
@@ -338,6 +402,9 @@ export function ProgramImporter() {
         }
       }
 
+      const fee_structure = parseGroupedText(safeString(mappedRow.fee_structure))
+      const general_info = parseGroupedText(safeString(mappedRow.general_info || mappedRow.description))
+
       return {
         id_in_file: index,
         title,
@@ -363,6 +430,7 @@ export function ProgramImporter() {
         registration_fee: safeString(mappedRow.registration_fee) || fee_structure['Registration'] || fee_structure['registration'] || null,
         application_fee_status: safeString(mappedRow.application_fee_status),
         fee_structure, // Use the parsed object
+        general_info,
         
         _rawUniName: rawUniName,
         _matchStatus: matchStatus,
@@ -374,64 +442,6 @@ export function ProgramImporter() {
 
     setPreviewData(processed)
     setStep('preview')
-  }
-
-  const parseGroupedText = (text: string | null | undefined): Record<string, string> => {
-    if (!text) return {}
-    // Normalize line endings and handle both \n and \r\n
-    const normalized = text.replace(/\r\n/g, '\n')
-    
-    // Split by newline first, then handle multi-pair lines
-    const lines = normalized.split('\n').map(l => l.trim()).filter(l => !!l)
-    const obj: Record<string, string> = {}
-    
-    lines.forEach(line => {
-      // Look for colon
-      const colonIndex = line.indexOf(':')
-      if (colonIndex > 0) {
-        const key = line.substring(0, colonIndex).trim()
-        const value = line.substring(colonIndex + 1).trim()
-        
-        if (key && value) {
-          // Handle multiple key-value pairs on one line (e.g. "Key1: Val1 Key2: Val2")
-          const nextKeyMatch = value.match(/\s+([A-Za-z][A-Za-z\s]+):/);
-          if (nextKeyMatch && nextKeyMatch.index !== undefined) {
-            const actualValue = value.substring(0, nextKeyMatch.index).trim();
-            const remaining = value.substring(nextKeyMatch.index).trim();
-            obj[key] = actualValue;
-            Object.assign(obj, parseGroupedText(remaining));
-          } else {
-            if (obj[key]) {
-              obj[key] = `${obj[key]} / ${value}`;
-            } else {
-              obj[key] = value;
-            }
-          }
-        }
-      } else if (line.length > 0) {
-        // Fallback for lines without colons - add to a general 'Other' or use line as key if short
-        if (line.length < 30 && !obj['Info']) {
-           obj['Note'] = line
-        }
-      }
-    })
-    return obj
-  }
-
-  const safeString = (val: unknown): string | null => {
-    if (typeof val === 'string') return val.trim()
-    if (val !== null && val !== undefined) return String(val).trim()
-    return null
-  }
-
-  const mapLevel = (level: string | null): string => {
-    if (!level) return 'Bachelor'
-    const lower = level.toLowerCase()
-    if (lower.includes('bach')) return 'Bachelor'
-    if (lower.includes('mast')) return 'Master'
-    if (lower.includes('doct') || lower.includes('phd')) return 'PhD'
-    if (lower.includes('lang')) return 'Language'
-    return 'Bachelor'
   }
 
   const handleUpdateRow = (index: number, field: keyof ProgramRow, value: string | null | boolean | Record<string, string>) => {
