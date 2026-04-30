@@ -424,9 +424,23 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   </div>
                 ))}
 
-                {accommodationCosts && (
+                {program.application_fee_status && (
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Application Fee Status</span>
+                    <span className="font-medium">{program.application_fee_status}</span>
+                  </div>
+                )}
+
+                {program.accommodation_details && (
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Accommodation</span>
+                    <span className="font-medium">{program.accommodation_details}</span>
+                  </div>
+                )}
+
+                {accommodationCosts && Object.values(accommodationCosts).some(v => !!v) && (
                   <div className="space-y-2 pt-2">
-                    <span className="text-muted-foreground block text-xs uppercase font-bold tracking-wider opacity-60">Legacy Accommodation Details</span>
+                    <span className="text-muted-foreground block text-xs uppercase font-bold tracking-wider opacity-60">Specific Room Costs</span>
                     {accommodationCosts.single && (
                       <div className="flex justify-between pl-2">
                         <span>Single Room</span>
