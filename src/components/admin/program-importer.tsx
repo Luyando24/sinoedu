@@ -357,13 +357,12 @@ export function ProgramImporter() {
           ? safeString(mappedRow.required_documents)!.split('\n').map(s => s.trim()).filter(s => !!s)
           : null,
         is_active: true,
-        general_info: parseGroupedText(safeString(mappedRow.general_info || mappedRow.description)),
-        fee_structure: parseGroupedText(safeString(mappedRow.fee_structure)),
         scholarship_details: safeString(mappedRow.scholarship_details),
         additional_info: safeString(mappedRow.additional_info),
-        accommodation_details: safeString(mappedRow.accommodation_details),
-        registration_fee: safeString(mappedRow.registration_fee),
+        accommodation_details: safeString(mappedRow.accommodation_details) || fee_structure['Accommodation'] || fee_structure['accommodation'] || null,
+        registration_fee: safeString(mappedRow.registration_fee) || fee_structure['Registration'] || fee_structure['registration'] || null,
         application_fee_status: safeString(mappedRow.application_fee_status),
+        fee_structure, // Use the parsed object
         
         _rawUniName: rawUniName,
         _matchStatus: matchStatus,
@@ -379,12 +378,41 @@ export function ProgramImporter() {
 
   const parseGroupedText = (text: string | null | undefined): Record<string, string> => {
     if (!text) return {}
-    const lines = text.split('\n')
+    // Normalize line endings and handle both \n and \r\n
+    const normalized = text.replace(/\r\n/g, '\n')
+    
+    // Split by newline first, then handle multi-pair lines
+    const lines = normalized.split('\n').map(l => l.trim()).filter(l => !!l)
     const obj: Record<string, string> = {}
+    
     lines.forEach(line => {
-      const [key, ...valueParts] = line.split(':')
-      if (key && valueParts.length > 0) {
-        obj[key.trim()] = valueParts.join(':').trim()
+      // Look for colon
+      const colonIndex = line.indexOf(':')
+      if (colonIndex > 0) {
+        const key = line.substring(0, colonIndex).trim()
+        const value = line.substring(colonIndex + 1).trim()
+        
+        if (key && value) {
+          // Handle multiple key-value pairs on one line (e.g. "Key1: Val1 Key2: Val2")
+          const nextKeyMatch = value.match(/\s+([A-Za-z][A-Za-z\s]+):/);
+          if (nextKeyMatch && nextKeyMatch.index !== undefined) {
+            const actualValue = value.substring(0, nextKeyMatch.index).trim();
+            const remaining = value.substring(nextKeyMatch.index).trim();
+            obj[key] = actualValue;
+            Object.assign(obj, parseGroupedText(remaining));
+          } else {
+            if (obj[key]) {
+              obj[key] = `${obj[key]} / ${value}`;
+            } else {
+              obj[key] = value;
+            }
+          }
+        }
+      } else if (line.length > 0) {
+        // Fallback for lines without colons - add to a general 'Other' or use line as key if short
+        if (line.length < 30 && !obj['Info']) {
+           obj['Note'] = line
+        }
       }
     })
     return obj

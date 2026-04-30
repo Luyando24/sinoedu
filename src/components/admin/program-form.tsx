@@ -12,16 +12,45 @@ import { FileUpload } from "@/components/ui/file-upload"
 import { Loader2, Plus, X } from "lucide-react"
 import Image from "next/image"
 
-function parseGroupedText(text: string) {
+function parseGroupedText(text: string | null | undefined): Record<string, string> {
   if (!text) return {}
-  const lines = text.split('\n')
+  // Handle both \n and \r\n, and also handle single-line space-separated entries like "Key: Value Key2: Value2"
+  // First, normalize line endings
+  const normalized = text.replace(/\r\n/g, '\n')
+  
+  // Try splitting by newline first
+  const lines = normalized.split('\n').map(l => l.trim()).filter(l => !!l)
   const obj: Record<string, string> = {}
+  
   lines.forEach(line => {
-    const [key, ...valueParts] = line.split(':')
-    if (key && valueParts.length > 0) {
-      obj[key.trim()] = valueParts.join(':').trim()
+    // Look for colon
+    const colonIndex = line.indexOf(':')
+    if (colonIndex > 0) {
+      const key = line.substring(0, colonIndex).trim()
+      let value = line.substring(colonIndex + 1).trim()
+      
+      // Check if this "value" actually contains another key-value pair on the same line
+      // e.g. "¥20,000/year Registration: ¥600"
+      // We look for a pattern like " Word:" that isn't part of a URL
+      const nextKeyMatch = value.match(/\s+([A-Za-z][A-Za-z\s]+):/);
+      if (nextKeyMatch && nextKeyMatch.index !== undefined) {
+        const actualValue = value.substring(0, nextKeyMatch.index).trim();
+        const remaining = value.substring(nextKeyMatch.index).trim();
+        obj[key] = actualValue;
+        // Recursively parse the remaining part of the line
+        const remainingObj = parseGroupedText(remaining);
+        Object.assign(obj, remainingObj);
+      } else {
+        // Normal single key-value on this line
+        if (obj[key]) {
+          obj[key] = `${obj[key]} / ${value}`;
+        } else {
+          obj[key] = value;
+        }
+      }
     }
-  })
+  });
+
   return obj
 }
 
@@ -131,8 +160,12 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     processing_speed: initialData?.processing_speed || "",
     required_documents: initialData?.required_documents || [""],
     is_active: initialData?.is_active ?? true,
-    general_info_text: initialData?.general_info ? Object.entries(initialData.general_info).map(([k, v]) => `${k}: ${v}`).join('\n') : "",
-    fee_structure_text: initialData?.fee_structure ? Object.entries(initialData.fee_structure).map(([k, v]) => `${k}: ${v}`).join('\n') : "",
+    general_info_text: (initialData?.general_info && typeof initialData.general_info === 'object') 
+      ? Object.entries(initialData.general_info).map(([k, v]) => `${k}: ${v}`).join('\n') 
+      : (typeof initialData?.general_info === 'string' ? initialData.general_info : ""),
+    fee_structure_text: (initialData?.fee_structure && typeof initialData.fee_structure === 'object') 
+      ? Object.entries(initialData.fee_structure).map(([k, v]) => `${k}: ${v}`).join('\n') 
+      : (typeof initialData?.fee_structure === 'string' ? initialData.fee_structure : ""),
     additional_info: initialData?.additional_info || ""
   })
 
@@ -227,6 +260,8 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
         general_info: parseGroupedText(general_info_text),
         fee_structure: parseGroupedText(fee_structure_text)
       }
+
+      console.log("Submitting Payload:", payload);
 
       // Look up school_name if needed for backward compatibility or display, 
       // but we are relying on university_id now. 

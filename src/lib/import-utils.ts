@@ -67,6 +67,7 @@ export const HEADER_ALIASES: Record<string, string[]> = {
   scholarship_details: ['scholarship details', 'scholarship info', 'scholarship description', 'scholarship text'],
   accommodation_details: ['accommodation', 'accommodation fee', 'housing', 'dormitory fee', 'accommodation details'],
   registration_fee: ['registration fee', 'application fee', 'admin fee', 'registration'],
+  fee_structure: ['fee structure', 'fee structure details', 'other fees', 'fees breakdown', 'cost breakdown'],
   additional_info: ['additional information', 'additional info', 'more info', 'notes', 'extra information'],
 };
 
