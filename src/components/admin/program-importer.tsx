@@ -65,6 +65,9 @@ interface ProgramRow {
   fee_structure: Record<string, string>;
   scholarship_details: string | null;
   additional_info: string | null;
+  accommodation_details: string | null;
+  registration_fee: string | null;
+  application_fee_status: string | null;
   
   // UI status fields
   _rawUniName?: string;
@@ -358,6 +361,9 @@ export function ProgramImporter() {
         fee_structure: parseGroupedText(safeString(mappedRow.fee_structure)),
         scholarship_details: safeString(mappedRow.scholarship_details),
         additional_info: safeString(mappedRow.additional_info),
+        accommodation_details: safeString(mappedRow.accommodation_details),
+        registration_fee: safeString(mappedRow.registration_fee),
+        application_fee_status: safeString(mappedRow.application_fee_status),
         
         _rawUniName: rawUniName,
         _matchStatus: matchStatus,
@@ -435,7 +441,10 @@ export function ProgramImporter() {
         general_info: row.general_info,
         fee_structure: row.fee_structure,
         scholarship_details: row.scholarship_details,
-        additional_info: row.additional_info
+        additional_info: row.additional_info,
+        accommodation_details: row.accommodation_details,
+        registration_fee: row.registration_fee,
+        application_fee_status: row.application_fee_status
       }))
 
       // Use upsert to handle updates
@@ -638,6 +647,8 @@ export function ProgramImporter() {
                                 {row.requirements && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-green-50/50">Reqs</Badge>}
                                 {row.required_documents && row.required_documents.length > 0 && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-purple-50/50">Docs ({row.required_documents.length})</Badge>}
                                 {row.scholarship_details && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-amber-50/50">Scholarship</Badge>}
+                                {row.accommodation_details && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-orange-50/50">Accom</Badge>}
+                                {row.registration_fee && <Badge variant="outline" className="text-[8px] h-3.5 px-1 bg-slate-50/50">RegFee</Badge>}
                              </div>
                           </div>
                         </td>
