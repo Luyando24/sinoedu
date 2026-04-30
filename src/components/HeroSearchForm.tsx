@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
+import { Search, X } from "lucide-react"
 import { motion } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
@@ -147,6 +147,11 @@ export function HeroSearchForm({
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const clearField = (name: keyof typeof formData) => {
+    setFormData(prev => ({ ...prev, [name]: "" }))
+    if (name === "city") setCitySearch("")
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const params = new URLSearchParams()
@@ -178,7 +183,7 @@ export function HeroSearchForm({
     className
   )
 
-  const inputClasses = "w-full h-12 px-4 rounded-lg bg-white/90 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-[#0056b3] text-gray-700 font-medium appearance-none cursor-pointer placeholder:text-gray-500 focus:outline-none transition-all"
+  const inputClasses = "w-full h-12 px-4 pr-10 rounded-lg bg-white/90 border-0 ring-1 ring-gray-200 focus:ring-2 focus:ring-[#0056b3] text-gray-700 font-medium appearance-none cursor-pointer placeholder:text-gray-500 focus:outline-none transition-all"
 
   const formContent = (
     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -218,10 +223,21 @@ export function HeroSearchForm({
               setTimeout(() => setIsCityOpen(false), 200)
             }}
           />
-          <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
-            <svg className={cn("w-4 h-4 fill-current transition-transform", isCityOpen ? "rotate-180" : "")} viewBox="0 0 20 20">
-              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-            </svg>
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
+            {formData.city && (
+              <button
+                type="button"
+                onClick={() => clearField("city")}
+                className="p-1 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+            <div className="pointer-events-none text-gray-500">
+              <svg className={cn("w-4 h-4 fill-current transition-transform", isCityOpen ? "rotate-180" : "")} viewBox="0 0 20 20">
+                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+              </svg>
+            </div>
           </div>
         </div>
 
@@ -269,15 +285,26 @@ export function HeroSearchForm({
           value={formData.degree}
           onChange={handleChange}
         >
-          <option value="" disabled>Select Degree</option>
+          <option value="">All Degrees</option>
           {activeDegreeTypes.map((degree) => (
             <option key={degree.id} value={degree.id}>{degree.name}</option>
           ))}
         </select>
-        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
-          <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-          </svg>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
+          {formData.degree && (
+            <button
+              type="button"
+              onClick={() => clearField("degree")}
+              className="p-1 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <div className="pointer-events-none text-gray-500">
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -289,15 +316,26 @@ export function HeroSearchForm({
           value={formData.language}
           onChange={handleChange}
         >
-          <option value="" disabled>Teaching Language</option>
+          <option value="">All Languages</option>
           <option value="English">English</option>
           <option value="Chinese">Chinese</option>
           <option value="Bilingual">Bilingual</option>
         </select>
-        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
-          <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-          </svg>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
+          {formData.language && (
+            <button
+              type="button"
+              onClick={() => clearField("language")}
+              className="p-1 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <div className="pointer-events-none text-gray-500">
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -309,7 +347,7 @@ export function HeroSearchForm({
           value={formData.duration}
           onChange={handleChange}
         >
-          <option value="" disabled>Select Duration</option>
+          <option value="">All Durations</option>
           <option value="1">1 Year</option>
           <option value="2">2 Years</option>
           <option value="3">3 Years</option>
@@ -318,10 +356,21 @@ export function HeroSearchForm({
           <option value="6">6 Years</option>
           <option value="5+">5+ Years</option>
         </select>
-        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
-          <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-          </svg>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
+          {formData.duration && (
+            <button
+              type="button"
+              onClick={() => clearField("duration")}
+              className="p-1 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <div className="pointer-events-none text-gray-500">
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -333,17 +382,28 @@ export function HeroSearchForm({
           value={formData.scholarship}
           onChange={handleChange}
         >
-          <option value="" disabled>Select Scholarship</option>
+          <option value="">All Scholarships</option>
           <option value="any">Any Scholarship</option>
           {activeScholarships.map((s) => (
             <option key={s.id} value={s.id}>{s.name}</option>
           ))}
           <option value="none">Self-Funded</option>
         </select>
-        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
-          <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-          </svg>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
+          {formData.scholarship && (
+            <button
+              type="button"
+              onClick={() => clearField("scholarship")}
+              className="p-1 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <div className="pointer-events-none text-gray-500">
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -355,7 +415,7 @@ export function HeroSearchForm({
           value={formData.intake}
           onChange={handleChange}
         >
-          <option value="" disabled>Select Intake</option>
+          <option value="">All Intakes</option>
           {activeIntakes.length > 0 ? (
             activeIntakes.map((intake) => (
               <option key={intake.id} value={intake.name}>{intake.name} Intake</option>
@@ -367,10 +427,21 @@ export function HeroSearchForm({
             </>
           )}
         </select>
-        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-gray-500">
-          <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
-            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-          </svg>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
+          {formData.intake && (
+            <button
+              type="button"
+              onClick={() => clearField("intake")}
+              className="p-1 hover:bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+          <div className="pointer-events-none text-gray-500">
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+            </svg>
+          </div>
         </div>
       </div>
 
