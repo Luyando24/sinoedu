@@ -451,31 +451,51 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                     )}
 
                     {program.accommodation_details && (
-                      <div className="flex justify-between items-center group">
+                      <div className="flex justify-between items-start group">
                         <div className="flex items-center gap-3">
                           <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-slate-200 transition-colors">
                             <Building2 className="h-4 w-4 text-slate-600" />
                           </div>
                           <span className="text-slate-600">Accommodation</span>
                         </div>
-                        <span className="font-semibold text-slate-900">{program.accommodation_details}</span>
+                        <span className="font-semibold text-slate-900 text-right ml-4">{program.accommodation_details}</span>
                       </div>
                     )}
 
                     {/* Dynamic Fee Structure */}
-                    {program.fee_structure && typeof program.fee_structure === 'object' && Object.entries(program.fee_structure).map(([key, value]) => (
-                      <div key={key} className="flex justify-between items-center group">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-slate-200 transition-colors">
-                            <div className="h-4 w-4 flex items-center justify-center text-[10px] font-bold text-slate-500 italic">
-                              {key[0].toUpperCase()}
+                    {program.fee_structure && typeof program.fee_structure === 'object' && 
+                      Object.entries(program.fee_structure)
+                        .filter(([key, value]) => {
+                          const k = key.toLowerCase();
+                          const v = String(value);
+                          
+                          // Skip if it's already shown as Tuition
+                          if (k.includes('tuition') && program.tuition_fee?.includes(v)) return false;
+                          
+                          // Skip if it's already shown as Registration
+                          if (k.includes('registration') && program.registration_fee?.includes(v)) return false;
+                          
+                          // Skip if it's already shown as Accommodation
+                          if (k.includes('accommodation') && program.accommodation_details?.includes(v)) return false;
+
+                          // Skip if it's just a duplicate of the main tuition fee
+                          if (v === program.tuition_fee) return false;
+
+                          return true;
+                        })
+                        .map(([key, value]) => (
+                          <div key={key} className="flex justify-between items-start group">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-slate-200 transition-colors">
+                                <div className="h-4 w-4 flex items-center justify-center text-[10px] font-bold text-slate-500 italic">
+                                  {key[0].toUpperCase()}
+                                </div>
+                              </div>
+                              <span className="text-slate-600">{key}</span>
                             </div>
+                            <span className="font-semibold text-slate-900 text-right ml-4">{value as string}</span>
                           </div>
-                          <span className="text-slate-600">{key}</span>
-                        </div>
-                        <span className="font-semibold text-slate-900">{value as string}</span>
-                      </div>
-                    ))}
+                        ))}
                   </div>
 
                   {/* Specific Room Costs Section */}
@@ -486,25 +506,25 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                         {accommodationCosts.single && (
                           <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
                             <p className="text-[9px] text-slate-400 font-bold uppercase">Single</p>
-                            <p className="text-[11px] font-bold truncate text-slate-700">{accommodationCosts.single}</p>
+                            <p className="text-[11px] font-bold text-slate-700">{accommodationCosts.single}</p>
                           </div>
                         )}
                         {accommodationCosts.double && (
                           <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
                             <p className="text-[9px] text-slate-400 font-bold uppercase">Double</p>
-                            <p className="text-[11px] font-bold truncate text-slate-700">{accommodationCosts.double}</p>
+                            <p className="text-[11px] font-bold text-slate-700">{accommodationCosts.double}</p>
                           </div>
                         )}
                         {accommodationCosts.triple && (
                           <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
                             <p className="text-[9px] text-slate-400 font-bold uppercase">3-Person</p>
-                            <p className="text-[11px] font-bold truncate text-slate-700">{accommodationCosts.triple}</p>
+                            <p className="text-[11px] font-bold text-slate-700">{accommodationCosts.triple}</p>
                           </div>
                         )}
                         {accommodationCosts.quad && (
                           <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm">
                             <p className="text-[9px] text-slate-400 font-bold uppercase">4-Person</p>
-                            <p className="text-[11px] font-bold truncate text-slate-700">{accommodationCosts.quad}</p>
+                            <p className="text-[11px] font-bold text-slate-700">{accommodationCosts.quad}</p>
                           </div>
                         )}
                       </div>
