@@ -126,7 +126,7 @@ export function extractFieldsFromText(text: string): Record<string, string> {
 
   // Intake patterns
   const intakePatterns = [
-    /(?:intake|start date|admission)\s*[:=-]?\s*([^,\n.]+)/i,
+    /(?:intake|start date|admission)\s*[:=-]?\s*([^,\n.]{1,50}?)(?=\s+(?:age|level|duration|tuition|deadline|requirements|note|info|registration)|$)/i,
     /(spring|autumn|september|march|april|october)\s+(?:\d{4})?\s*(?:intake)/i
   ];
 

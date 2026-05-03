@@ -207,7 +207,12 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                   </div>
                   
                   {/* Dynamic General Info from grouped column */}
-                  {program.general_info && typeof program.general_info === 'object' && Object.entries(program.general_info).map(([key, value]) => (
+                  {program.general_info && typeof program.general_info === 'object' && Object.entries(program.general_info)
+                    .filter(([key]) => {
+                      const k = key.toLowerCase();
+                      return !['intake', 'duration', 'tuition', 'tuition fee', 'deadline', 'application deadline'].includes(k);
+                    })
+                    .map(([key, value]) => (
                     <div key={key} className="flex items-start gap-3">
                       <div className="p-2 bg-slate-50 text-slate-600 rounded-lg">
                         <CheckCircle2 className="h-5 w-5" />
