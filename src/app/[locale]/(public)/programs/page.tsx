@@ -66,6 +66,15 @@ export default async function ProgramsPage({
 
   const scholarships = scholarshipData || []
 
+  // Fetch active durations
+  const { data: durationData } = await supabase
+    .from('program_durations')
+    .select('id, name, value')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true })
+
+  const durations = durationData || []
+
   let queryBuilder = supabase
     .from('programs')
     .select('*, universities(name, location), scholarships(name)', { count: 'exact' })
@@ -153,6 +162,7 @@ export default async function ProgramsPage({
         enableAnimation={false} 
         initialIntakes={intakes} 
         initialScholarships={scholarships} 
+        initialDurations={durations}
       />
 
       <div className="space-y-6">

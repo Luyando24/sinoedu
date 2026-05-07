@@ -15,6 +15,7 @@ interface HeroSearchFormProps {
   variant?: "hero" | "plain"
   initialIntakes?: { id: string, name: string }[]
   initialScholarships?: { id: string, name: string }[]
+  initialDurations?: { id: string, name: string, value: string }[]
 }
 
 export function HeroSearchForm({
@@ -22,7 +23,8 @@ export function HeroSearchForm({
   enableAnimation = true,
   variant = "hero",
   initialIntakes = [],
-  initialScholarships = []
+  initialScholarships = [],
+  initialDurations = []
 }: HeroSearchFormProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -38,6 +40,7 @@ export function HeroSearchForm({
   })
   const [activeIntakes, setActiveIntakes] = useState<{ id: string, name: string }[]>(initialIntakes)
   const [activeScholarships, setActiveScholarships] = useState<{ id: string, name: string }[]>(initialScholarships)
+  const [activeDurations, setActiveDurations] = useState<{ id: string, name: string, value: string }[]>(initialDurations)
   const [cities, setCities] = useState<string[]>([])
   const [citySearch, setCitySearch] = useState("")
   const [isCityOpen, setIsCityOpen] = useState(false)
@@ -125,6 +128,23 @@ export function HeroSearchForm({
         }
       }
       fetchScholarships()
+    }
+    
+    // Only fetch if initialDurations were not provided
+    if (initialDurations.length === 0) {
+      const fetchDurations = async () => {
+        const supabase = createClient()
+        const { data } = await supabase
+          .from('program_durations')
+          .select('id, name, value')
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true })
+
+        if (data) {
+          setActiveDurations(data)
+        }
+      }
+      fetchDurations()
     }
 
     // Fetch active degree types
@@ -348,13 +368,9 @@ export function HeroSearchForm({
           onChange={handleChange}
         >
           <option value="">All Durations</option>
-          <option value="1">1 Year</option>
-          <option value="2">2 Years</option>
-          <option value="3">3 Years</option>
-          <option value="4">4 Years</option>
-          <option value="5">5 Years</option>
-          <option value="6">6 Years</option>
-          <option value="5+">5+ Years</option>
+          {activeDurations.map((d) => (
+            <option key={d.id} value={d.value}>{d.name}</option>
+          ))}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
           {formData.duration && (

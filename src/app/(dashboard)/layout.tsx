@@ -47,6 +47,7 @@ export default async function DashboardLayout({
         { name: "Programs", href: "/admin/programs", icon: "FileText", group: "Academic" },
         { name: "Degree Types", href: "/admin/degree-types", icon: "GraduationCap", group: "Academic" },
         { name: "Intakes", href: "/admin/intakes", icon: "Calendar", group: "Academic" },
+        { name: "Durations", href: "/admin/durations", icon: "Clock", group: "Academic" },
         { name: "Scholarships", href: "/admin/scholarships", icon: "Trophy", group: "Academic" },
         { name: "Reviews", href: "/admin/reviews", icon: "Star", group: "Academic" },
 

@@ -102,6 +102,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
   const [intakePeriods, setIntakePeriods] = useState<{ id: string, name: string }[]>([])
   const [scholarships, setScholarships] = useState<{ id: string, name: string }[]>([])
   const [degreeTypes, setDegreeTypes] = useState<{ id: string, name: string }[]>([])
+  const [durations, setDurations] = useState<{ id: string, name: string, value: string }[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,13 +110,16 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
         supabase.from('universities').select('id, name'),
         supabase.from('intake_periods').select('id, name').eq('is_active', true).order('name'),
         supabase.from('scholarships').select('id, name').eq('is_active', true).order('name'),
-        supabase.from('program_levels').select('id, name').eq('is_active', true).order('sort_order')
+        supabase.from('program_levels').select('id, name').eq('is_active', true).order('sort_order'),
+        supabase.from('program_durations').select('id, name, value').eq('is_active', true).order('sort_order')
       ])
 
       if (uniRes.data) setUniversities(uniRes.data)
       if (intakeRes.data) setIntakePeriods(intakeRes.data)
       if (scholarshipRes.data) setScholarships(scholarshipRes.data)
       if (degreeRes.data) setDegreeTypes(degreeRes.data)
+      if (durationsRes.status === 200 && durationsRes.data) setDurations(durationsRes.data)
+      else if ((durationsRes as any).data) setDurations((durationsRes as any).data) // Handle potential different response shapes
     }
     fetchData()
   }, [supabase])
@@ -352,7 +356,21 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Duration</label>
-            <Input name="duration" value={formData.duration} onChange={handleChange} placeholder="e.g. 4 years" />
+            <select
+              name="duration"
+              value={formData.duration}
+              onChange={handleChange}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              <option value="">Select Duration</option>
+              {durations.map((d) => (
+                <option key={d.id} value={d.value}>{d.name}</option>
+              ))}
+              {/* Fallback for legacy data */}
+              {formData.duration && !durations.some(d => d.value === formData.duration) && (
+                <option value={formData.duration}>{formData.duration} (Current)</option>
+              )}
+            </select>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Language of Instruction</label>
