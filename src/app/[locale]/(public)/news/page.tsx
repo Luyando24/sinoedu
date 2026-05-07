@@ -27,7 +27,7 @@ export default async function NewsPage() {
   return (
     <div className="container py-16 space-y-12 bg-slate-50 min-h-screen">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight text-[#0056b3]">{getContent(blocks, 'news.hero.title', 'Latest News & Updates')}</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-[#0056b3]">{getContent(blocks, 'news.hero.title', 'Study Tour & Updates')}</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           {getContent(blocks, 'news.hero.desc', 'Stay informed about scholarships, university updates, and student life in China.')}
         </p>
@@ -81,7 +81,7 @@ export default async function NewsPage() {
           ))
         ) : (
           <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
-            <h3 className="text-xl font-semibold text-[#0056b3]">{getContent(blocks, 'news.no_news.title', 'No news yet')}</h3>
+            <h3 className="text-xl font-semibold text-[#0056b3]">{getContent(blocks, 'news.no_news.title', 'No study tours yet')}</h3>
             <p className="text-muted-foreground mt-2">{getContent(blocks, 'news.no_news.desc', 'Check back later for the latest updates.')}</p>
           </div>
         )}
