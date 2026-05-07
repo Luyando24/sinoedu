@@ -26,7 +26,6 @@ import {
   Receipt
 } from "lucide-react";
 
-export const dynamic = 'force-dynamic';
 
 interface AccommodationCosts {
   single?: string;
