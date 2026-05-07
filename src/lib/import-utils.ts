@@ -55,7 +55,7 @@ export const HEADER_ALIASES: Record<string, string[]> = {
   level: ['degree level', 'category', 'program level'],
   location: ['city', 'province', 'area'],
   duration: ['time', 'length', 'period'],
-  tuition_fee: ['cost', 'price', 'fees', 'tuition'],
+  tuition_fee: ['cost', 'price', 'fees', 'tuition', 'tuition fee', 'tution', 'tution fee'],
   language: ['taught language', 'instruction language'],
   intake: ['start date', 'admission date'],
   application_deadline: ['deadline', 'closing date'],
@@ -79,7 +79,7 @@ export function extractFieldsFromText(text: string): Record<string, string> {
 
   // Tuition patterns
   const tuitionPatterns = [
-    /(?:tuition|cost|fee)\s*[:=-]?\s*([\d,.]+\s*(?:rmb|usd|yuan|\$|€))/i,
+    /(?:tuition|tution|cost|fee)\s*[:=-]?\s*([\d,.]+\s*(?:rmb|usd|yuan|\$|€))/i,
     /([\d,.]+\s*(?:rmb|usd|yuan|\$|€))\s*(?:per year|annually|\/year)/i,
     /(?:rmb|usd|\$)\s*([\d,.]+)/i
   ];

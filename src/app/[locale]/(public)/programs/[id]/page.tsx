@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
+export const dynamic = 'force-dynamic';
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,27 @@ interface AccommodationCosts {
   triple?: string;
   quad?: string;
   [key: string]: string | undefined;
+}
+
+const getTuitionFee = (program: any) => {
+  if (program.tuition_fee) return program.tuition_fee
+  let fees = program.fee_structure
+  if (typeof fees === 'string') {
+    try {
+      fees = JSON.parse(fees)
+    } catch {
+      fees = {}
+    }
+  }
+  if (fees && typeof fees === 'object' && !Array.isArray(fees)) {
+    const keys = Object.keys(fees)
+    const tuitionKey = keys.find(k => {
+      const kl = k.toLowerCase()
+      return kl.includes('tuition') || kl.includes('tution')
+    })
+    if (tuitionKey) return (fees as any)[tuitionKey]
+  }
+  return null
 }
 
 export default async function ProgramDetailsPage({ params }: { params: { id: string } }) {
@@ -72,6 +94,8 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
   // Safe cast for accommodation costs
   const rawCosts = program.accommodation_costs || {};
   const accommodationCosts = rawCosts as AccommodationCosts;
+  
+  const displayedTuition = getTuitionFee(program);
 
   return (
     <div className="bg-slate-50 min-h-screen py-6 md:py-10">
@@ -182,7 +206,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Tuition Fee</p>
-                      <p className="font-semibold">{program.tuition_fee || "Contact us"}</p>
+                      <p className="font-semibold">{displayedTuition || "Contact us"}</p>
                     </div>
                   </div>
 
@@ -425,7 +449,7 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                     </div>
                     <div className="flex justify-between items-end">
                       <span className="text-slate-600 font-medium">Tuition Fee</span>
-                      <span className="text-xl font-bold text-slate-900">{program.tuition_fee || "N/A"}</span>
+                      <span className="text-xl font-bold text-slate-900">{displayedTuition || "N/A"}</span>
                     </div>
                   </div>
 
@@ -473,18 +497,19 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
                         .filter(([key, value]) => {
                           const k = key.toLowerCase();
                           const v = String(value);
+                          const displayedTuition = getTuitionFee(program);
                           
                           // Skip if it's already shown as Tuition
-                          if (k.includes('tuition') && program.tuition_fee?.includes(v)) return false;
+                          if (k.includes('tuition') && (program.tuition_fee?.includes(v) || displayedTuition?.includes(v))) return false;
                           
                           // Skip if it's already shown as Registration
                           if (k.includes('registration') && program.registration_fee?.includes(v)) return false;
                           
                           // Skip if it's already shown as Accommodation
                           if (k.includes('accommodation') && program.accommodation_details?.includes(v)) return false;
-
+ 
                           // Skip if it's just a duplicate of the main tuition fee
-                          if (v === program.tuition_fee) return false;
+                          if (v === program.tuition_fee || v === displayedTuition) return false;
 
                           return true;
                         })

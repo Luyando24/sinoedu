@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server"
+export const dynamic = 'force-dynamic'
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
@@ -11,6 +12,27 @@ const getContent = (blocks: { key: string; content: string }[] | null, key: stri
   if (!blocks) return fallback
   const block = blocks.find(b => b.key === key)
   return block ? block.content : fallback
+}
+
+const getTuitionFee = (program: any) => {
+  if (program.tuition_fee) return program.tuition_fee
+  let fees = program.fee_structure
+  if (typeof fees === 'string') {
+    try {
+      fees = JSON.parse(fees)
+    } catch {
+      fees = {}
+    }
+  }
+  if (fees && typeof fees === 'object' && !Array.isArray(fees)) {
+    const keys = Object.keys(fees)
+    const tuitionKey = keys.find(k => {
+      const kl = k.toLowerCase()
+      return kl.includes('tuition') || kl.includes('tution')
+    })
+    if (tuitionKey) return (fees as any)[tuitionKey]
+  }
+  return "N/A"
 }
 
 export default async function ProgramsPage({
@@ -196,7 +218,7 @@ export default async function ProgramsPage({
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <DollarSign className="h-4 w-4 text-[#0056b3]" />
-                    {program.tuition_fee || "N/A"}
+                    {getTuitionFee(program)}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Calendar className="h-4 w-4 text-[#0056b3]" />

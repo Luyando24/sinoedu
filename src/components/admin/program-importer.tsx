@@ -409,7 +409,7 @@ export function ProgramImporter() {
       // but only if they were parsed correctly (smarter splitting)
       const intake = safeString(mappedRow.intake) || general_info['Intake'] || general_info['intake'] || extracted.intake || 'September'
       const duration = safeString(mappedRow.duration) || general_info['Duration'] || general_info['duration'] || extracted.duration || null
-      const tuition_fee = safeString(mappedRow.tuition_fee) || general_info['Tuition'] || general_info['tuition'] || general_info['Tuition Fee'] || extracted.tuition_fee || null
+      const tuition_fee = safeString(mappedRow.tuition_fee) || general_info['Tuition'] || general_info['tuition'] || general_info['Tution'] || general_info['tution'] || general_info['Tuition Fee'] || extracted.tuition_fee || null
       const deadline = safeString(mappedRow.application_deadline) || general_info['Deadline'] || general_info['deadline'] || null
 
       // Remove redundant keys from general_info and fee_structure to prevent double entry in UI

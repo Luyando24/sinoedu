@@ -53,6 +53,19 @@ function parseGroupedText(text: string | null | undefined): Record<string, strin
 
   return obj
 }
+function getTuitionFee(program: any) {
+  if (program.tuition_fee) return program.tuition_fee
+  const fees = program.fee_structure
+  if (fees && typeof fees === 'object' && !Array.isArray(fees)) {
+    const keys = Object.keys(fees)
+    const tuitionKey = keys.find(k => {
+      const kl = k.toLowerCase()
+      return kl.includes('tuition') || kl.includes('tution')
+    })
+    if (tuitionKey) return (fees as any)[tuitionKey]
+  }
+  return null
+}
 
 type Program = {
   id: string
@@ -131,7 +144,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
     cover_image: initialData?.cover_image || "",
     level: initialData?.level || "Bachelor",
     duration: initialData?.duration || "",
-    tuition_fee: initialData?.tuition_fee || "",
+    tuition_fee: initialData?.tuition_fee || getTuitionFee(initialData) || "",
     description: initialData?.description || "",
     requirements: initialData?.requirements || "",
     location: initialData?.location || "",
