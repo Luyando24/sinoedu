@@ -161,7 +161,7 @@ export function HeroSearchForm({
       }
     }
     fetchDegreeTypes()
-  }, [initialIntakes, initialScholarships])
+  }, [initialIntakes, initialScholarships, initialDurations])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })

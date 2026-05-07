@@ -106,7 +106,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [uniRes, intakeRes, scholarshipRes, degreeRes] = await Promise.all([
+      const [uniRes, intakeRes, scholarshipRes, degreeRes, durationsRes] = await Promise.all([
         supabase.from('universities').select('id, name'),
         supabase.from('intake_periods').select('id, name').eq('is_active', true).order('name'),
         supabase.from('scholarships').select('id, name').eq('is_active', true).order('name'),
@@ -118,8 +118,7 @@ export function ProgramForm({ initialData }: ProgramFormProps) {
       if (intakeRes.data) setIntakePeriods(intakeRes.data)
       if (scholarshipRes.data) setScholarships(scholarshipRes.data)
       if (degreeRes.data) setDegreeTypes(degreeRes.data)
-      if (durationsRes.status === 200 && durationsRes.data) setDurations(durationsRes.data)
-      else if ((durationsRes as any).data) setDurations((durationsRes as any).data) // Handle potential different response shapes
+      if (durationsRes.data) setDurations(durationsRes.data)
     }
     fetchData()
   }, [supabase])
