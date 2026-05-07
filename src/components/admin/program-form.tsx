@@ -53,7 +53,8 @@ function parseGroupedText(text: string | null | undefined): Record<string, strin
 
   return obj
 }
-function getTuitionFee(program: { tuition_fee?: string | null; fee_structure?: Record<string, unknown> | null }) {
+function getTuitionFee(program?: { tuition_fee?: string | null; fee_structure?: Record<string, unknown> | null }) {
+  if (!program) return null
   if (program.tuition_fee) return program.tuition_fee
   const fees = program.fee_structure
   if (fees && typeof fees === 'object' && !Array.isArray(fees)) {
