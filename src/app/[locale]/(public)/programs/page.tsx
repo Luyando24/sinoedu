@@ -14,7 +14,7 @@ const getContent = (blocks: { key: string; content: string }[] | null, key: stri
   return block ? block.content : fallback
 }
 
-const getTuitionFee = (program: any) => {
+const getTuitionFee = (program: { tuition_fee?: string | null; fee_structure?: Record<string, unknown> | string | null }) => {
   if (program.tuition_fee) return program.tuition_fee
   let fees = program.fee_structure
   if (typeof fees === 'string') {
@@ -30,7 +30,7 @@ const getTuitionFee = (program: any) => {
       const kl = k.toLowerCase()
       return kl.includes('tuition') || kl.includes('tution')
     })
-    if (tuitionKey) return (fees as any)[tuitionKey]
+    if (tuitionKey) return (fees as Record<string, string>)[tuitionKey]
   }
   return "N/A"
 }
