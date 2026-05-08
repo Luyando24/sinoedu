@@ -92,9 +92,29 @@ const safeString = (val: unknown): string | null => {
   return null
 }
 
-const mapLevel = (level: string | null): string => {
+const mapLevel = (level: string | null, availableLevels: {name: string}[]): string => {
   if (!level) return 'Bachelor'
   const lower = level.toLowerCase()
+  
+  // 1. Exact match (case insensitive)
+  const exactMatch = availableLevels.find(l => l.name.toLowerCase() === lower)
+  if (exactMatch) return exactMatch.name
+
+  // 2. Find all levels that are contained in the input string
+  // or that contain the input string (if the input is short)
+  const matches = availableLevels.filter(l => {
+    const levelNameLower = l.name.toLowerCase()
+    return lower.includes(levelNameLower) || levelNameLower.includes(lower)
+  })
+
+  if (matches.length > 0) {
+    // If multiple matches, pick the longest one to be most specific
+    // (e.g. "Bachelor without CSA" instead of "Bachelor")
+    const bestMatch = matches.sort((a, b) => b.name.length - a.name.length)[0]
+    return bestMatch.name
+  }
+
+  // 3. Legacy fallbacks if no matches found in DB
   if (lower.includes('bach')) return 'Bachelor'
   if (lower.includes('mast')) return 'Master'
   if (lower.includes('doct') || lower.includes('phd')) return 'PhD'
@@ -104,6 +124,7 @@ const mapLevel = (level: string | null): string => {
   if (lower.includes('vocational')) return 'Secondary Vocational Education'
   if (lower.includes('college')) return 'College'
   if (lower.includes('top-up')) return 'Top-up program'
+  
   return 'Bachelor'
 }
 
@@ -150,6 +171,7 @@ export function ProgramImporter() {
   const [error, setError] = useState<string | null>(null)
   const [universities, setUniversities] = useState<{id: string, name: string, location: string | null}[]>([])
   const [scholarships, setScholarships] = useState<{id: string, name: string}[]>([])
+  const [levels, setLevels] = useState<{id: string, name: string}[]>([])
   
   const router = useRouter()
   const supabase = createClient()
@@ -157,12 +179,14 @@ export function ProgramImporter() {
   // Fetch universities and scholarships for mapping
   useEffect(() => {
     const fetchData = async () => {
-        const [uniRes, scholarshipRes] = await Promise.all([
+        const [uniRes, scholarshipRes, levelRes] = await Promise.all([
           supabase.from('universities').select('id, name, location'),
-          supabase.from('scholarships').select('id, name')
+          supabase.from('scholarships').select('id, name'),
+          supabase.from('program_levels').select('id, name').eq('is_active', true).order('sort_order')
         ])
         if (uniRes.data) setUniversities(uniRes.data)
         if (scholarshipRes.data) setScholarships(scholarshipRes.data)
+        if (levelRes.data) setLevels(levelRes.data)
     }
     if (open) fetchData()
   }, [open, supabase])
@@ -425,7 +449,7 @@ export function ProgramImporter() {
         program_id_code: safeString(mappedRow.program_id_code),
         university_id: uniId || suggestedUniId || null,
         scholarship_id: scholarshipId,
-        level: mapLevel(safeString(mappedRow.level)),
+        level: mapLevel(safeString(mappedRow.level), levels),
         location: safeString(mappedRow.location) || extracted.location || matchedUni?.location || null,
         duration,
         tuition_fee,
