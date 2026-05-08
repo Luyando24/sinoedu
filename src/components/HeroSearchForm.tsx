@@ -399,11 +399,9 @@ export function HeroSearchForm({
           onChange={handleChange}
         >
           <option value="">All Scholarships</option>
-          <option value="any">Any Scholarship</option>
           {activeScholarships.map((s) => (
             <option key={s.id} value={s.id}>{s.name}</option>
           ))}
-          <option value="none">Self-Funded</option>
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
           {formData.scholarship && (

@@ -691,7 +691,6 @@ export function ProgramImporter() {
                                 <SelectValue placeholder="Select Scholarship" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="none">-- None / Self-funded --</SelectItem>
                                 {scholarships.map(s => (
                                   <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
                                 ))}
