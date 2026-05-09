@@ -340,6 +340,7 @@ export function HeroSearchForm({
           <option value="English">English</option>
           <option value="Chinese">Chinese</option>
           <option value="Bilingual">Bilingual</option>
+          <option value="Chinese/English">Chinese/English</option>
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center pr-2 gap-1">
           {formData.language && (

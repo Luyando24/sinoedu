@@ -107,7 +107,8 @@ export function extractFieldsFromText(text: string): Record<string, string> {
   }
 
   // Language patterns
-  if (/english[- ]taught|taught in english/i.test(text)) extracted.language = 'English';
+  if (/(?:chinese[ /&]english|english[ /&]chinese)[- ]taught|taught in (?:chinese[ /&]english|english[ /&]chinese)/i.test(text)) extracted.language = 'Chinese/English';
+  else if (/english[- ]taught|taught in english/i.test(text)) extracted.language = 'English';
   else if (/chinese[- ]taught|taught in chinese/i.test(text)) extracted.language = 'Chinese';
 
   // Location patterns
