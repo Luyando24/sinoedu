@@ -101,9 +101,9 @@ export default async function ProgramDetailsPage({ params }: { params: { id: str
       <div className="container px-4 md:px-6 space-y-6 md:space-y-8">
         {/* Navigation & Admin Controls */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <Link href="/universities">
+          <Link href={`/universities/${program.university_id}`}>
             <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Universities
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to University
             </Button>
           </Link>
 
