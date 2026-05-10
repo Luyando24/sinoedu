@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { GraduationCap, MapPin, ArrowRight } from "lucide-react"
+import { GraduationCap, MapPin, ArrowRight, ArrowLeft } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "next/image"
 import { SearchForm } from "@/components/programs/search-form"
@@ -54,6 +54,13 @@ export default async function UniversitiesPage({
 
   return (
     <div className="container py-16 space-y-12 bg-slate-50 min-h-screen">
+      <div className="flex items-center -mt-8 -mb-4">
+        <Link href="/programs">
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-[#0056b3]">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Programs
+          </Button>
+        </Link>
+      </div>
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <h1 className="text-4xl font-bold tracking-tight text-[#0056b3]">{getContent(blocks, 'universities.header.title', "Partner Universities")}</h1>
         <p className="text-xl text-muted-foreground">

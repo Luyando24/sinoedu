@@ -57,6 +57,11 @@ export default async function UniversityDetailsPage({ params }: { params: { id: 
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to Universities
             </Button>
           </Link>
+          <Link href="/programs">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Programs
+            </Button>
+          </Link>
         </div>
 
         {/* Hero Section */}
