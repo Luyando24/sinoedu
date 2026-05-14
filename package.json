@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "maintenance:enable": "tsx scripts/maintenance.ts enable",
+    "maintenance:disable": "tsx scripts/maintenance.ts disable",
+    "maintenance:status": "tsx scripts/maintenance.ts status"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
