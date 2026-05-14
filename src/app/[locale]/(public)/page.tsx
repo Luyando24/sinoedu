@@ -22,5 +22,13 @@ export default async function Home() {
   const supabase = createClient()
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
-  return <HomeClient content={blocks || []} />
+  // Check if user is admin or agent
+  const { data: { user } } = await supabase.auth.getUser()
+  let hasPrivilegedAccess = false
+  if (user) {
+    const { data: role } = await supabase.rpc('get_my_role')
+    hasPrivilegedAccess = role === 'admin' || role === 'agent'
+  }
+
+  return <HomeClient content={blocks || []} hasPrivilegedAccess={hasPrivilegedAccess} />
 }

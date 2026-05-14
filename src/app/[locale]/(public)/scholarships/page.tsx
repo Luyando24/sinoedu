@@ -13,6 +13,15 @@ const getContent = (blocks: { key: string; content: string }[] | null, key: stri
 
 export default async function ScholarshipsPage() {
   const supabase = createClient()
+  
+  // Check if user is admin or agent
+  const { data: { user } } = await supabase.auth.getUser()
+  let hasPrivilegedAccess = false
+  if (user) {
+    const { data: role } = await supabase.rpc('get_my_role')
+    hasPrivilegedAccess = role === 'admin' || role === 'agent'
+  }
+
   const { data: blocks } = await supabase.from('content_blocks').select('*')
 
   return (
@@ -168,7 +177,10 @@ export default async function ScholarshipsPage() {
                  <div>
                    <h3 className="text-xl font-bold text-[#0056b3] mb-4">Participating Universities</h3>
                    <div className="flex flex-wrap gap-2">
-                     {["Zhejiang University", "Wuhan University", "Xiamen University", "Harbin Institute of Technology"].map((tag, i) => (
+                     {(hasPrivilegedAccess 
+                        ? ["Zhejiang University", "Wuhan University", "Xiamen University", "Harbin Institute of Technology"]
+                        : ["Top University", "Prestigious Institution", "Leading Research University", "World-class Center"]
+                      ).map((tag, i) => (
                        <span key={i} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
                          {tag}
                        </span>

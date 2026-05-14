@@ -53,7 +53,13 @@ interface Location {
   }
 }
 
-export function HomeClient({ content }: { content: ContentBlock[] }) {
+export function HomeClient({ 
+  content,
+  hasPrivilegedAccess = false 
+}: { 
+  content: ContentBlock[],
+  hasPrivilegedAccess?: boolean 
+}) {
   const t = useTranslations('Home')
   const tCommon = useTranslations('Common')
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -479,16 +485,23 @@ export function HomeClient({ content }: { content: ContentBlock[] }) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
            {[
-             { name: "Tsinghua University", img: "/images/gallery-10.jpg", desc: "Renowned for its outstanding engineering programs and rich historical and cultural heritage, offers a wealth of academic resources." },
-             { name: "Shanghai University", img: "/images/gallery-11.jpg", desc: "Recognized for its comprehensive academic disciplines and vibrant international community, is known for its strong emphasis on global perspectives." },
-             { name: "Peking University", img: "/images/gallery-9.jpg", desc: "A major Chinese research university in Beijing and a member of the C9 League. It is colloquially known as Beida." },
+             { name: "Tsinghua University", location: "Beijing", img: "/images/gallery-10.jpg", desc: "Renowned for its outstanding engineering programs and rich historical and cultural heritage, offers a wealth of academic resources." },
+             { name: "Shanghai University", location: "Shanghai", img: "/images/gallery-11.jpg", desc: "Recognized for its comprehensive academic disciplines and vibrant international community, is known for its strong emphasis on global perspectives." },
+             { name: "Peking University", location: "Beijing", img: "/images/gallery-9.jpg", desc: "A major Chinese research university in Beijing and a member of the C9 League. It is colloquially known as Beida." },
            ].map((uni, i) => (
              <div key={i} className="bg-white shadow-lg rounded-none overflow-hidden group hover:shadow-xl transition-shadow">
                <div className="h-64 relative overflow-hidden">
-                 <Image src={uni.img} alt={uni.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                 <Image 
+                   src={uni.img} 
+                   alt={hasPrivilegedAccess ? uni.name : `University in ${uni.location}`} 
+                   fill 
+                   className="object-cover group-hover:scale-105 transition-transform duration-500" 
+                 />
                </div>
                <div className="p-6 bg-slate-100 min-h-[200px]">
-                 <h3 className="text-xl font-bold mb-4 text-black">{uni.name}</h3>
+                 <h3 className="text-xl font-bold mb-4 text-black">
+                   {hasPrivilegedAccess ? uni.name : `University in ${uni.location}`}
+                 </h3>
                  <p className="text-sm text-gray-600 leading-relaxed">{uni.desc}</p>
                </div>
              </div>
