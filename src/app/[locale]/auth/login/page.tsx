@@ -50,13 +50,22 @@ export default function LoginPage({
              console.warn("RPC failed in login, falling back to direct select")
              const { data: profile } = await supabase
               .from('users')
-              .select('role')
+              .select('role, status')
               .eq('id', user.id)
               .single()
-             userRole = profile?.role
+             // Replicate pending_agent logic from get_my_role RPC
+             userRole = (profile?.role === 'agent' && profile?.status !== 'active')
+               ? 'pending_agent'
+               : profile?.role
         }
         
         console.log("Login Role Check:", userRole)
+
+        // Redirect pending agents to the status page instead of blocking them
+        if (userRole === 'pending_agent') {
+          router.push(`/${locale}/auth/agent-pending`)
+          return
+        }
 
         if (userRole === 'admin') {
           redirectUrl = '/admin'
