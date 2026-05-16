@@ -169,7 +169,7 @@ export default function AgentPendingPage() {
                 <div className="flex items-start gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
                   <Mail className="w-4 h-4 mt-0.5 text-sky-300 flex-shrink-0" />
                   <p className="text-xs text-white/70">
-                    We'll send a notification to <span className="font-medium text-white">{userEmail}</span> when your account is approved or if we need more information.
+                    We&apos;ll send a notification to <span className="font-medium text-white">{userEmail}</span> when your account is approved or if we need more information.
                   </p>
                 </div>
               )}
