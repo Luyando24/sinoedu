@@ -33,7 +33,9 @@ export default function AgentPendingPage() {
       return
     }
 
-    const s = data?.status ?? "pending"
+    const s = (data?.status === 'active' || data?.status === 'rejected')
+      ? data.status
+      : 'pending'   // treat null/missing status as pending (safe default)
     setStatus(s as "pending" | "active" | "rejected")
 
     // If admin approved, redirect to dashboard

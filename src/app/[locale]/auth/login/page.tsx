@@ -42,30 +42,30 @@ export default function LoginPage({
       
       let redirectUrl = `/${locale}`
       if (user) {
-        // Try RPC first (bypasses RLS)
-        const { data: roleData, error: rpcError } = await supabase.rpc('get_my_role')
-        let userRole = roleData
+        // Always fetch role + status directly from the DB (source of truth).
+        // We cannot rely solely on get_my_role() because the old version of
+        // that function (before the migration) returns 'agent' even for pending
+        // agents — it doesn't check the status column at all.
+        const { data: profile } = await supabase
+          .from('users')
+          .select('role, status')
+          .eq('id', user.id)
+          .single()
 
-        if (rpcError) {
-             console.warn("RPC failed in login, falling back to direct select")
-             const { data: profile } = await supabase
-              .from('users')
-              .select('role, status')
-              .eq('id', user.id)
-              .single()
-             // Replicate pending_agent logic from get_my_role RPC
-             userRole = (profile?.role === 'agent' && profile?.status !== 'active')
-               ? 'pending_agent'
-               : profile?.role
-        }
-        
-        console.log("Login Role Check:", userRole)
+        const isPendingAgent =
+          profile?.role === 'agent' && profile?.status !== 'active'
 
-        // Redirect pending agents to the status page instead of blocking them
-        if (userRole === 'pending_agent') {
+        console.log("Login Profile:", profile, "isPendingAgent:", isPendingAgent)
+
+        // Redirect pending agents to the status/waiting page
+        if (isPendingAgent) {
           router.push(`/${locale}/auth/agent-pending`)
           return
         }
+
+        // Use RPC only to decide admin vs regular redirect (it still bypasses RLS)
+        const { data: roleData } = await supabase.rpc('get_my_role')
+        const userRole = roleData ?? profile?.role
 
         if (userRole === 'admin') {
           redirectUrl = '/admin'
